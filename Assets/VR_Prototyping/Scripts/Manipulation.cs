@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Sirenix.OdinInspector;
 using UnityEditor.U2D;
@@ -167,31 +168,36 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 
-		public void OnStay(Transform con, Transform mid, Transform end, Transform grabObject, int q)
+		public void OnStay(Transform con)
 		{
 			switch (con == c.Controller.LeftControllerTransform())
 			{
 				case true:
 					ControllerFollowing(con, cFl, cPl, tl);
-					tSl.transform.localPosition = new Vector3(0, 0, MagnifiedDepth(cPl, cOl, oOl, tSl, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
+					tSl.transform.localPosition = new Vector3(0, 0, Set.MagnifiedDepth(cPl, cOl, oOl, tSl, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
 					break;
 				case false:
 					ControllerFollowing(con, cFr, cPr, tr);
-					tSr.transform.localPosition = new Vector3(0, 0, MagnifiedDepth(cPr, cOr, oOr, tSr, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
+					tSr.transform.localPosition = new Vector3(0, 0, Set.MagnifiedDepth(cPr, cOr, oOr, tSr, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
 					break;
 				default:
 					throw new ArgumentException();
 			}
 		}
-
-		private static float MagnifiedDepth(GameObject conP, GameObject conO, GameObject objO, GameObject objP, float snapDistance, float max, bool limit)
+		
+		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)
 		{
-			var depth = conP.transform.localPosition.z / conO.transform.localPosition.z;
-			var distance = Vector3.Distance(objO.transform.position, objP.transform.position);
-				
-			if (distance >= max && limit) return max;
-			if (distance < snapDistance) return objO.transform.localPosition.z * Mathf.Pow(depth, 2);														
-			return objO.transform.localPosition.z * Mathf.Pow(depth, 2.5f);
+			rigid.useGravity = false;
+			target.SetParent(controller);
+		}
+		
+		public static void DirectGrabEnd(Rigidbody rigid, Transform target, bool g, List<Vector3> pos, List<Quaternion> rot, float f, LineRenderer lr)
+		{
+			rigid.useGravity = g;
+			target.SetParent(null);
+			rigid.AddForce(Set.Velocity(pos) * f, ForceMode.VelocityChange);
+			rigid.AddTorque(Set.AngularVelocity(rot) * f, ForceMode.VelocityChange);
+			lr.enabled = true;
 		}
 		
 		public void OnEnd(Transform con)

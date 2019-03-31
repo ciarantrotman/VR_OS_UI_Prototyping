@@ -146,8 +146,15 @@ namespace VR_Prototyping.Scripts
         }
         public static Vector3 Velocity(List<Vector3> list)
         {
-            return (list[list.Count - 1] - list[0]) / Time.deltaTime;// *list.Count;
+            return (list[list.Count - 1] - list[0]) / Time.deltaTime;
         }
+        
+        public static Vector3 AngularVelocity(List<Quaternion> list)
+        {
+            var rot = Quaternion.FromToRotation(list[list.Count - 1].eulerAngles, list[0].eulerAngles);
+            return rot.eulerAngles / Time.deltaTime;
+        }
+        
         public static void RigidBody(Rigidbody rb, float force, float drag, bool stop, bool gravity)
         {
             rb.mass = force;
@@ -223,6 +230,16 @@ namespace VR_Prototyping.Scripts
         public static float Divergence(Transform a, Transform b)
         {           
             return Vector3.Angle(a.forward, b.forward);
+        }
+        
+        public static float MagnifiedDepth(GameObject conP, GameObject conO, GameObject objO, GameObject objP, float snapDistance, float max, bool limit)
+        {
+            var depth = conP.transform.localPosition.z / conO.transform.localPosition.z;
+            var distance = Vector3.Distance(objO.transform.position, objP.transform.position);
+				
+            if (distance >= max && limit) return max;
+            if (distance < snapDistance) return objO.transform.localPosition.z * Mathf.Pow(depth, 2);														
+            return objO.transform.localPosition.z * Mathf.Pow(depth, 2.5f);
         }
     }
 }

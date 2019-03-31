@@ -25,10 +25,6 @@ namespace VR_Prototyping.Scripts
 		}
 		private GameObject lTarget;
 		private GameObject rTarget;
-		private bool lSelectPrevious;
-		private bool rSelectPrevious;
-		private bool lGrabPrevious;
-		private bool rGrabPrevious;
 		private GameObject lDefault;
 		private GameObject rDefault;
 		private SelectableObject pLSelectableObject;
@@ -45,6 +41,10 @@ namespace VR_Prototyping.Scripts
 		[HideInInspector] public LineRenderer lLr;
 		[HideInInspector] public LineRenderer rLr;
 		[HideInInspector] public bool disableSelection;
+		[HideInInspector] public bool lSelectPrevious;
+		[HideInInspector] public bool rSelectPrevious;
+		[HideInInspector] public bool lGrabPrevious;
+		[HideInInspector] public bool rGrabPrevious;
 		
 		[ValidateInput("TypeCheck", "Recommended Selection Type is Fusion", InfoMessageType.Warning)]
 		[BoxGroup("Selection Settings")] [SerializeField] private SelectionType selectionType;
@@ -127,8 +127,8 @@ namespace VR_Prototyping.Scripts
 		}
 		private void FixedUpdate()
 		{
-			Check.Manipulation(lFocusObject, lSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lMidPoint.transform, lTarget.transform);
-			Check.Manipulation(rFocusObject, rSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rMidPoint.transform, rTarget.transform);
+			Check.Manipulation(lFocusObject, lSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lMidPoint.transform, lTarget.transform, lTouch);
+			Check.Manipulation(rFocusObject, rSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rMidPoint.transform, rTarget.transform, rTouch);
 			
 			lGrabPrevious = Controller.LeftGrab();
 			rGrabPrevious = Controller.RightGrab();

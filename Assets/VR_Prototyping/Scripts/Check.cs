@@ -6,9 +6,9 @@ namespace VR_Prototyping.Scripts
 {
     public static class Check
     {
-        public static void Manipulation(Object focusObject, SelectableObject selectableObject, bool grip, bool pGrip, Transform con, Transform mid, Transform end)
+        public static void Manipulation(Object focusObject, SelectableObject selectableObject, bool grip, bool pGrip, Transform con, Transform mid, Transform end, bool disable)
         {
-            if (focusObject == null || selectableObject == null) return;
+            if (focusObject == null || selectableObject == null || disable) return;
             if (grip && !pGrip)
             {
                 selectableObject.GrabStart(con);
@@ -66,8 +66,14 @@ namespace VR_Prototyping.Scripts
         {
             list.Add(current);
             CullList(list, sensitivity);
-            Debug.DrawLine(list[0], list[list.Count - 1], Color.red);
         }
+        
+        public static void RotationTracking(List<Quaternion> list, Quaternion current, float sensitivity)
+        {
+            list.Add(current);
+            CullList(list, sensitivity);
+        }
+
         
         private static void CullList(IList list, float sensitivity)
         {

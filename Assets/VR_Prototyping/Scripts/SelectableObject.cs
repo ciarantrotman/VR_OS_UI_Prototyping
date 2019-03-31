@@ -14,7 +14,6 @@ namespace VR_Prototyping.Scripts
 	[RequireComponent(typeof(Rigidbody))]
 	public class SelectableObject : MonoBehaviour
 	{
-		public float force = 10f;
 		#region Inspector and Variables
 		private ObjectSelection c;
 		private Manipulation f;
@@ -24,6 +23,9 @@ namespace VR_Prototyping.Scripts
 		private Vector3 defaultLocalScale;
 
 		private bool active;
+		
+		private bool pGrabR;
+		private bool pGrabL;
 		
 		private RotationLock rotLock;
 		private float gazeAngle;
@@ -46,7 +48,8 @@ namespace VR_Prototyping.Scripts
 			OnButtonUp				
 		}
 		
-		public List<Vector3> positions = new List<Vector3>();
+		private readonly List<Vector3> positions = new List<Vector3>();
+		private readonly List<Quaternion> rotations = new List<Quaternion>();
 		private const float Sensitivity = 10f;
 	
 		[BoxGroup("Script Setup")] [SerializeField] [Required] private GameObject player;
@@ -160,13 +163,12 @@ namespace VR_Prototyping.Scripts
 			CheckGaze(o, gazeAngle, c.gaze, c.gazeList, c.lHandList, c.rHandList, c.globalList);
 			ManageList(o, c.lHandList, CheckHand(o, c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftControllerTransform(), c.selectionRange));
 			ManageList(o, c.rHandList, CheckHand(o, c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightControllerTransform(), c.selectionRange));
-			
-			Check.PositionTracking(positions, transform.position, Sensitivity);
-			Debug.DrawRay(transform.position, Set.Velocity(positions) * force, Color.cyan);
 		}
 
 		private void OnTriggerEnter(Collider col)
 		{
+			if(!directGrab) return;
+			
 			switch (col.gameObject.name)
 			{
 				case Manipulation.RTag when !c.rTouch:
@@ -183,48 +185,56 @@ namespace VR_Prototyping.Scripts
 					return;
 			}
 		}
+		
 		private void OnTriggerStay(Collider col)
 		{
+			if(!directGrab) return;
+			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when c.Controller.RightGrab() && directGrab:// && !c.rTouch:
-					rb.useGravity = false;
-					transform.SetParent(f.cR.transform);
+				case Manipulation.RTag when c.Controller.RightGrab() && !pGrabR && c.rFocusObject == gameObject:
+					Manipulation.DirectGrabStart(rb, transform, f.cR.transform);
 					break;
-				case Manipulation.RTag when !c.Controller.RightGrab() && directGrab:// && !c.rTouch:
-					transform.SetParent(null);
-					rb.useGravity = gravity;
-					rb.AddForce(Set.Velocity(positions) * force, ForceMode.Impulse);
+				case Manipulation.RTag when !c.Controller.RightGrab() && pGrabR && c.rFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, c.rLr);
 					break;
-				case Manipulation.LTag when c.Controller.LeftGrab() && directGrab:// && !c.lTouch:
-					rb.useGravity = false;
-					transform.SetParent(f.cL.transform);
+				case Manipulation.LTag when c.Controller.LeftGrab() && !pGrabL && c.lFocusObject == gameObject:
+					Manipulation.DirectGrabStart(rb, transform, f.cL.transform);
+					c.rTouch = false;
+					c.rFocusObject = null;
 					break;
-				case Manipulation.LTag when !c.Controller.LeftGrab() && directGrab:// && !c.lTouch:
-					rb.useGravity = gravity;
-					transform.SetParent(null);
-					rb.AddForce(Set.Velocity(positions) * force, ForceMode.Impulse);
+				case Manipulation.LTag when !c.Controller.LeftGrab() && pGrabL && c.lFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, c.lLr);
+					c.lTouch = false;
+					c.lFocusObject = null;
 					break;
 				default:
-					return;
+					Check.PositionTracking(positions, transform.position, Sensitivity);
+					Check.RotationTracking(rotations, transform.rotation, 2);
+					break;
 			}
+
+			pGrabR = c.Controller.RightGrab();
+			pGrabL = c.Controller.LeftGrab();
 		}
+		
 		private void OnTriggerExit(Collider col)
 		{
+			if(!directGrab) return;
+			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when c.rFocusObject == transform.gameObject:
-					rb.useGravity = gravity;
-					c.rTouch = false;
+				case Manipulation.RTag:
 					c.rLr.enabled = true;
+					c.rTouch = false;
+					c.rFocusObject = null;
 					break;
-				case Manipulation.LTag when c.lFocusObject == transform.gameObject:
-					rb.useGravity = gravity;
-					c.lTouch = false;
+				case Manipulation.LTag:
 					c.lLr.enabled = true;
+					c.lTouch = false;
+					c.lFocusObject = null;
 					break;
-				default:
-					return;
+
 			}
 		}
 
@@ -325,7 +335,7 @@ namespace VR_Prototyping.Scripts
 			
 			if (!grab) return;
 			
-			f.OnStay(con, mid, end, transform, c.lineRenderQuality);
+			f.OnStay(con);
 			
 			switch (f.manipulationType)
 			{
