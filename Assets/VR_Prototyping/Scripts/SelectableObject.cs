@@ -171,12 +171,12 @@ namespace VR_Prototyping.Scripts
 			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when !c.rTouch:
+				case Manipulation.RTag when !c.rTouch && !c.Controller.RightGrab():
 					c.rTouch = true;
 					c.rLr.enabled = false;
 					c.rFocusObject = gameObject;
 					break;
-				case Manipulation.LTag when !c.lTouch:
+				case Manipulation.LTag when !c.lTouch && !c.Controller.LeftGrab():
 					c.lTouch = true;
 					c.lLr.enabled = false;
 					c.lFocusObject = gameObject;
@@ -210,7 +210,7 @@ namespace VR_Prototyping.Scripts
 					break;
 				default:
 					Check.PositionTracking(positions, transform.position, Sensitivity);
-					Check.RotationTracking(rotations, transform.rotation, 2);
+					Check.RotationTracking(rotations, transform.rotation, Sensitivity);
 					break;
 			}
 

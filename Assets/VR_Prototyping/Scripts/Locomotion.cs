@@ -38,7 +38,7 @@ namespace VR_Prototyping.Scripts
         private const float MaxAngle = 60f;
         private const float MinAngle = 0f;
         
-        private const float Trigger = .85f;
+        private const float Trigger = .7f;
         private const float Sensitivity = 10f;
         private const float Tolerance = .1f;
         

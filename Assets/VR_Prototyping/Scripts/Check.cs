@@ -6,9 +6,12 @@ namespace VR_Prototyping.Scripts
 {
     public static class Check
     {
-        public static void Manipulation(Object focusObject, SelectableObject selectableObject, bool grip, bool pGrip, Transform con, Transform mid, Transform end, bool disable)
+        public static void Manipulation(Object focusObject, Object oppFocusObject, SelectableObject selectableObject, bool grip, bool pGrip, Transform con, Transform mid, Transform end, bool touch, bool oppTouch)
         {
-            if (focusObject == null || selectableObject == null || disable) return;
+            if (focusObject == null || selectableObject == null || touch) return;
+         
+            if (oppTouch && oppFocusObject  == focusObject) return;
+            
             if (grip && !pGrip)
             {
                 selectableObject.GrabStart(con);
@@ -80,19 +83,6 @@ namespace VR_Prototyping.Scripts
             if (list.Count > sensitivity)
             {
                 list.RemoveAt(0);
-            }
-        }
-        
-        public static void Locomotion(Locomotion t, bool current, bool previous, GameObject visual, LineRenderer lr)
-        {
-            if (t != null)
-            if (current && !previous)
-            {
-                t.LocomotionStart(visual, lr);
-            }
-            if (!current && previous)
-            {
-                t.LocomotionEnd(visual, visual.transform.position, visual.transform.eulerAngles, lr);
             }
         }
         

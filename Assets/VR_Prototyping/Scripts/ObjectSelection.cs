@@ -127,8 +127,8 @@ namespace VR_Prototyping.Scripts
 		}
 		private void FixedUpdate()
 		{
-			Check.Manipulation(lFocusObject, lSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lMidPoint.transform, lTarget.transform, lTouch);
-			Check.Manipulation(rFocusObject, rSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rMidPoint.transform, rTarget.transform, rTouch);
+			Check.Manipulation(lFocusObject, rFocusObject, lSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lMidPoint.transform, lTarget.transform, lTouch, rTouch);
+			Check.Manipulation(rFocusObject, lFocusObject, rSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rMidPoint.transform, rTarget.transform, rTouch, lTouch);
 			
 			lGrabPrevious = Controller.LeftGrab();
 			rGrabPrevious = Controller.RightGrab();

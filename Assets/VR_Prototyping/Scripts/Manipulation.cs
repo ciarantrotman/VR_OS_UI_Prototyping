@@ -195,8 +195,8 @@ namespace VR_Prototyping.Scripts
 		{
 			rigid.useGravity = g;
 			target.SetParent(null);
-			rigid.AddForce(Set.Velocity(pos) * f, ForceMode.VelocityChange);
-			rigid.AddTorque(Set.AngularVelocity(rot) * f, ForceMode.VelocityChange);
+			rigid.AddForce(Set.Velocity(pos) * (f + f), ForceMode.VelocityChange);
+			rigid.AddTorque(Set.AngularVelocity(rot) * (f + f), ForceMode.VelocityChange);
 			lr.enabled = true;
 		}
 		
