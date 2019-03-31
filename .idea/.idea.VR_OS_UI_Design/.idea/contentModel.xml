@@ -427,7 +427,6 @@
             <e p="Locomotion.cs" t="Include" />
             <e p="Manipulation.cs" t="Include" />
             <e p="ObjectSelection.cs" t="Include" />
-            <e p="Rotation.cs" t="Include" />
             <e p="RubberbandedObject.cs" t="Include" />
             <e p="SelectableObject.cs" t="Include" />
             <e p="SelfRighting.cs" t="Include" />

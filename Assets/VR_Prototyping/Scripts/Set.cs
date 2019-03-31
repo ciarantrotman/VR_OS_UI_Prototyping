@@ -109,10 +109,7 @@ namespace VR_Prototyping.Scripts
             var posA = a.position;
             var posB = b.position;
 
-            target.transform.position = new Vector3(
-                (posA.x + posB.x) / 2,
-                (posA.y + posB.y) / 2,
-                (posA.z + posB.z) / 2);
+            target.position = Vector3.Lerp(posA, posB, .5f);
             
             if (!lookAt) return;
             

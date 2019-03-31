@@ -26,6 +26,8 @@ namespace VR_Prototyping.Scripts
 		
 		private bool pGrabR;
 		private bool pGrabL;
+
+		private bool pDualGrab;
 		
 		private RotationLock rotLock;
 		private float gazeAngle;
@@ -322,17 +324,9 @@ namespace VR_Prototyping.Scripts
 			f.OnStart(con);
 		}
 
-		private int loop;
 		
-		// BUG: Applying rotation.
-		
-		private Quaternion _aPreviousRotation;
-		private Quaternion _applyRot;
-		private float _scalar = 1;
-		
-		public void GrabStay(Transform con, Transform mid, Transform end)
+		public void GrabStay(Transform con)
 		{
-			
 			if (!grab) return;
 			
 			f.OnStay(con);
@@ -340,7 +334,7 @@ namespace VR_Prototyping.Scripts
 			switch (f.manipulationType)
 			{
 				case Manipulation.ManipulationType.Lerp:
-					if (DualGrab(c.Controller.LeftGrab(), c.Controller.RightGrab(), c.lSelectableObject, c.rSelectableObject, this))
+					if (DualGrab())
 					{
 						Set.TransformLerpPosition(transform, f.mP.transform, .1f);
 						break;
@@ -356,22 +350,18 @@ namespace VR_Prototyping.Scripts
 					}
 					break;
 				case Manipulation.ManipulationType.Physics:
-					if (DualGrab(c.Controller.LeftGrab(), c.Controller.RightGrab(), c.lSelectableObject, c.rSelectableObject, this))
+					if (DualGrab() && !pDualGrab)
+					{
+						f.DualGrabStart(transform);
+					}
+					if (DualGrab() && pDualGrab)
 					{
 						Set.AddForcePosition(rb, transform, f.mP.transform, c.Controller.debugActive);
-						/*if (loop == 0)
+
+						if (freeRotationEnabled)
 						{
-							_aPreviousRotation = f.mP.transform.rotation;
-							Debug.Log(_aPreviousRotation);
-							loop++;
-						}	
-						else
-						{
-							Quaternion deltaRotation = _aPreviousRotation * Quaternion.Inverse(f.mP.transform.rotation);
-							transform.rotation = Quaternion.Inverse(Quaternion.LerpUnclamped(Quaternion.identity, deltaRotation, scaler)) * transform.rotation;
-							_aPreviousRotation = f.mP.transform.rotation;
-							Debug.Log(deltaRotation);
-						}*/
+							f.DualGrabStay(rb);
+						}
 						break;
 					}
 					if (c.Controller.RightGrab() && c.rSelectableObject == this)
@@ -387,12 +377,16 @@ namespace VR_Prototyping.Scripts
 				default:
 					throw new ArgumentException();
 			}
+			
+			pDualGrab = DualGrab();
+			pDualGrab = DualGrab();
 		}
 		 
-		private static bool DualGrab(bool l, bool r, Object lS, Object rS, Object s)
+		private bool DualGrab()
 		{
-			return l && r && lS == s && rS == s;
+			return c.Controller.LeftGrab() && c.Controller.RightGrab() && c.lSelectableObject == this && c.rSelectableObject == this;
 		}
+		
 		public void GrabEnd(Transform con)
 		{
 			if (!grab) return;

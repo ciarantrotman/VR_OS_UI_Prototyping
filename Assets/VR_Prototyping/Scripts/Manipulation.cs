@@ -18,7 +18,10 @@ namespace VR_Prototyping.Scripts
 		private ObjectSelection c;
 		
 		private GameObject fM;
-		[HideInInspector] public GameObject mP;
+		[HideInInspector] public GameObject mP; // dual grab pos target
+		
+		[HideInInspector] public GameObject mRp; // dual grab rot target
+		[HideInInspector] public GameObject mRc; // dual grab rot target
 		
 		[HideInInspector] public GameObject cR; // controller proxy
 		private GameObject cPr; // controller proxy
@@ -41,6 +44,9 @@ namespace VR_Prototyping.Scripts
 		private float initialDistance;
 		private float m;
 		private float z;
+		
+		private Quaternion pRot;
+		private const float Scalar = 2f;
 
 		[HideInInspector] public SphereCollider sCl;
 		[HideInInspector] public SphereCollider sCr;
@@ -53,13 +59,14 @@ namespace VR_Prototyping.Scripts
 			Physics,
 			Lerp		
 		}
+		
 		[TabGroup("Grab Settings")] public ManipulationType manipulationType;
 		[TabGroup("Grab Settings")] public bool directGrab;
 		[TabGroup("Grab Settings")] [ShowIf("directGrab")] [Indent] [Range(0f, 1f)] [SerializeField] private float directGrabDistance = .5f;
 		[TabGroup("Grab Settings")] public bool disableLeftGrab;
 		[TabGroup("Grab Settings")] public bool disableRightGrab;
 		[TabGroup("Rotation Settings")] public bool enableRotation;
-		[TabGroup("Rotation Settings")] [ShowIf("enableRotation")] [Indent] [Range(0f, 10f)] public float force;
+		[TabGroup("Rotation Settings")] [ShowIf("enableRotation")] [Indent] [Range(1f, 10f)] public float rotationForce;
 		
 		[BoxGroup("Snapping")] [SerializeField] private bool distanceSnapping = true;
 		[BoxGroup("Snapping")] [ShowIf("distanceSnapping")] [Indent] [Range(0f, 5f)] [SerializeField] private float snapDistance = 1f;
@@ -76,7 +83,10 @@ namespace VR_Prototyping.Scripts
 		private void SetupGameObjects()
 		{
 			fM = new GameObject("Manipulation/Manipulation");
-			mP = new GameObject("Manipulation/MidPoint");
+			mP = new GameObject("Manipulation/MidPoint/Position");
+			mRc = new GameObject("Manipulation/MidPoint/Rotation");
+			mRp = new GameObject("Manipulation/MidPoint/Rotation");
+			
 			tr = new GameObject("Manipulation/Target/Right");
 			cFr = new GameObject("Manipulation/Controller/Follow/Right");
 			cOr = new GameObject("Manipulation/Controller/Original/Right");
@@ -88,6 +98,9 @@ namespace VR_Prototyping.Scripts
 			fM.transform.parent = player.transform;
 			
 			mP.transform.SetParent(fM.transform);
+			mRc.transform.SetParent(fM.transform);
+			mRp.transform.SetParent(fM.transform);
+			
 			tr.transform.SetParent(fM.transform);
 			cFr.transform.SetParent(fM.transform);
 			cOr.transform.SetParent(cFr.transform);
@@ -183,6 +196,31 @@ namespace VR_Prototyping.Scripts
 				default:
 					throw new ArgumentException();
 			}
+		}
+
+		public void DualGrabStart(Transform target)
+		{
+			Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
+			pRot = mRp.transform.rotation;
+			mRc.transform.rotation = target.rotation;
+			mRc.transform.position = mRp.transform.position;
+		}
+
+		public void DualGrabStay(Rigidbody rb)
+		{
+			Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
+
+			var rotation = mRp.transform.rotation;
+			
+			Quaternion aRot = pRot * Quaternion.Inverse(rotation);
+			mRc.transform.rotation = Quaternion.Inverse(Quaternion.LerpUnclamped(Quaternion.identity, aRot, Scalar)) * mRc.transform.rotation;
+			mRc.transform.position = mRp.transform.position;
+
+			rb.AddTorque(Vector3.Cross(rb.transform.forward, mRc.transform.forward) * rotationForce, ForceMode.Acceleration);
+			rb.AddTorque(Vector3.Cross(rb.transform.right, mRc.transform.right) * rotationForce, ForceMode.Acceleration);
+			rb.AddTorque(Vector3.Cross(rb.transform.up, mRc.transform.up) * rotationForce, ForceMode.Acceleration);
+
+			pRot = rotation;
 		}
 		
 		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)
