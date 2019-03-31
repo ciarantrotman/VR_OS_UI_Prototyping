@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.hdrpsketch.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "S:\\Personal\\Projects\\Unity Development\\HDRP Sketches\\VR_OS_UI_Design\\VR_OS_UI_Design\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "VR_OS_UI_Design [Testing]"
+        }
+      }
+    }
+  ]
+}
