@@ -46,7 +46,7 @@ namespace VR_Prototyping.Scripts
 		private float z;
 		
 		private Quaternion pRot;
-		private const float Scalar = 2f;
+		private const float Scalar = 1f;
 
 		[HideInInspector] public SphereCollider sCl;
 		[HideInInspector] public SphereCollider sCr;

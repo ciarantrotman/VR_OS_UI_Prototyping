@@ -82,6 +82,12 @@ namespace VR_Prototyping.Scripts
             a.position = Vector3.Lerp(a.position, b, l);
         }
         
+        public static void VectorLerpLocalPosition(Transform a, Vector3 b, float l)
+        {
+            if (a == null) return;
+            a.localPosition = Vector3.Lerp(a.localPosition, b, l);
+        }
+        
         public static void Transforms(Transform a, Transform b)
         {
             if (a == null || b == null) return;

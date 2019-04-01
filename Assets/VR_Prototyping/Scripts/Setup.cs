@@ -13,6 +13,11 @@ namespace VR_Prototyping.Scripts
             lr.useWorldSpace = true;
             lr.enabled = e;
         }
+
+        public static Rigidbody AddOrGetRigidbody(Transform a)
+        {
+            return !a.GetComponent<Rigidbody>() ? a.gameObject.AddComponent<Rigidbody>() : a.gameObject.GetComponent<Rigidbody>();
+        }
         
         public static void LineRenderObjects(Transform m, Transform p, float offset)
         {

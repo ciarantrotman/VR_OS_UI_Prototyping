@@ -11,7 +11,6 @@ using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
-	[RequireComponent(typeof(Rigidbody))]
 	public class SelectableObject : MonoBehaviour
 	{
 		#region Inspector and Variables
@@ -122,7 +121,7 @@ namespace VR_Prototyping.Scripts
 			ToggleList(gameObject, c.gazeList);
 			
 			if(!button) return;
-			ToggleState(startsActive);
+			SetState(startsActive);
 			active = startsActive;
 			ResetState = transform;
 		}
@@ -134,7 +133,7 @@ namespace VR_Prototyping.Scripts
 		}
 		private void SetupRigidBody()
 		{
-			rb = GetComponent<Rigidbody>();
+			rb = Setup.AddOrGetRigidbody(transform);
 			rb.freezeRotation = true;
 			rb.useGravity = !button && gravity;
 		}
@@ -302,7 +301,7 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 
-		private void ToggleState(bool a)
+		private void SetState(bool a)
 		{
 			switch (a)
 			{
@@ -437,7 +436,7 @@ namespace VR_Prototyping.Scripts
 			{
 				case ButtonTrigger.OnButtonDown:
 					active = !active;
-					ToggleState(active);
+					SetState(active);
 					break;
 				case ButtonTrigger.OnButtonUp:
 					break;
@@ -460,7 +459,7 @@ namespace VR_Prototyping.Scripts
 					break;
 				case ButtonTrigger.OnButtonUp:
 					active = !active;
-					ToggleState(active);
+					SetState(active);
 					break;
 				default:
 					throw new ArgumentException();
