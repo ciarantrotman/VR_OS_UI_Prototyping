@@ -46,6 +46,18 @@
       "requirement": "mandatory"
     },
     {
+      "name": "/actions/default/in/LeftDPad",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/RightDPad",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/BackDPad",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },

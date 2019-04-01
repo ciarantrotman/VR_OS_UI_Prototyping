@@ -226,10 +226,11 @@ namespace VR_Prototyping.Scripts
 		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)
 		{
 			rigid.useGravity = false;
+			rigid.velocity = Vector3.zero;
 			target.SetParent(controller);
 		}
 		
-		public static void DirectGrabEnd(Rigidbody rigid, Transform target, bool g, List<Vector3> pos, List<Quaternion> rot, float f, LineRenderer lr)
+		public static void DirectGrabEnd(Rigidbody rigid, Transform target, bool g, List<Vector3> pos, List<Vector3> rot, float f, LineRenderer lr)
 		{
 			rigid.useGravity = g;
 			target.SetParent(null);

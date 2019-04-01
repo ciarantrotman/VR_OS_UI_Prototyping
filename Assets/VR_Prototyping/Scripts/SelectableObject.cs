@@ -51,7 +51,7 @@ namespace VR_Prototyping.Scripts
 		}
 		
 		private readonly List<Vector3> positions = new List<Vector3>();
-		private readonly List<Quaternion> rotations = new List<Quaternion>();
+		private readonly List<Vector3> rotations = new List<Vector3>();
 		private const float Sensitivity = 10f;
 	
 		[BoxGroup("Script Setup")] [SerializeField] [Required] private GameObject player;
@@ -212,7 +212,7 @@ namespace VR_Prototyping.Scripts
 					break;
 				default:
 					Check.PositionTracking(positions, transform.position, Sensitivity);
-					Check.RotationTracking(rotations, transform.rotation, Sensitivity);
+					Check.RotationTracking(rotations, transform.forward, Sensitivity);
 					break;
 			}
 

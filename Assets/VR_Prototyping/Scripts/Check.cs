@@ -71,7 +71,7 @@ namespace VR_Prototyping.Scripts
             CullList(list, sensitivity);
         }
         
-        public static void RotationTracking(List<Quaternion> list, Quaternion current, float sensitivity)
+        public static void RotationTracking(List<Vector3> list, Vector3 current, float sensitivity)
         {
             list.Add(current);
             CullList(list, sensitivity);

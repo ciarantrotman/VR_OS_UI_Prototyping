@@ -6,10 +6,11 @@ namespace VR_Prototyping.Scripts
 {
     public class ControllerTransforms : MonoBehaviour
     {
-        private enum SDK
+        public enum SDK
         {
             SteamVR,
-            VRTK
+            VRTK,
+            LeapMotion
         }
         
         [SerializeField] public bool debugActive;
@@ -18,11 +19,13 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Transforms")] [SerializeField] [Required] private Transform r;
         [TabGroup("Transforms")] [SerializeField] [Required] private Transform h;
 
-
-        [TabGroup("Button Events")] [SerializeField] private SDK VR_SDK;
+        [TabGroup("Button Events")] public SDK VR_SDK;
         [TabGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;
         [TabGroup("Button Events")] public SteamVR_Action_Boolean triggerGrip;
         [TabGroup("Button Events")] public SteamVR_Action_Boolean joystickPress;
+        [TabGroup("Button Events")] public SteamVR_Action_Boolean leftDPad;
+        [TabGroup("Button Events")] public SteamVR_Action_Boolean rightDPad;
+        [TabGroup("Button Events")] public SteamVR_Action_Boolean backDPad;
         [TabGroup("Button Events")] public SteamVR_Action_Vector2 joystickDirection;
         [TabGroup("Button Events")] public SteamVR_Action_Vibration haptic;
        

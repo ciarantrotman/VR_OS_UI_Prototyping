@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -146,10 +145,9 @@ namespace VR_Prototyping.Scripts
             return (list[list.Count - 1] - list[0]) / Time.deltaTime;
         }
         
-        public static Vector3 AngularVelocity(List<Quaternion> list)
+        public static Vector3 AngularVelocity(List<Vector3> list)
         {
-            var rot = Quaternion.FromToRotation(list[list.Count - 1].eulerAngles, list[0].eulerAngles);
-            return rot.eulerAngles / Time.deltaTime;
+            return Vector3.Cross(list[list.Count - 1], list[0]);
         }
         
         public static void RigidBody(Rigidbody rb, float force, float drag, bool stop, bool gravity)
