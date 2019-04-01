@@ -254,7 +254,7 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 		
-		private void ControllerFollowing(Transform con, GameObject f, GameObject p, GameObject target)
+		private static void ControllerFollowing(Transform con, GameObject f, GameObject p, GameObject target)
 		{
 			f.transform.LookAt(con);
 			p.transform.position = con.position;
