@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace VR_Prototyping.Scripts
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(ControllerTransforms))]
     public class Locomotion : MonoBehaviour
     {

@@ -7,15 +7,18 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using VR_Prototyping.Plugins.QuickOutline.Scripts;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
+	[DisallowMultipleComponent]
 	public class SelectableObject : MonoBehaviour
 	{
 		#region Inspector and Variables
 		private ObjectSelection c;
 		private Manipulation f;
+		private Outline outline;
 		
 		private Vector3 defaultPosition;
 		private Vector3 defaultLocalPosition;
@@ -54,45 +57,63 @@ namespace VR_Prototyping.Scripts
 		private const float Sensitivity = 10f;
 	
 		[BoxGroup("Script Setup")] [SerializeField] [Required] private GameObject player;
+		[Header("Define Object Behaviour")]
 		[BoxGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
 		[BoxGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
 		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
 		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
 		[BoxGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
-		[BoxGroup("Script Setup")] public bool toolTip;
-		[BoxGroup("Script Setup")] [ShowIf("toolTip")] [Indent] public string toolTipText;
 		
-		[TabGroup("Manipulation Settings")] [HideIf("button")] [Range(0, 1f)] public float moveForce = .15f;
-		[TabGroup("Manipulation Settings")] [HideIf("button")] [Range(0, 10f)] public float latency = 4.5f;
-		[TabGroup("Manipulation Settings")] [HideIf("button")] [SerializeField] private bool gravity;
-		[TabGroup("Manipulation Settings")] [HideIf("button")] [ShowIf("grab")] [Space(3)] public bool directGrab = true;
-		[TabGroup("Rotation Settings")] [HideIf("button")] [SerializeField] public bool freeRotationEnabled;
-		[TabGroup("Rotation Settings")] [HideIf("button")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
+		[Header("Grab Settings")]
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 1f)] public float moveForce = .15f;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 10f)] public float latency = 4.5f;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")]  [SerializeField] private bool gravity;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("grab")] public bool directGrab = true;
+		[Header("Rotation Settings")]
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool freeRotationEnabled;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
+		[Header("Visual Effects")]
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] private bool genericGrabEffect;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [Indent] [SerializeField] private bool grabOutline;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float grabOutlineWidth;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Color grabOutlineColor = new Color(0,0,0,255);
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Outline.Mode grabOutlineMode;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private bool touchOutline;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float touchOutlineWidth;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Color touchOutlineColor = new Color(0,0,0,255);
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Outline.Mode touchOutlineMode;
 		
-		[TabGroup("Button Settings")] [ShowIf("button")] public TextMeshPro buttonText;
-		[TabGroup("Button Settings")] [ShowIf("button")] public Renderer buttonBack;
-		[TabGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private TMP_FontAsset activeFont;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private TMP_FontAsset inactiveFont;
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
-		[TabGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
-		[TabGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
-		[TabGroup("Button Settings")] [ShowIf("button")] [SerializeField] [Space(10)] private UnityEvent selectStart;
-		[TabGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectStay;
-		[TabGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectEnd;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public Renderer buttonBack;
+		[Header("Visual Effects")]
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset activeFont;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset inactiveFont;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
+		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] [Space(10)] private UnityEvent selectStart;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectStay;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectEnd;
 
-		[BoxGroup("Visual Settings")] [SerializeField] private bool reactiveMat;
-		[BoxGroup("Visual Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
-
+		[BoxGroup("Hover Settings")] [SerializeField] private bool reactiveMat;
+		[BoxGroup("Hover Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
 		[BoxGroup("Hover Settings")] [SerializeField] private bool hover;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [Indent] [SerializeField] private bool genericHoverEffect;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] public bool toolTip;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("toolTip")] [Indent] public string toolTipText = "Enter hover state text here.";
+		[Header("Visual Effects")]
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [Space(5)] [Indent] [SerializeField] private bool genericHoverEffect;
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverOffset;
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverScale;
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverEffectDuration;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverStart;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent] [SerializeField] private bool hoverOutline;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float hoverOutlineWidth;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Color hoverOutlineColor = new Color(0,0,0,255);
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Outline.Mode hoverOutlineMode;
+		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [Space(10)] [SerializeField] private UnityEvent hoverStart;
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverStay;
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverEnd;
 		
@@ -118,6 +139,7 @@ namespace VR_Prototyping.Scripts
 			AssignComponents();
 			SetupRigidBody();
 			SetupManipulation();
+			SetupOutline();
 			ToggleList(gameObject, c.gazeList);
 			
 			if(!button) return;
@@ -143,6 +165,13 @@ namespace VR_Prototyping.Scripts
 			{
 				rotationLock = RotationLock.FreeRotation;
 			}
+		}
+
+		private void SetupOutline()
+		{
+			outline = Setup.AddOrGetOutline(transform);
+			outline.enabled = false;
+			outline.precomputeOutline = true;
 		}
 		private static void ToggleList(GameObject g, ICollection<GameObject> l)
 		{
@@ -185,6 +214,10 @@ namespace VR_Prototyping.Scripts
 				default:
 					return;
 			}
+			
+			if (!touchOutline) return;
+			Set.Outline(outline, touchOutlineMode, touchOutlineWidth, touchOutlineColor);
+			outline.enabled = true;
 		}
 		
 		private void OnTriggerStay(Collider col)
@@ -235,8 +268,11 @@ namespace VR_Prototyping.Scripts
 					c.lTouch = false;
 					c.lFocusObject = null;
 					break;
-
+				default:
+					return;
 			}
+			
+			outline.enabled = false;
 		}
 
 		private void ReactiveMaterial()
@@ -321,9 +357,11 @@ namespace VR_Prototyping.Scripts
 			if (!grab) return;
 			Set.RigidBody(rb, moveForce, latency,false, gravity);
 			f.OnStart(con);
-		}
-
-		
+			
+			if(!grabOutline) return;
+			Set.Outline(outline, grabOutlineMode, grabOutlineWidth, grabOutlineColor);
+			outline.enabled = true;
+		}	
 		public void GrabStay(Transform con)
 		{
 			if (!grab) return;
@@ -378,28 +416,31 @@ namespace VR_Prototyping.Scripts
 			}
 			
 			pDualGrab = DualGrab();
-			pDualGrab = DualGrab();
 		}
-		 
 		private bool DualGrab()
 		{
 			return c.Controller.LeftGrab() && c.Controller.RightGrab() && c.lSelectableObject == this && c.rSelectableObject == this;
 		}
-		
 		public void GrabEnd(Transform con)
 		{
-			if (!grab) return;
 			c.gazeList.Clear();
 			
 			Set.RigidBody(rb, moveForce, latency,false, gravity);
+			outline.enabled = false;
 			
 			f.OnEnd(con);
 		}
 		public void HoverStart()
 		{
 			hoverStart.Invoke();
-
+			
 			if (!genericHoverEffect || !hover) return;
+
+			if (hoverOutline)
+			{
+				Set.Outline(outline, hoverOutlineMode, hoverOutlineWidth, hoverOutlineColor);
+				outline.enabled = true;
+			}
 			
 			var t = transform;
 			defaultLocalScale = t.localScale;
@@ -417,6 +458,8 @@ namespace VR_Prototyping.Scripts
 		public void HoverEnd()
 		{
 			hoverEnd.Invoke();
+			
+			outline.enabled = false;
 			
 			if (!genericHoverEffect || !hover) return;
 			

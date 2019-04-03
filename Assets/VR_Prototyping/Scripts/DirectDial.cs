@@ -1,12 +1,10 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
-using VR_Prototyping.Scripts;
-
 
 namespace VR_Prototyping.Scripts
 {
+    [DisallowMultipleComponent]
     public class DirectDial : MonoBehaviour
     {
         private LineRenderer circleLr;

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace VR_Prototyping.Scripts
 {
+    [DisallowMultipleComponent]
     public class DirectSlider : MonoBehaviour
     {
         private LineRenderer activeLr;

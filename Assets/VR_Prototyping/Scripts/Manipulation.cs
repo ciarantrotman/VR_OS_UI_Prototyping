@@ -9,6 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
+	[DisallowMultipleComponent]
 	[RequireComponent(typeof(ObjectSelection))]
 	public class Manipulation : MonoBehaviour
 	{
