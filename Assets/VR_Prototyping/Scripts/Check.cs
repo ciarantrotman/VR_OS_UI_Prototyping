@@ -248,7 +248,7 @@ namespace VR_Prototyping.Scripts
             midpoint.transform.localPosition = new Vector3(0, 0, Set.Midpoint(controller, target.transform));
             Set.LineRenderWidth(lr, .001f, focus != null ? .01f : 0f);
             
-            BezierCurve.BezierLineRenderer(lr, 
+            Draw.BezierLineRenderer(lr, 
                 controller.position,
                 midpoint.transform.position, 
                 target.transform.position,

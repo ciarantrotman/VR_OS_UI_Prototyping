@@ -158,7 +158,7 @@ namespace VR_Prototyping.Scripts
             Active = toggle;
             lr.enabled = toggle;
             if (!toggle) return;
-            BezierCurve.BezierLineRenderer(lr, b.position, Midpoint(), transform.position, 15);
+            Draw.BezierLineRenderer(lr, b.position, Midpoint(), transform.position, 15);
         }
         private void Visual(Transform c, Transform x, bool g)
         {

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
-using Valve.VR.InteractionSystem.Sample;
+
 
 namespace VR_Prototyping.Scripts
 {
@@ -11,8 +10,6 @@ namespace VR_Prototyping.Scripts
     {
         private LineRenderer activeLr;
         private LineRenderer inactiveLr;
-
-        private float sliderValue;
         
         private const float DirectDistance = .05f;
 
@@ -24,27 +21,19 @@ namespace VR_Prototyping.Scripts
         
         [HideInInspector] public Vector3 sliderMaxPos;
         [HideInInspector] public Vector3 sliderMinPos;
-        [ShowIf("manualSliderSetup")] [Button("Manual Setup")]
-        private void ManualSetup()
-        {
-            var p = transform.localPosition;
-            sliderMaxPos = new Vector3(p.x + .25f, p.y, p.z);
-            sliderMinPos = new Vector3(p.x - .25f, p.y, p.z);
-        }
+        [HideInInspector] public float sliderValue;
 
         private Rigidbody rb;
 
-        [BoxGroup("Script Setup")] [SerializeField] [Required]
-        private ControllerTransforms c;
+        [BoxGroup("Script Setup")] [SerializeField] [Required] private ControllerTransforms c;
 
         [TabGroup("Slider Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
         [TabGroup("Slider Settings")] [Header("Slider Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
-        [TabGroup("Slider Settings")] [HideIf("manualSliderSetup")] [Indent] [Range(.01f, 2f)] public float sliderMax;
-        [TabGroup("Slider Settings")] [HideIf("manualSliderSetup")] [Indent] [Range(.01f, 2f)] public float sliderMin;
-        [TabGroup("Slider Settings")] [Space(10)] public bool manualSliderSetup;
+        [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMax;
+        [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMin;
         
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float activeWidth;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float inactiveWidth;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float activeWidth;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float inactiveWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material sliderMaterial;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(5)] private GameObject sliderCap;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] private GameObject sliderHandle;
@@ -64,9 +53,11 @@ namespace VR_Prototyping.Scripts
             var o = gameObject;
             slider = o;
             o.name = "Slider/Slider";
-            min = Instantiate(sliderCap, slider.transform); // new GameObject("Slider/Min");
-            max = Instantiate(sliderCap, slider.transform); //new GameObject("Slider/Max");
-            handle = Instantiate(sliderHandle, slider.transform); //new GameObject("Slider/Handle");
+            min = Instantiate(sliderCap, slider.transform);
+            min.name = "Slider/Min";
+            max = Instantiate(sliderCap, slider.transform);
+            max.name = "Slider/Max";
+            handle = Instantiate(sliderHandle, slider.transform);
             handleNormalised = new GameObject("Slider/Handle/Follow");
 
             min.transform.SetParent(slider.transform);
@@ -80,26 +71,10 @@ namespace VR_Prototyping.Scripts
             rb = Setup.AddOrGetRigidbody(handle.transform);
             Set.RigidBody(rb, .1f, 4.5f, true, false);
             
-            switch (manualSliderSetup)
-            {
-                case true:
-                    min.transform.position =  sliderMinPos;
-                    max.transform.position = sliderMaxPos;
-                    sliderMin = transform.InverseTransformPoint(min.transform.localPosition).x;
-                    if (sliderMin < 0) sliderMin = -sliderMin;
-                    sliderMax = transform.InverseTransformPoint(max.transform.localPosition).x;
-                    handle.transform.position = Vector3.Lerp(sliderMinPos, sliderMaxPos, startingValue);
-                    handleNormalised.transform.localPosition = handle.transform.localPosition;
-                    break;
-                case false:
-                    min.transform.localPosition = new Vector3(-sliderMin, 0, 0);
-                    max.transform.localPosition = new Vector3(sliderMax, 0, 0);
-                    handle.transform.localPosition = new Vector3(Mathf.Lerp(-sliderMin, sliderMax, startingValue), 0, 0);
-                    handleNormalised.transform.localPosition = handle.transform.localPosition;
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
+            min.transform.localPosition = new Vector3(-sliderMin, 0, 0);
+            max.transform.localPosition = new Vector3(sliderMax, 0, 0);
+            handle.transform.localPosition = new Vector3(Mathf.Lerp(-sliderMin, sliderMax, startingValue), 0, 0);
+            handleNormalised.transform.localPosition = handle.transform.localPosition;
         }
         
         private LineRenderer LineRender(Component a, float width)
@@ -155,10 +130,17 @@ namespace VR_Prototyping.Scripts
             lr.SetPosition(0, start.position);
             lr.SetPosition(1, end.position);
         }
+        
+        public void AlignHandles(float pos, float neg)
+        {
+            var p = transform.localPosition;
+            sliderMaxPos = new Vector3(p.x + pos, p.y, p.z);
+            sliderMinPos = new Vector3(p.x - neg, p.y, p.z);
+        }
     }
     
     [CustomEditor(typeof(DirectSlider)), CanEditMultipleObjects]
-    public sealed class PositionHandleEditor : Sirenix.OdinInspector.Editor.OdinEditor
+    public sealed class DirectSliderSetup : Sirenix.OdinInspector.Editor.OdinEditor
     {
         private void OnSceneGUI()
         {
@@ -170,14 +152,14 @@ namespace VR_Prototyping.Scripts
             const float snap = .1f;
             
             EditorGUI.BeginChangeCheck();
-
-            if (!slider.manualSliderSetup) return; 
             
             var max = Handles.Slider(slider.sliderMaxPos, right, size, Handles.ConeHandleCap, snap);
             var min = Handles.Slider(slider.sliderMinPos, -right, size, Handles.ConeHandleCap, snap);
-
+            
             Handles.DrawLine(position, slider.sliderMaxPos);
             Handles.DrawLine(position, slider.sliderMinPos);
+            
+            slider.AlignHandles(slider.sliderMax, slider.sliderMin);
 
             if (!EditorGUI.EndChangeCheck()) return;
             slider.sliderMaxPos = max;
