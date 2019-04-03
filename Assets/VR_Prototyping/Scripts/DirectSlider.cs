@@ -117,7 +117,7 @@ namespace VR_Prototyping.Scripts
                 Set.TransformLerpPosition(handle.transform, controller, .5f);
                 return;
             }
-            Set.TransformLerpPosition(handle.transform, handleNormalised.transform, .05f);
+            Set.TransformLerpPosition(handle.transform, handleNormalised.transform, .2f);
         }
         
         private static float SliderValue(float max, float min, float current)
