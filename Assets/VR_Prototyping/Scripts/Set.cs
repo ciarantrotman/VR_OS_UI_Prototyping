@@ -246,7 +246,6 @@ namespace VR_Prototyping.Scripts
 
         public static void Outline(Outline outline, Outline.Mode mode, float width, Color color)
         {
-            Debug.Log(color);
             outline.OutlineColor = color;
             outline.OutlineWidth = width;
             outline.OutlineMode = mode;

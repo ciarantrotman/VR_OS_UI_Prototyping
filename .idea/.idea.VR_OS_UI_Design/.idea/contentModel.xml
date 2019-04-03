@@ -784,7 +784,6 @@
           <e p="SteamVR_Input_ActionSets.cs" t="Include" />
           <e p="SteamVR_Input_Initialization.cs" t="Include" />
         </e>
-                <e p="StencilMaskID.shader" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
@@ -812,6 +811,16 @@
         </e>
         <e p="VR_Prototyping" t="Include">
           <e p="Plugins" t="Include">
+            <e p="Ciconia Studio" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="Double Sided Shaders" t="Include">
+                  <e p="Double Sided Emissive Diffuse.shader" t="Include" />
+                  <e p="Double Sided Standard Diffuse Bump.shader" t="Include" />
+                  <e p="Double Sided Transparent Diffuse Bump Cutout.shader" t="Include" />
+                  <e p="Double Sided Transparent Diffuse Bump.shader" t="Include" />
+                </e>
+              </e>
+            </e>
             <e p="Demigiant" t="Include">
               <e p="DemiLib" t="Include">
                 <e p="Core" t="Include">
@@ -920,6 +929,7 @@
             <e p="DirectDial.cs" t="Include" />
             <e p="DirectSlider.cs" t="Include" />
             <e p="Draw.cs" t="Include" />
+            <e p="DrivenValue.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />

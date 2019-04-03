@@ -7,7 +7,8 @@ namespace VR_Prototyping.Scripts
     [DisallowMultipleComponent]
     public class DirectDial : MonoBehaviour
     {
-        private LineRenderer circleLr;
+        private LineRenderer activeCircleLr;
+        private LineRenderer inactiveCircleLr;
         private LineRenderer spokeLr;
         
         private const float DirectDistance = .05f;
@@ -24,11 +25,14 @@ namespace VR_Prototyping.Scripts
 
         [BoxGroup("Script Setup")] [SerializeField] [Required] private ControllerTransforms c;
 
-        [TabGroup("Slider Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
-        [TabGroup("Slider Settings")] [Header("Dial Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
-        [TabGroup("Slider Settings")] [Range(.01f, .25f)] public float dialRadius;
+        [TabGroup("Dial Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
+        [TabGroup("Dial Settings")] [Header("Dial Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
+        [TabGroup("Dial Settings")] [Range(.01f, .25f)] public float dialRadius;
+        [TabGroup("Dial Settings")] [Space(5)] public bool ignoreLeftHand;
+        [TabGroup("Dial Settings")] public bool ignoreRightHand;
         
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float circleLineRendererWidth;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float activeCircleLineRendererWidth;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float inactiveCircleLineRendererWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float spokeLineRendererWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material dialMaterial;
@@ -51,22 +55,23 @@ namespace VR_Prototyping.Scripts
             dial = o;
             o.name = "Dial/Dial";
             center = new GameObject("Dial/Center");
-            var vis = Instantiate(dialCap, dial.transform);
             handle = Instantiate(dialHandle, dial.transform);
             handle.name = "Dial/Handle";
             handleNormalised = new GameObject("Dial/Handle/Follow");
             anchor = new GameObject("Dial/Anchor");
-
-            vis.transform.SetParent(center.transform);
+            var vis = Instantiate(dialCap, anchor.transform);
+            
+            vis.transform.SetParent(anchor.transform);
             center.transform.SetParent(dial.transform);
             anchor.transform.SetParent(center.transform);
             handle.transform.SetParent(dial.transform);
             handleNormalised.transform.SetParent(dial.transform);
 
-            circleLr = LineRender(center.transform, circleLineRendererWidth);
+            activeCircleLr = LineRender(dial.transform, activeCircleLineRendererWidth);
+            inactiveCircleLr = LineRender(center.transform, inactiveCircleLineRendererWidth);
             spokeLr = LineRender(handle.transform, spokeLineRendererWidth);
 
-            Draw.CircleLineRenderer(circleLr, dialRadius, Draw.Orientation.Right, circleQuality);
+            Draw.CircleLineRenderer(inactiveCircleLr, dialRadius, Draw.Orientation.Right, circleQuality);
             
             rb = Setup.AddOrGetRigidbody(handle.transform);
             Set.RigidBody(rb, .1f, 4.5f, true, false);
@@ -77,6 +82,8 @@ namespace VR_Prototyping.Scripts
             anchor.transform.localPosition = new Vector3(0, 0, dialRadius);
             handle.transform.position = anchor.transform.position;
             handleNormalised.transform.localPosition = handle.transform.localPosition;
+
+            dialValue = DialValue(0, 360, center.transform.localEulerAngles.y);
         }
    
         private LineRenderer LineRender(Component a, float width)
@@ -88,10 +95,18 @@ namespace VR_Prototyping.Scripts
         
         private void FixedUpdate()
         {
-            DrawLineRender(spokeLr, dial.transform, handle.transform);
-            
-            DirectSliderCheck(c.RightControllerTransform(), c.RightGrab());
-            DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
+            Draw.LineRender(spokeLr, anchor.transform, handle.transform);
+            Draw.ArcLineRenderer(activeCircleLr, dialRadius, 0, center.transform.localEulerAngles.y, Draw.Orientation.Right, circleQuality);
+
+            if (!ignoreRightHand)
+            {
+                DirectSliderCheck(c.RightControllerTransform(), c.RightGrab());
+            }
+
+            if (!ignoreLeftHand)
+            {
+                DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
+            }
         }
 
         private void DirectSliderCheck(Transform controller, bool grab)
@@ -121,13 +136,10 @@ namespace VR_Prototyping.Scripts
             var target = new Vector3(value.x, 0, value.z);
             Set.VectorLerpLocalPosition(handleNormalised.transform, target, .2f);
             center.transform.LookAt(handleNormalised.transform);
-            return center.transform.localEulerAngles.y;
-        }
-        
-        private static void DrawLineRender(LineRenderer lr, Transform start, Transform end)
-        {
-            lr.SetPosition(0, start.position);
-            lr.SetPosition(1, end.position);
+            var localEulerAngles = center.transform.localEulerAngles;
+            localEulerAngles = new Vector3(0, localEulerAngles.y, 0);
+            center.transform.localEulerAngles = localEulerAngles;
+            return localEulerAngles.y;
         }
     }
     

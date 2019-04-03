@@ -32,6 +32,8 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Slider Settings")] [Header("Slider Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
         [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMax;
         [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMin;
+        [TabGroup("Slider Settings")] [Space(5)] public bool ignoreLeftHand;
+        [TabGroup("Slider Settings")] public bool ignoreRightHand;
         
         [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float activeWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float inactiveWidth;
@@ -76,6 +78,8 @@ namespace VR_Prototyping.Scripts
             max.transform.localPosition = new Vector3(sliderMax, 0, 0);
             handle.transform.localPosition = new Vector3(Mathf.Lerp(-sliderMin, sliderMax, startingValue), 0, 0);
             handleNormalised.transform.localPosition = handle.transform.localPosition;
+            
+            sliderValue = SliderValue(sliderMax, sliderMin, handleNormalised.transform.localPosition.x);
         }
         
         private LineRenderer LineRender(Component a, float width)
@@ -87,13 +91,18 @@ namespace VR_Prototyping.Scripts
 
         private void FixedUpdate()
         {
-            DrawLineRender(activeLr, min.transform, handle.transform);
-            DrawLineRender(inactiveLr, max.transform, handle.transform);
-            
-            DirectSliderCheck(c.RightControllerTransform(), c.RightGrab());
-            DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
-            
-            //sliderValue = SliderValue(sliderMax, sliderMin, HandleFollow());
+            Draw.LineRender(activeLr, min.transform, handle.transform);
+            Draw.LineRender(inactiveLr, max.transform, handle.transform);
+
+            if (!ignoreRightHand)
+            {
+                DirectSliderCheck(c.RightControllerTransform(), c.RightGrab());
+            }
+
+            if (!ignoreLeftHand)
+            {
+                DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
+            }
         }
 
         private void DirectSliderCheck(Transform controller, bool grab)
@@ -124,12 +133,6 @@ namespace VR_Prototyping.Scripts
             if (value.x >= sliderMax) target = new Vector3(sliderMax, 0, 0);
             Set.VectorLerpLocalPosition(handleNormalised.transform, target, .2f);
             return handleNormalised.transform.localPosition.x;
-        }
-
-        private static void DrawLineRender(LineRenderer lr, Transform start, Transform end)
-        {
-            lr.SetPosition(0, start.position);
-            lr.SetPosition(1, end.position);
         }
         
         public void AlignHandles(float pos, float neg)

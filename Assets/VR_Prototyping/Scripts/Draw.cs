@@ -60,6 +60,44 @@ namespace VR_Prototyping.Scripts
 				angle += arcLength / quality;
 			}
 		}
+		
+		public static void LineRender(LineRenderer lr, Transform start, Transform end)
+		{
+			lr.SetPosition(0, start.position);
+			lr.SetPosition(1, end.position);
+		}
+
+		public static void ArcLineRenderer(LineRenderer lr, float radius, float startAngle, float endAngle,
+			Orientation orientation, int quality)
+		{
+			lr.positionCount = quality;
+			lr.useWorldSpace = false;
+
+			var angle = startAngle;
+			var arcLength = endAngle - startAngle;
+
+			for (var i = 0; i < quality; i++)
+			{
+				var x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
+				var y = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
+				switch (orientation)
+				{
+					case Orientation.Forward:
+						lr.SetPosition(i, new Vector3(x, y, 0));
+						break;
+					case Orientation.Right:
+						lr.SetPosition(i, new Vector3(x, 0, y));
+						break;
+					case Orientation.Up:
+						lr.SetPosition(i, new Vector3(0, x, y));
+						break;
+					default:
+						throw new ArgumentException();
+				}
+
+				angle += arcLength / quality;
+			}
+		}
 	}
 }
 
