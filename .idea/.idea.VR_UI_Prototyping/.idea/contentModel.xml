@@ -903,6 +903,7 @@
             <e p="BezierCurve.cs" t="Include" />
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
+            <e p="DirectSlider.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
@@ -918,7 +919,6 @@
             <e p="Set.cs" t="Include" />
             <e p="SetTransform.cs" t="Include" />
             <e p="Setup.cs" t="Include" />
-            <e p="SimpleCameraController.cs" t="Include" />
             <e p="SortBy.cs" t="Include" />
             <e p="VehicleController.cs" t="Include" />
           </e>
