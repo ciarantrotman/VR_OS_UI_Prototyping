@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VR_Prototyping.Plugins.QuickOutline.Scripts;
 
 namespace VR_Prototyping.Scripts
 {
@@ -17,6 +18,11 @@ namespace VR_Prototyping.Scripts
         public static Rigidbody AddOrGetRigidbody(Transform a)
         {
             return !a.GetComponent<Rigidbody>() ? a.gameObject.AddComponent<Rigidbody>() : a.gameObject.GetComponent<Rigidbody>();
+        }
+        
+        public static Outline AddOrGetOutline(Transform a)
+        {
+            return !a.GetComponent<Outline>() ? a.gameObject.AddComponent<Outline>() : a.gameObject.GetComponent<Outline>();
         }
         
         public static void LineRenderObjects(Transform m, Transform p, float offset)

@@ -8,6 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
+	[DisallowMultipleComponent]
 	[RequireComponent(typeof(ControllerTransforms))]
 	public class ObjectSelection : MonoBehaviour
 	{
@@ -94,9 +95,9 @@ namespace VR_Prototyping.Scripts
 			Setup.LineRenderObjects(lMidPoint.transform, Controller.LeftControllerTransform(), 0f);
 			Setup.LineRenderObjects(rMidPoint.transform, Controller.RightControllerTransform(), 0f);
 		}
-		
-		private void Update () 
-		{		
+
+		private void FixedUpdate()
+		{
 			SortLists();
 
 			switch (selectionType)
@@ -119,16 +120,14 @@ namespace VR_Prototyping.Scripts
 					break;
 			}
 			
-			lSelectableObject = Check.FindSelectableObject(lFocusObject, lSelectableObject, Controller.LeftGrab());
-			rSelectableObject = Check.FindSelectableObject(rFocusObject, rSelectableObject, Controller.RightGrab());
-			
 			Check.DrawLineRenderer(lLr, lFocusObject, lMidPoint, Controller.LeftControllerTransform(), lTarget, lineRenderQuality, Controller.LeftGrab());
 			Check.DrawLineRenderer(rLr, rFocusObject, rMidPoint, Controller.RightControllerTransform() ,rTarget, lineRenderQuality, Controller.RightGrab());
-		}
-		private void FixedUpdate()
-		{
-			Check.Manipulation(lFocusObject, rFocusObject, lSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lTouch, rTouch);
-			Check.Manipulation(rFocusObject, lFocusObject, rSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rTouch, lTouch);
+			
+			Check.Manipulation(lFocusObject, rFocusObject, lSelectableObject, pLSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lTouch, rTouch);
+			Check.Manipulation(rFocusObject, lFocusObject, rSelectableObject, pRSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rTouch, lTouch);
+			
+			lSelectableObject = Check.FindSelectableObject(lFocusObject, lSelectableObject, Controller.LeftGrab());
+			rSelectableObject = Check.FindSelectableObject(rFocusObject, rSelectableObject, Controller.RightGrab());
 			
 			lGrabPrevious = Controller.LeftGrab();
 			rGrabPrevious = Controller.RightGrab();

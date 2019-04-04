@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace VR_Prototyping.Scripts
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(ControllerTransforms))]
     public class Locomotion : MonoBehaviour
     {
@@ -60,12 +61,14 @@ namespace VR_Prototyping.Scripts
         
         [BoxGroup("Distance Settings")] [Range(.15f, 1f)] [SerializeField] private float min = .5f;
         [BoxGroup("Distance Settings")] [Range(1f, 100f)] [SerializeField] private float max = 15f;
+        
         [TabGroup("Locomotion Settings")] [SerializeField] private Method locomotionMethod;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool rotation;
-        [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [SerializeField] private float angle;
+        [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(15f, 90f)] [SerializeField] private float angle;
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(0f, 1f)] [SerializeField] private float rotateSpeed = .15f;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableLeftHand;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableRightHand;
+        
         [TabGroup("Aesthetic Settings")] [Range(0f, 1f)] [SerializeField] private float moveSpeed = .75f;
         [TabGroup("Aesthetic Settings")] [Space(5)] [SerializeField] [Required] private GameObject targetVisual;
         [TabGroup("Aesthetic Settings")] [SerializeField] [Required] private AnimationCurve locomotionEasing;
@@ -149,8 +152,8 @@ namespace VR_Prototyping.Scripts
             Check.Target(rVo, rHp, rCn.transform, c.RightJoystick(), rRt);
             Check.Target(lVo, lHp, lCn.transform, c.LeftJoystick(), lRt);
             
-            BezierCurve.BezierLineRenderer(rLr,c.RightControllerTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
-            BezierCurve.BezierLineRenderer(lLr, c.LeftControllerTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
+            Draw.BezierLineRenderer(rLr,c.RightControllerTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
+            Draw.BezierLineRenderer(lLr, c.LeftControllerTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
 
         }
 

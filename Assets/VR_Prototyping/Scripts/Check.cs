@@ -6,7 +6,7 @@ namespace VR_Prototyping.Scripts
 {
     public static class Check
     {
-        public static void Manipulation(Object focusObject, Object oppFocusObject, SelectableObject selectableObject, bool grip, bool pGrip, Transform con, bool touch, bool oppTouch)
+        public static void Manipulation(Object focusObject, Object oppFocusObject, SelectableObject selectableObject, SelectableObject previous, bool grip, bool pGrip, Transform con, bool touch, bool oppTouch)
         {
             if (focusObject == null || selectableObject == null || touch) return;
          
@@ -22,7 +22,7 @@ namespace VR_Prototyping.Scripts
             }
             if (!grip && pGrip)
             {
-                selectableObject.GrabEnd(con);
+                previous.GrabEnd(con);
             }
         }
         
@@ -248,7 +248,7 @@ namespace VR_Prototyping.Scripts
             midpoint.transform.localPosition = new Vector3(0, 0, Set.Midpoint(controller, target.transform));
             Set.LineRenderWidth(lr, .001f, focus != null ? .01f : 0f);
             
-            BezierCurve.BezierLineRenderer(lr, 
+            Draw.BezierLineRenderer(lr, 
                 controller.position,
                 midpoint.transform.position, 
                 target.transform.position,

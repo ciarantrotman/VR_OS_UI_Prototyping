@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening.Core;
 using UnityEngine;
+using VR_Prototyping.Plugins.Demigiant.DOTween.Modules;
 #if true // UI_MARKER
 using UnityEngine.UI;
 #endif

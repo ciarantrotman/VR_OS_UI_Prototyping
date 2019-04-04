@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using VR_Prototyping.Plugins.QuickOutline.Scripts;
 
 namespace VR_Prototyping.Scripts
 {
@@ -241,6 +242,13 @@ namespace VR_Prototyping.Scripts
             if (distance >= max && limit) return max;
             if (distance < snapDistance) return objO.transform.localPosition.z * Mathf.Pow(depth, 2);														
             return objO.transform.localPosition.z * Mathf.Pow(depth, 2.5f);
+        }
+
+        public static void Outline(Outline outline, Outline.Mode mode, float width, Color color)
+        {
+            outline.OutlineColor = color;
+            outline.OutlineWidth = width;
+            outline.OutlineMode = mode;
         }
     }
 }
