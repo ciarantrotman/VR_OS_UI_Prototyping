@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
+using System.Runtime.CompilerServices;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace VR_Prototyping.Scripts
@@ -19,6 +22,11 @@ namespace VR_Prototyping.Scripts
         private GameObject max;
         private GameObject handle;
         private GameObject handleNormalised;
+
+        private bool cHover;
+        private bool pHover;
+        private bool cGrab;
+        private bool pGrab;
         
         [HideInInspector] public Vector3 sliderMaxPos;
         [HideInInspector] public Vector3 sliderMinPos;
@@ -41,6 +49,13 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(5)] private GameObject sliderCap;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] private GameObject sliderHandle;
 
+        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverStart;
+        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverStay;
+        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverEnd;
+        [BoxGroup("Slider Events")] [Space(10)] [SerializeField] private UnityEvent grabStart;
+        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent grabStay;
+        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent grabEnd;
+        
         private void Start()
         {
             InitialiseSelectableObject();
@@ -103,6 +118,10 @@ namespace VR_Prototyping.Scripts
             {
                 DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
             }
+
+            TriggerEvent(hoverStart, hoverStay, hoverEnd, cHover, pHover);
+            TriggerEvent(grabStart, grabStay, grabEnd, cGrab, pGrab);
+
         }
 
         private void DirectSliderCheck(Transform controller, bool grab)
@@ -110,14 +129,19 @@ namespace VR_Prototyping.Scripts
             if (Vector3.Distance(handleNormalised.transform.position, controller.position) < directGrabDistance && !grab)
             {
                 Set.TransformLerpPosition(handle.transform, controller, .05f);
+                cHover = true;
             }
             if (Vector3.Distance(handle.transform.position, controller.position) < DirectDistance && grab)
             {
                 sliderValue = SliderValue(sliderMax, sliderMin, HandleFollow());
                 Set.TransformLerpPosition(handle.transform, controller, .5f);
+                cGrab = true;
                 return;
             }
             Set.TransformLerpPosition(handle.transform, handleNormalised.transform, .2f);
+            
+            pHover = cHover;
+            pGrab = cGrab;
         }
         
         private static float SliderValue(float max, float min, float current)
@@ -140,6 +164,24 @@ namespace VR_Prototyping.Scripts
             var p = transform.localPosition;
             sliderMaxPos = new Vector3(p.x + pos, p.y, p.z);
             sliderMinPos = new Vector3(p.x - neg, p.y, p.z);
+        }
+
+        private static void TriggerEvent(UnityEvent start, UnityEvent stay, UnityEvent end, bool current, bool previous)
+        {
+            if (current && !previous)
+            {
+                start.Invoke();
+            }
+
+            if (current && previous)
+            {
+                stay.Invoke();
+            }
+
+            if (!current && previous)
+            {
+                end.Invoke();
+            }
         }
     }
     

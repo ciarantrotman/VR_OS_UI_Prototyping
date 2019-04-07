@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LineRenderMat
+  m_Name: UILineRenderMat
   m_Shader: {fileID: 4800000, guid: d0188c64b3ff75947a4e285da6cedcd4, type: 3}
   m_ShaderKeywords: _DOUBLESIDED_ON _EMISSION _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 2

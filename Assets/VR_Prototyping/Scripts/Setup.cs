@@ -5,6 +5,10 @@ namespace VR_Prototyping.Scripts
 {
     public static class Setup
     {
+        public static LineRenderer AddOrGetLineRenderer(Transform a)
+        {
+            return !a.GetComponent<LineRenderer>() ? a.gameObject.AddComponent<LineRenderer>() : a.gameObject.GetComponent<LineRenderer>();
+        }
         public static void LineRender(LineRenderer lr, Material m, float w, bool e)
         {
             lr.material = m;
