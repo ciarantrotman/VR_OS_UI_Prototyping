@@ -49,12 +49,12 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(5)] private GameObject sliderCap;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] private GameObject sliderHandle;
 
-        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverStart;
-        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverStay;
-        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent hoverEnd;
-        [BoxGroup("Slider Events")] [Space(10)] [SerializeField] private UnityEvent grabStart;
-        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent grabStay;
-        [BoxGroup("Slider Events")] [SerializeField] private UnityEvent grabEnd;
+        [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStart;
+        [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStay;
+        [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverEnd;
+        [FoldoutGroup("Slider Events")] [Space(10)] [SerializeField] private UnityEvent grabStart;
+        [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent grabStay;
+        [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent grabEnd;
         
         private void Start()
         {
