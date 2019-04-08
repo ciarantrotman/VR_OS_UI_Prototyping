@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -15,8 +16,6 @@ namespace VR_Prototyping.Scripts
         private MeshFilter buttonSurface;
         private MeshRenderer buttonVisual;
         private MeshCollider buttonCollider;
-        
-        private const float DirectDistance = .05f;
 
         private GameObject parent;
         private GameObject target;
@@ -29,22 +28,24 @@ namespace VR_Prototyping.Scripts
         
         private Rigidbody rb;
 
+        private const float Tolerance = .005f;
+
         public enum ButtonState
         {
             Inactive,
             Hover,
-            Touch,
-            Active,
-            Over
+            Active
         }
         
-        public ButtonState buttonState;
+        [HideInInspector] public ButtonState buttonState;
 
         [BoxGroup("Script Setup")] [SerializeField] [Required] private ControllerTransforms c;
 
-        [TabGroup("Button Settings")] [Header("Button Setup")] [SerializeField] private bool toggle;
+        [TabGroup("Button Settings")] [Header("Button Function")] public bool toggle;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [SerializeField] [Indent] private bool startsActive;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [Indent] [Range(.01f, .05f)] public float toggleDepth;
+        [TabGroup("Button Settings")] [Header("Button Parameters")] [Space(5)] [Range(0f, 10f)] public float springiness;
+        [TabGroup("Button Settings")] [Space(5)] [Range(.01f, .5f)] [SerializeField] private float hoverDistance = .05f;
         [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth;
         [TabGroup("Button Settings")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth;
         [TabGroup("Button Settings")] [Range(.01f, .05f)] public float buttonRadius;
@@ -64,9 +65,8 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
         
-        [BoxGroup("Button Events")] [SerializeField] private UnityEvent active;
-        [BoxGroup("Button Events")] [SerializeField] private UnityEvent touch;
-        [BoxGroup("Button Events")] [SerializeField] private UnityEvent over;
+        [BoxGroup("Button Events")] [SerializeField] private UnityEvent activate;
+        [BoxGroup("Button Events")] [ShowIf("toggle")] [SerializeField] private UnityEvent deactivate;
         [BoxGroup("Button Events")] [SerializeField] private UnityEvent hover;
         private void Start()
         {
@@ -103,7 +103,7 @@ namespace VR_Prototyping.Scripts
             
             rb = Setup.AddOrGetRigidbody(button.transform);
             Set.RigidBody(rb, .1f, 4.5f, true, false);
-            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
             
             buttonSurface = visual.AddComponent<MeshFilter>();
             buttonVisual = visual.AddComponent<MeshRenderer>();
@@ -119,6 +119,17 @@ namespace VR_Prototyping.Scripts
             restTarget.transform.localPosition = Offset(target.transform, restDepth);
             hoverTarget.transform.localPosition = Offset(target.transform, hoverDepth);
             toggleTarget.transform.localPosition = Offset(target.transform, -toggleDepth);
+
+            buttonState = toggle && startsActive ? ButtonState.Active : ButtonState.Inactive;
+
+            if (toggle && startsActive)
+            {
+                activate.Invoke();
+            }
+            else if (toggle && !startsActive)
+            {
+                deactivate.Invoke();
+            }
         }
    
         private LineRenderer LineRender(Component a, float width)
@@ -130,31 +141,82 @@ namespace VR_Prototyping.Scripts
 
         private void FixedUpdate()
         {
-            var buttonPos = button.transform.position;
+            SetState();  
             
+            var buttonPos = button.transform.position;
             switch (buttonState)
             {
                 case ButtonState.Inactive:
-                    rb.AddForce(Force(restTarget, buttonPos), ForceMode.Force);
+                    rb.AddForce(Force(restTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 case ButtonState.Hover:
-                    rb.AddForce(Force(hoverTarget, buttonPos), ForceMode.Force);
+                    rb.AddForce(Force(hoverTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 case ButtonState.Active:
-                    rb.AddForce(Force(target, buttonPos), ForceMode.Force);
-                    break;
-                case ButtonState.Touch:
-                    break;
-                case ButtonState.Over:
+                    rb.AddForce(Force(target, buttonPos, springiness), ForceMode.Force);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             if (!c.debugActive) return;
-            Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos), Color.yellow);
-            Debug.DrawRay(buttonPos, Force(restTarget, buttonPos), Color.red);
-            Debug.DrawRay(buttonPos, Force(target, buttonPos), Color.green);
+            Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
+            Debug.DrawRay(buttonPos, Force(restTarget, buttonPos, springiness), Color.red);
+            Debug.DrawRay(buttonPos, Force(target, buttonPos, springiness), Color.green);
+        }
+
+        private void SetState()
+        {
+            if (DirectCheck() && buttonState != ButtonState.Active)
+            {
+                buttonState = ButtonState.Hover;
+                hover.Invoke();
+            }
+            else if (!DirectCheck() && buttonState != ButtonState.Active)
+            {
+                buttonState = ButtonState.Inactive;
+                return;
+            }
+            
+            if (buttonState == ButtonState.Hover && ActiveDistance())
+            {
+                buttonState = toggle? ButtonState.Active : ButtonState.Inactive;
+                activate.Invoke();
+            }
+
+            if (buttonState == ButtonState.Active && ToggleDistance() && toggle)
+            {
+                buttonState = ButtonState.Inactive;
+                deactivate.Invoke();
+            }
+        }
+
+        private bool ActiveDistance()
+        {
+            return Vector3.Distance(button.transform.position, target.transform.position) <= Tolerance;
+        }
+        
+        private bool ToggleDistance()
+        {
+            return Vector3.Distance(button.transform.position, toggleTarget.transform.position) <= Tolerance;
+        }
+
+        private bool DirectCheck()
+        {
+            var buttonPos = button.transform.position;
+            
+            if (ignoreLeftHand)
+            {
+                return Vector3.Distance(buttonPos, c.RightControllerTransform().position) <= hoverDistance;
+            }
+
+            if (ignoreRightHand)
+            {
+                return Vector3.Distance(buttonPos, c.LeftControllerTransform().position) <= hoverDistance;
+            }
+            
+            return Vector3.Distance(buttonPos, c.LeftControllerTransform().position) <= hoverDistance ||
+                   Vector3.Distance(buttonPos, c.RightControllerTransform().position) <= hoverDistance;
         }
 
         private static Vector3 Offset(Transform local, float offset)
@@ -163,9 +225,9 @@ namespace VR_Prototyping.Scripts
             return new Vector3(pos.x, pos.y, pos.z + offset);
         }
 
-        private static Vector3 Force(GameObject a, Vector3 b)
+        private static Vector3 Force(GameObject a, Vector3 b, float force)
         {
-            return a.transform.position - b;
+            return (a.transform.position - b) * force;
         }
     }
     
@@ -183,6 +245,7 @@ namespace VR_Prototyping.Scripts
             var position = transform.position;
             var rest = new Vector3(position.x, position.y, position.z + button.restDepth);
             var hover = new Vector3(position.x, position.y, position.z + button.hoverDepth);
+            var toggle = new Vector3(position.x, position.y, position.z - button.toggleDepth);
             var size = HandleUtility.GetHandleSize(rest) * .1f;
             const float arc = 360f;
             
@@ -190,6 +253,11 @@ namespace VR_Prototyping.Scripts
             Handles.DrawWireArc(position, forward, right, arc, button.targetRadius);
             Handles.DrawLine(position, rest);
             Handles.DrawLine(position, hover);
+            if(button.toggle)
+            {
+                Handles.DrawLine(position, toggle);
+                Handles.Slider(toggle, -forward, size, Handles.ConeHandleCap, .1f);
+            }
             Handles.Slider(rest, forward, size, Handles.ConeHandleCap, .1f);
             Handles.Slider(hover, forward, size, Handles.ConeHandleCap, .1f);
         }

@@ -101,18 +101,15 @@ namespace VR_Prototyping.Scripts
             {
                 if (current.x > triggerValue)
                 {
-                    Debug.Log(current.x + " RIGHT");
                     l.RotateUser(rot, speed);
                     
                 }
                 else if (current.x < -triggerValue)
                 {
-                    Debug.Log(current.x + " LEFT");
                     l.RotateUser(-rot, speed);
                 }
                 else if (current.y < -triggerValue)
                 {
-                    Debug.Log(current.x + " BACK");
                     l.RotateUser(180f, speed);
                 }
             }

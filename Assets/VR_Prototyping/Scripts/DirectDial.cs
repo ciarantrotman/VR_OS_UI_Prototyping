@@ -117,7 +117,6 @@ namespace VR_Prototyping.Scripts
             }
             if (Vector3.Distance(handle.transform.position, controller.position) < DirectDistance && grab)
             {
-                Debug.Log(dialValue);
                 dialValue = DialValue(360, 0, HandleFollow());
                 Set.TransformLerpPosition(handle.transform, controller, .5f);
                 return;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace VR_Prototyping.Scripts
 {
@@ -33,6 +34,8 @@ namespace VR_Prototyping.Scripts
         private GameObject lVo; // visual
         private GameObject lRt; // rotation
 
+        private Vignette vignetteLayer;
+        
         [HideInInspector] public LineRenderer lLr;
         [HideInInspector] public LineRenderer rLr;
         
@@ -74,7 +77,8 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(0f, 1f)] [SerializeField] private float rotateSpeed = .15f;
         [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool disableLeftHand;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableRightHand;
-        
+
+        [TabGroup("Aesthetic Settings")] [Required] [SerializeField] private PostProcessVolume volume;
         [TabGroup("Aesthetic Settings")] [Range(0f, 1f)] [SerializeField] private float moveSpeed = .75f;
         [TabGroup("Aesthetic Settings")] [Space(5)] [SerializeField] [Required] private GameObject targetVisual;
         [TabGroup("Aesthetic Settings")] [SerializeField] [Required] private AnimationCurve locomotionEasing;
@@ -91,6 +95,7 @@ namespace VR_Prototyping.Scripts
 
         private void SetupGameObjects()
         {
+            volume.profile.TryGetSettings(out vignetteLayer);
             parent = new GameObject("Locomotion/Calculations");
             var p = parent.transform;
             p.SetParent(transform);
@@ -229,12 +234,15 @@ namespace VR_Prototyping.Scripts
             visual.SetActive(false);
             lr.enabled = false;
         }
-
+        
         private IEnumerator Uncouple(Transform a, float time)
         {
+
+            vignetteLayer.intensity.value = 1f;
             yield return new WaitForSeconds(time);
             a.SetParent(null);
             active = false;
+            vignetteLayer.intensity.value = 0f;
             yield return null;
         }
     }

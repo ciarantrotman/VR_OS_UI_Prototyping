@@ -872,6 +872,11 @@
                 <e p="Outline.cs" t="Include" />
               </e>
             </e>
+            <e p="Raymarching" t="Include">
+              <e p="Master.cs" t="Include" />
+              <e p="Raymarching.compute" t="Include" />
+              <e p="Shape.cs" t="Include" />
+            </e>
             <e p="Sirenix" t="Include">
               <e p="Assemblies" t="Include">
                 <e p="link.xml" t="Include" />
@@ -926,6 +931,7 @@
           <e p="Scripts" t="Include">
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
+            <e p="DirectButton.cs" t="Include" />
             <e p="DirectDial.cs" t="Include" />
             <e p="DirectSlider.cs" t="Include" />
             <e p="Draw.cs" t="Include" />
@@ -946,7 +952,6 @@
             <e p="SetTransform.cs" t="Include" />
             <e p="Setup.cs" t="Include" />
             <e p="SortBy.cs" t="Include" />
-            <e p="TEST_LineIntersect.cs" t="Include" />
             <e p="VehicleController.cs" t="Include" />
           </e>
         </e>
