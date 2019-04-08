@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts
@@ -34,6 +35,7 @@ namespace VR_Prototyping.Scripts
 		{
 			lr.positionCount = quality;
 			lr.useWorldSpace = false;
+			lr.loop = true;
 			
 			var angle = 0f;
 			const float arcLength = 360f;
@@ -98,71 +100,45 @@ namespace VR_Prototyping.Scripts
 				angle += arcLength / quality;
 			}
 		}
-	}
-}
-
-
-/*
- * using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using UnityEngine;
-
-public class LineRendererCurved : MonoBehaviour
-{
-	private LineRenderer _lr;
-	private float _angle;
-	private float _startAngle;
-	private float _endAngle;
-	private float _arcLength;
-	private float _radius;
-	
-	public float Radius;
-	public float StartAngle;
-	public float EndAngle;
-	public int Quality;
-	
-	public enum Orientation
-	{
-	Forward,
-	Right,
-	Down
-	}
-
-	public Orientation orientation;
-
-	public void Start()
-	{
-		_lr = transform.GetComponent<LineRenderer>();
-	}
-	
-	private void Update ()
-	{
-		_lr.positionCount = Quality;
-		_angle = StartAngle;
-		_arcLength = EndAngle - StartAngle;
-		for (var i = 0; i < Quality; i++)
+		
+		private const int CircleSegmentCount = 64;
+		private const int CircleVertexCount = CircleSegmentCount + 2;
+		private const int CircleIndexCount = CircleSegmentCount * 3;
+		public static Mesh GenerateCircleMesh(float radius, Orientation orientation)
 		{
-			var x = Mathf.Sin(Mathf.Deg2Rad * _angle) * Radius;
-			var y = Mathf.Cos(Mathf.Deg2Rad * _angle) * Radius;
-			switch (orientation)
+			var circle = new Mesh();
+			var vertices = new List<Vector3>(CircleVertexCount);
+			var indices = new int[CircleIndexCount];
+			const float segmentWidth = Mathf.PI * 2f / CircleSegmentCount;
+			var angle = 0f;
+			vertices.Add(Vector3.zero);
+			for (var i = 1; i < CircleVertexCount; ++i)
 			{
-				case Orientation.Forward:
-					_lr.SetPosition(i, new Vector3(x, y, 0));
-					break;
-				case Orientation.Right:
-					_lr.SetPosition(i, new Vector3(x, 0, y));
-					break;
-				case Orientation.Down:
-					_lr.SetPosition(i, new Vector3(0, x, y));
-					break;
-				default:
-					break;
+				switch (orientation)
+				{
+					case Orientation.Forward:
+						vertices.Add(new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0));
+						break;
+					case Orientation.Right:
+						vertices.Add(new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius));
+						break;
+					case Orientation.Up:
+						vertices.Add(new Vector3(0f, Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius));
+						break;
+					default:
+						throw new ArgumentException();
+				}
+				angle -= segmentWidth;
+				if (i <= 1) continue;
+				var j = (i - 2) * 3;
+				indices[j + 0] = 0;
+				indices[j + 1] = i - 1;
+				indices[j + 2] = i;
 			}
-			_angle += (_arcLength / Quality);
+			circle.SetVertices(vertices);
+			circle.SetIndices(indices, MeshTopology.Triangles, 0);
+			circle.RecalculateBounds();
+			return circle;
 		}
 	}
 }
-
- */

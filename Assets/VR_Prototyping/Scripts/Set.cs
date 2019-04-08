@@ -10,30 +10,7 @@ namespace VR_Prototyping.Scripts
     public static class Set
     {
         private static readonly int LeftHand = Shader.PropertyToID("_LeftHand");
-        private static readonly int RightHand = Shader.PropertyToID("_RightHand");
-
-        public static void Tag(string tag)
-        {
-            var tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-            var tagsProp = tagManager.FindProperty("tags");
-
-            var found = false;
-            for (var i = 0; i < tagsProp.arraySize; i++)
-            {
-                var t = tagsProp.GetArrayElementAtIndex(i);
-                if (!t.stringValue.Equals(tag)) continue;
-                found = true; break;
-            }
-
-            Debug.LogWarning(tag + " is already a tag!");
-            
-            if (found) return;
-            
-            Debug.Log(tag + " added to tags!");
-            tagsProp.InsertArrayElementAtIndex(0);
-            var n = tagsProp.GetArrayElementAtIndex(0);
-            n.stringValue = tag;
-        }
+        private static readonly int RightHand = Shader.PropertyToID("_RightHand"); 
         
         public static void Position(Transform a, Transform b)
         {
@@ -44,6 +21,13 @@ namespace VR_Prototyping.Scripts
         {
             if (a == null || b == null) return;
             a.transform.rotation = b.transform.rotation;
+        }
+
+        public static void LocalTransformZero(Transform a)
+        {
+            var transform = a.transform;
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
         }
         
         public static void AddForceRotation(Rigidbody rb, Transform a, Transform b, float force)

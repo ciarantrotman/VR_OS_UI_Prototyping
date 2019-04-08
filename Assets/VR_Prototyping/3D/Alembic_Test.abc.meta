@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: b0bd8719f0395ed40b2719378d1d1a75
+guid: da9be07cec6a46a48b1760140d8249d4
 ScriptedImporter:
   fileIDToRecycleName:
-    100000: Alembic_Test/Alembic_Test
-    100002: Alembic_Test/Alembic_Test/Cube
-    100004: Alembic_Test/Alembic_Test/Cube/CubeShape
-    400000: Alembic_Test/Alembic_Test/Transform
-    400002: Alembic_Test/Alembic_Test/Cube/Transform
-    400004: Alembic_Test/Alembic_Test/Cube/CubeShape/Transform
+    100006: Alembic_Test/Alembic_Test
+    100008: Alembic_Test/Alembic_Test/Cube
+    100010: Alembic_Test/Alembic_Test/Cube/CubeShape
+    400006: Alembic_Test/Alembic_Test/Transform
+    400008: Alembic_Test/Alembic_Test/Cube/Transform
+    400010: Alembic_Test/Alembic_Test/Cube/CubeShape/Transform
     2100000: Default Material
-    2300000: Alembic_Test/Alembic_Test/Cube/CubeShape/MeshRenderer
-    3300000: Alembic_Test/Alembic_Test/Cube/CubeShape/MeshFilter
+    2300002: Alembic_Test/Alembic_Test/Cube/CubeShape/MeshRenderer
+    3300002: Alembic_Test/Alembic_Test/Cube/CubeShape/MeshFilter
     4300000: /Cube/CubeShape
     7400000: Default Animation
-    7400002: Alembic_Test_Frames
-    11400000: Alembic_Test/Alembic_Test/MonoBehaviour-UnityEngine.Formats.Alembic.Importer.AlembicStreamPlayer
-    11400002: Alembic_Test_ABCDesc
-    100100000: Alembic_Test
+    7400004: Alembic_Test_Frames
+    11400004: Alembic_Test/Alembic_Test/MonoBehaviour-UnityEngine.Formats.Alembic.Importer.AlembicStreamPlayer
+    11400006: Alembic_Test_ABCDesc
+    100100002: Alembic_Test
   externalObjects: {}
   userData: 
   assetBundleName: 
