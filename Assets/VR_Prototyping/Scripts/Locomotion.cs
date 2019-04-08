@@ -68,8 +68,7 @@ namespace VR_Prototyping.Scripts
         
         [ValidateInput("TypeCheck", "Dash is the recommended locomotion type, but should be disabled for motion sickness prone users.", InfoMessageType.Info)]
         [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private Method locomotionMethod = Method.Dash;
-        [DetailedInfoBox("Advanced Locomotion Details", "This controls the ability to control the direction you face when moving, it is recommended, but should be disabled for the Vive.")]
-        [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private bool advancedLocomotion = true;
+        [TabGroup("Locomotion Settings")] [Tooltip("This controls the ability to control the direction you face when moving, it is recommended, but should be disabled for the Vive.")] [Space(5)] [SerializeField] private bool advancedLocomotion = true;
         [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool rotation = true;
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(15f, 90f)] [SerializeField] private float angle = 45f;
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(0f, 1f)] [SerializeField] private float rotateSpeed = .15f;
