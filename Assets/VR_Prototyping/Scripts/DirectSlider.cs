@@ -142,7 +142,7 @@ namespace VR_Prototyping.Scripts
             sliderMinPos = new Vector3(p.x - neg, p.y, p.z);
         }
     }
-    
+    #if UNITY_EDITOR
     [CustomEditor(typeof(DirectSlider)), CanEditMultipleObjects]
     public sealed class DirectSliderSetup : Sirenix.OdinInspector.Editor.OdinEditor
     {
@@ -170,4 +170,5 @@ namespace VR_Prototyping.Scripts
             slider.sliderMinPos = min;
         }
     }
+    #endif
 }

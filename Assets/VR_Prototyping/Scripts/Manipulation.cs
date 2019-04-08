@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using Sirenix.OdinInspector;
-using UnityEditor.U2D;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {

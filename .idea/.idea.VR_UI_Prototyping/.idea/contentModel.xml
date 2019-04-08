@@ -782,32 +782,6 @@
           <e p="SteamVR_Input_ActionSets.cs" t="Include" />
           <e p="SteamVR_Input_Initialization.cs" t="Include" />
         </e>
-        <e p="Stencil_Buffer_UI" t="Include">
-          <e p="Shaders" t="Include">
-            <e p="CustomInternalShaders" t="Include">
-              <e p="CustomInternal-DepthNormalsTexture.shader" t="Include" />
-            </e>
-            <e p="StencilShaders" t="Include">
-              <e p="Legacy" t="Include">
-                <e p="Stencil_Legacy_Alpha-Diffuse.shader" t="Include" />
-                <e p="Stencil_Legacy_Normal-Diffuse.shader" t="Include" />
-                <e p="Stencil_Legacy_Normal-Spec.shader" t="Include" />
-                <e p="Stencil_Legacy_Reflect-Normal-Spec.shader" t="Include" />
-              </e>
-              <e p="Masks" t="Include">
-                <e p="DepthMask.shader" t="Include" />
-                <e p="StencilMaskID.shader" t="Include" />
-              </e>
-              <e p="Standard" t="Include">
-                <e p="StandardSurfaceShader.shader" t="Include" />
-              </e>
-              <e p="StencilViewer" t="Include">
-                <e p="Stencil_Viewer.shader" t="Include" />
-                <e p="Stencil_ViewerTextured.shader" t="Include" />
-              </e>
-            </e>
-          </e>
-        </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
@@ -835,6 +809,16 @@
         </e>
         <e p="VR_Prototyping" t="Include">
           <e p="Plugins" t="Include">
+            <e p="Ciconia Studio" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="Double Sided Shaders" t="Include">
+                  <e p="Double Sided Emissive Diffuse.shader" t="Include" />
+                  <e p="Double Sided Standard Diffuse Bump.shader" t="Include" />
+                  <e p="Double Sided Transparent Diffuse Bump Cutout.shader" t="Include" />
+                  <e p="Double Sided Transparent Diffuse Bump.shader" t="Include" />
+                </e>
+              </e>
+            </e>
             <e p="Demigiant" t="Include">
               <e p="DemiLib" t="Include">
                 <e p="Core" t="Include">
@@ -874,6 +858,18 @@
               <e p="MeshToSDF.cs" t="Include" />
               <e p="MeshToVoxel.compute" t="Include" />
             </e>
+            <e p="QuickOutline" t="Include">
+              <e p="readme.txt" t="Include" />
+              <e p="Resources" t="Include">
+                <e p="Shaders" t="Include">
+                  <e p="OutlineFill.shader" t="Include" />
+                  <e p="OutlineMask.shader" t="Include" />
+                </e>
+              </e>
+              <e p="Scripts" t="Include">
+                <e p="Outline.cs" t="Include" />
+              </e>
+            </e>
             <e p="Sirenix" t="Include">
               <e p="Assemblies" t="Include">
                 <e p="link.xml" t="Include" />
@@ -898,12 +894,40 @@
               </e>
               <e p="readme.txt" t="Include" />
             </e>
+            <e p="Stencil_Buffer_UI" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="CustomInternalShaders" t="Include">
+                  <e p="CustomInternal-DepthNormalsTexture.shader" t="Include" />
+                </e>
+                <e p="StencilShaders" t="Include">
+                  <e p="Legacy" t="Include">
+                    <e p="Stencil_Legacy_Alpha-Diffuse.shader" t="Include" />
+                    <e p="Stencil_Legacy_Normal-Diffuse.shader" t="Include" />
+                    <e p="Stencil_Legacy_Normal-Spec.shader" t="Include" />
+                    <e p="Stencil_Legacy_Reflect-Normal-Spec.shader" t="Include" />
+                  </e>
+                  <e p="Masks" t="Include">
+                    <e p="DepthMask.shader" t="Include" />
+                    <e p="StencilMaskID.shader" t="Include" />
+                  </e>
+                  <e p="Standard" t="Include">
+                    <e p="StandardSurfaceShader.shader" t="Include" />
+                  </e>
+                  <e p="StencilViewer" t="Include">
+                    <e p="Stencil_Viewer.shader" t="Include" />
+                    <e p="Stencil_ViewerTextured.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
           </e>
           <e p="Scripts" t="Include">
-            <e p="BezierCurve.cs" t="Include" />
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
+            <e p="DirectDial.cs" t="Include" />
             <e p="DirectSlider.cs" t="Include" />
+            <e p="Draw.cs" t="Include" />
+            <e p="DrivenValue.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
