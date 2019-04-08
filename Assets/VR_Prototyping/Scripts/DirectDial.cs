@@ -122,7 +122,7 @@ namespace VR_Prototyping.Scripts
                 Set.TransformLerpPosition(handle.transform, controller, .5f);
                 return;
             }
-            Set.TransformLerpPosition(handle.transform, anchor.transform, .2f);
+            Set.TransformLerpPosition(handle.transform, anchor.transform, .05f);
         }
         
         private static float DialValue(float max, float min, float current)
@@ -136,10 +136,8 @@ namespace VR_Prototyping.Scripts
             var target = new Vector3(value.x, 0, value.z);
             Set.VectorLerpLocalPosition(handleNormalised.transform, target, .2f);
             center.transform.LookAt(handleNormalised.transform);
-            var localEulerAngles = center.transform.localEulerAngles;
-            localEulerAngles = new Vector3(0, localEulerAngles.y, 0);
-            center.transform.localEulerAngles = localEulerAngles;
-            return localEulerAngles.y;
+            center.transform.localEulerAngles = new Vector3(0, center.transform.localEulerAngles.y, 0);
+            return center.transform.localEulerAngles.y;
         }
     }
     #if UNITY_EDITOR

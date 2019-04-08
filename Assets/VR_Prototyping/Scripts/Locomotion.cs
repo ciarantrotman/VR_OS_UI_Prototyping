@@ -36,8 +36,8 @@ namespace VR_Prototyping.Scripts
         [HideInInspector] public LineRenderer lLr;
         [HideInInspector] public LineRenderer rLr;
         
-        private const float MaxAngle = 60f;
-        private const float MinAngle = 0f;
+        private const float MaxAngle = 110f;
+        private const float MinAngle = 80f;
         
         private const float Trigger = .7f;
         private const float Sensitivity = 10f;
@@ -58,15 +58,22 @@ namespace VR_Prototyping.Scripts
             Dash,
             Blink
         }
+        private static bool TypeCheck(Method type)
+        {
+            return type != Method.Dash;
+        }
         
-        [BoxGroup("Distance Settings")] [Range(.15f, 1f)] [SerializeField] private float min = .5f;
+        [BoxGroup("Distance Settings")] [Range(.1f, 1f)] [SerializeField] private float min = .5f;
         [BoxGroup("Distance Settings")] [Range(1f, 100f)] [SerializeField] private float max = 15f;
         
-        [TabGroup("Locomotion Settings")] [SerializeField] private Method locomotionMethod;
-        [TabGroup("Locomotion Settings")] [SerializeField] private bool rotation;
-        [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(15f, 90f)] [SerializeField] private float angle;
+        [ValidateInput("TypeCheck", "Dash is the recommended locomotion type, but should be disabled for motion sickness prone users.", InfoMessageType.Info)]
+        [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private Method locomotionMethod = Method.Dash;
+        [DetailedInfoBox("Advanced Locomotion Details", "This controls the ability to control the direction you face when moving, it is recommended, but should be disabled for the Vive.")]
+        [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private bool advancedLocomotion = true;
+        [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool rotation = true;
+        [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(15f, 90f)] [SerializeField] private float angle = 45f;
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(0f, 1f)] [SerializeField] private float rotateSpeed = .15f;
-        [TabGroup("Locomotion Settings")] [SerializeField] private bool disableLeftHand;
+        [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool disableLeftHand;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableRightHand;
         
         [TabGroup("Aesthetic Settings")] [Range(0f, 1f)] [SerializeField] private float moveSpeed = .75f;
@@ -149,8 +156,8 @@ namespace VR_Prototyping.Scripts
             Set.LocalDepth(rMp.transform, Set.Midpoint(rCp.transform, rTs.transform), false, 0f);
             Set.LocalDepth(lMp.transform, Set.Midpoint(lCp.transform, lTs.transform), false, 0f);
             
-            Check.Target(rVo, rHp, rCn.transform, c.RightJoystick(), rRt);
-            Check.Target(lVo, lHp, lCn.transform, c.LeftJoystick(), lRt);
+            Check.Target(rVo, rHp, rCn.transform, c.RightJoystick(), rRt, advancedLocomotion);
+            Check.Target(lVo, lHp, lCn.transform, c.LeftJoystick(), lRt, advancedLocomotion);
             
             Draw.BezierLineRenderer(rLr,c.RightControllerTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
             Draw.BezierLineRenderer(lLr, c.LeftControllerTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
@@ -203,7 +210,6 @@ namespace VR_Prototyping.Scripts
             Set.SplitPosition(c.CameraTransform(), transform, cN.transform);
             
             transform.SetParent(cN.transform);
-            Debug.Log(rotTarget);
             switch (locomotionMethod)
             {
                 case Method.Dash:

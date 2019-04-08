@@ -126,16 +126,16 @@ namespace VR_Prototyping.Scripts
             }
         }
         
-        public static void Target(GameObject visual, GameObject parent, Transform normal, Vector2 pos, GameObject target)
+        public static void Target(GameObject visual, GameObject parent, Transform normal, Vector2 pos, GameObject target, bool advanced)
         {
-            visual.transform.LookAt(RotationTarget(pos, target));
+            visual.transform.LookAt(RotationTarget(pos, target, advanced));
             
             parent.transform.forward = normal.forward;
         }
         
-        private static Transform RotationTarget(Vector2 pos, GameObject target)
+        private static Transform RotationTarget(Vector2 pos, GameObject target, bool advanced)
         {
-            target.transform.localPosition = Vector3.Lerp(target.transform.localPosition, new Vector3(pos.x, 0, pos.y), .1f);
+            target.transform.localPosition = advanced? Vector3.Lerp(target.transform.localPosition, new Vector3(pos.x, 0, pos.y), .1f) : Vector3.forward;
             return target.transform;
         }
         
@@ -146,18 +146,18 @@ namespace VR_Prototyping.Scripts
             Set.SplitRotation(proxy.transform, normal.transform, true);
             Set.SplitPosition(head, controller, follow.transform);
             follow.transform.LookAt(proxy.transform);
-
-            if (!debug) return Vector3.Angle(normal.transform.forward, proxy.transform.forward);
             
-            var normalForward = normal.transform.forward;
+            var normalDown = -normal.transform.up;
             var proxyForward = proxy.transform.forward;
             var position = proxy.transform.position;
             
+            if (!debug) return Vector3.Angle(normalDown, proxyForward);
+            
             Debug.DrawLine(follow.transform.position, position, Color.red);
-            Debug.DrawRay(normal.transform.position, normalForward, Color.blue);
+            Debug.DrawRay(normal.transform.position, normalDown, Color.blue);
             Debug.DrawRay(position, proxyForward, Color.blue);
 
-            return Vector3.Angle(normalForward, proxyForward);
+            return Vector3.Angle(normalDown, proxyForward);
         }
         
         public static float CalculateDepth(float angle, float maxAngle, float minAngle, float max, float min, Transform proxy)
@@ -167,10 +167,10 @@ namespace VR_Prototyping.Scripts
             a = a > maxAngle ? maxAngle : a;
             a = a < minAngle ? minAngle : a;
 
-            a = proxy.eulerAngles.x < 180 ? minAngle : a;
+            // a = proxy.eulerAngles.x < 180 ? minAngle : a;
             
             var proportion = Mathf.InverseLerp(maxAngle, minAngle, a);
-            return Mathf.Lerp(max, min, proportion);
+            return Mathf.SmoothStep(max, min, proportion);
         }
         
         public static void TargetLocation(GameObject target, GameObject hitPoint, Transform current)
