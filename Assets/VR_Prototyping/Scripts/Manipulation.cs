@@ -125,6 +125,8 @@ namespace VR_Prototyping.Scripts
 			
 			cR = new GameObject(RTag);
 			cL = new GameObject(LTag);
+			cR.transform.SetParent(fM.transform);
+			cL.transform.SetParent(fM.transform);
 			
 			if(!directGrab) return;
 			sCr = cR.AddComponent<SphereCollider>();

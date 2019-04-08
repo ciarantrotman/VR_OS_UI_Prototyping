@@ -13,42 +13,67 @@ namespace VR_Prototyping.Scripts
             LeapMotion
         }
         
-        [SerializeField] public bool debugActive;
+        [BoxGroup("Settings")] [SerializeField] public bool debugActive;
+        [BoxGroup("Settings")] [SerializeField] public bool directInteraction;
+        [BoxGroup("Settings")] [ShowIf("directInteraction")] [Indent] [Range(.01f, .05f)] [SerializeField] private float directDistance = .025f;
+        [BoxGroup("Settings")] [ShowIf("directInteraction")] [Indent] [Range(0, 31)] public int layerIndex = 9;
         
-        [TabGroup("Transforms")] [SerializeField] [Required] private Transform l;
-        [TabGroup("Transforms")] [SerializeField] [Required] private Transform r;
-        [TabGroup("Transforms")] [SerializeField] [Required] private Transform h;
+        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform leftController;
+        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform rightController;
+        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform hmdCamera;
 
-        [TabGroup("Button Events")] public SDK VR_SDK;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean triggerGrip;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean joystickPress;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean leftDPad;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean rightDPad;
-        [TabGroup("Button Events")] public SteamVR_Action_Boolean backDPad;
-        [TabGroup("Button Events")] public SteamVR_Action_Vector2 joystickDirection;
-        [TabGroup("Button Events")] public SteamVR_Action_Vibration haptic;
-       
-        [TabGroup("Aesthetics")][ SerializeField] [Required] public Material lineRenderMat;
+        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material lineRenderMat;
         
+        [FoldoutGroup("Button Events")] public SDK VR_SDK;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean triggerGrip;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean joystickPress;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean leftDPad;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean rightDPad;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean backDPad;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Vector2 joystickDirection;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Vibration haptic;
+
+        private GameObject lHandDirect;
+        private GameObject rHandDirect;
+        
+        public const string LTag = "Direct/Left";
+        public const string RTag = "Direct/Right";
+        private void Start()
+        {
+            lHandDirect = new GameObject(LTag);
+            rHandDirect = new GameObject(RTag);
+            lHandDirect.layer = layerIndex;
+            rHandDirect.layer = layerIndex;
+            var ls = lHandDirect.AddComponent<SphereCollider>();
+            var rs = rHandDirect.AddComponent<SphereCollider>();
+            ls.radius = directDistance;
+            rs.radius = directDistance;
+        }
+
+        private void FixedUpdate()
+        {
+            Set.Transforms(lHandDirect.transform, LeftControllerTransform());
+            Set.Transforms(rHandDirect.transform, RightControllerTransform());
+        }
         public Transform LeftControllerTransform()
         {
-            return l;
+            return leftController;
         }
     
         public Transform RightControllerTransform()
         {
-            return r;
+            return rightController;
         }
 
         public Transform CameraTransform()
         {
-            return h;
+            return hmdCamera;
         }
 
         public Vector3 CameraPosition()
         {
-            return h.position;
+            return hmdCamera.position;
         }
 
         public bool LeftGrab()
@@ -93,17 +118,17 @@ namespace VR_Prototyping.Scripts
         
         public Vector3 LeftForwardVector()
         {
-            return l.transform.TransformVector(Vector3.forward);
+            return leftController.transform.TransformVector(Vector3.forward);
         }
     
         public Vector3 RightForwardVector()
         {
-            return r.transform.TransformVector(Vector3.forward);
+            return rightController.transform.TransformVector(Vector3.forward);
         }
 
         public Vector3 CameraForwardVector()
         {
-            return h.forward;
+            return hmdCamera.forward;
         }
 
         public SteamVR_Input_Sources LeftSource()

@@ -22,6 +22,13 @@ namespace VR_Prototyping.Scripts
             if (a == null || b == null) return;
             a.transform.rotation = b.transform.rotation;
         }
+
+        public static void LocalTransformZero(Transform a)
+        {
+            var transform = a.transform;
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
         
         public static void AddForceRotation(Rigidbody rb, Transform a, Transform b, float force)
         {
