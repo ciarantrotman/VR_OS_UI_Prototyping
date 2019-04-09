@@ -72,6 +72,10 @@ namespace VR_Prototyping.Scripts
 		[Header("Rotation Settings")]
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool freeRotationEnabled;
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
+		[Header("Scaling Settings")]
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool scalingEnabled;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("scalingEnabled")] [Indent] [Range(.01f, 1f)] public float minScaleFactor;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("scalingEnabled")] [Indent] [Range(1f, 10f)] public float maxScaleFactor;
 		[Header("Visual Effects")]
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] private bool genericGrabEffect;
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [Indent] [SerializeField] private bool grabOutline;
@@ -389,17 +393,17 @@ namespace VR_Prototyping.Scripts
 				case Manipulation.ManipulationType.Physics:
 					if (DualGrab() && !pDualGrab)
 					{
-						f.DualGrabStart(transform);
+						f.DualGrabStart(transform, freeRotationEnabled, scalingEnabled, maxScaleFactor, minScaleFactor);
 					}
 					if (DualGrab() && pDualGrab)
 					{
 						Set.AddForcePosition(rb, transform, f.mP.transform, c.Controller.debugActive);
-
-						if (freeRotationEnabled)
-						{
-							f.DualGrabStay(rb);
-						}
+						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled);
 						break;
+					}
+					if (!DualGrab() && pDualGrab)
+					{
+						f.DualGrabEnd();
 					}
 					if (c.Controller.RightGrab() && c.rSelectableObject == this)
 					{

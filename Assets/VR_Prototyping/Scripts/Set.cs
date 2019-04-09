@@ -234,5 +234,13 @@ namespace VR_Prototyping.Scripts
             outline.OutlineWidth = width;
             outline.OutlineMode = mode;
         }
+
+        public static Vector3 ScaledScale(Vector3 initialScale, float factor)
+        {
+            return new Vector3(
+                initialScale.x * factor,
+                initialScale.y * factor,
+                initialScale.z * factor);
+        }
     }
 }

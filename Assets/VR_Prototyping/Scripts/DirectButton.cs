@@ -142,6 +142,7 @@ namespace VR_Prototyping.Scripts
         private void FixedUpdate()
         {
             SetState();  
+            ButtonAlignment();
             
             var buttonPos = button.transform.position;
             switch (buttonState)
@@ -163,6 +164,12 @@ namespace VR_Prototyping.Scripts
             Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
             Debug.DrawRay(buttonPos, Force(restTarget, buttonPos, springiness), Color.red);
             Debug.DrawRay(buttonPos, Force(target, buttonPos, springiness), Color.green);
+        }
+
+        private void ButtonAlignment()
+        {
+            var local = button.transform.localPosition;
+            button.transform.localPosition = new Vector3(0, 0, local.z);
         }
 
         private void SetState()

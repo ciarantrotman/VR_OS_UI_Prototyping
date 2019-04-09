@@ -62,7 +62,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 0.7
+    value: 0.5
   color:
     overrideState: 1
     value: {r: 0, g: 0, b: 0, a: 1}
@@ -80,7 +80,7 @@ MonoBehaviour:
     value: -12
   thicknessModifier:
     overrideState: 1
-    value: 3
+    value: 2.5
   directLightingStrength:
     overrideState: 0
     value: 0
@@ -120,13 +120,13 @@ MonoBehaviour:
     value: 0
   smoothness:
     overrideState: 1
-    value: 0.2
+    value: 1
   roundness:
     overrideState: 1
     value: 1
   rounded:
     overrideState: 1
-    value: 1
+    value: 0
   mask:
     overrideState: 0
     value: {fileID: 0}
@@ -151,21 +151,21 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   gradingMode:
-    overrideState: 0
+    overrideState: 1
     value: 1
   externalLut:
     overrideState: 0
     value: {fileID: 0}
     defaultState: 1
   tonemapper:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 3
   toneCurveToeStrength:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 0.246
   toneCurveToeLength:
-    overrideState: 0
-    value: 0.5
+    overrideState: 1
+    value: 0.611
   toneCurveShoulderStrength:
     overrideState: 0
     value: 0
@@ -238,13 +238,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 0
-    value: {x: 1, y: 1, z: 1, w: 0}
+    value: {x: 0.7595965, y: 0.94059455, z: 1, w: 0}
   gamma:
     overrideState: 0
-    value: {x: 1, y: 1, z: 1, w: 0}
+    value: {x: 0.91779125, y: 1, z: 0.96438485, w: 0}
   gain:
     overrideState: 0
-    value: {x: 1, y: 1, z: 1, w: 0}
+    value: {x: 0, y: 0.39529133, z: 1, w: 0}
   masterCurve:
     overrideState: 0
     value:
@@ -1463,7 +1463,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 5
+    value: 3
   threshold:
     overrideState: 1
     value: 1
@@ -1513,8 +1513,8 @@ MonoBehaviour:
     value: {fileID: 0}
     defaultState: 1
   intensity:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 0.2
   fastMode:
-    overrideState: 0
+    overrideState: 1
     value: 0

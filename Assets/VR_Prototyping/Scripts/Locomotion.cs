@@ -79,6 +79,8 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableRightHand;
 
         [TabGroup("Aesthetic Settings")] [Required] [SerializeField] private PostProcessVolume volume;
+        [TabGroup("Aesthetic Settings")] [SerializeField] private bool motionSicknessVignette;
+        [TabGroup("Aesthetic Settings")] [ShowIf("motionSicknessVignette")] [Indent] [Range(0f, 1f)] [SerializeField] private float vignetteStrength = .35f;
         [TabGroup("Aesthetic Settings")] [Range(0f, 1f)] [SerializeField] private float moveSpeed = .75f;
         [TabGroup("Aesthetic Settings")] [Space(5)] [SerializeField] [Required] private GameObject targetVisual;
         [TabGroup("Aesthetic Settings")] [SerializeField] [Required] private AnimationCurve locomotionEasing;

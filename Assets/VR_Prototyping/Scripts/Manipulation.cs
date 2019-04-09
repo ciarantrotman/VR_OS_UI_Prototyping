@@ -16,7 +16,6 @@ namespace VR_Prototyping.Scripts
 		
 		private GameObject fM;
 		[HideInInspector] public GameObject mP; // dual grab pos target
-		
 		[HideInInspector] public GameObject mRp; // dual grab rot target
 		[HideInInspector] public GameObject mRc; // dual grab rot target
 		
@@ -45,6 +44,14 @@ namespace VR_Prototyping.Scripts
 		private Quaternion pRot;
 		private const float Scalar = 1f;
 
+		private LineRenderer scaleLr;
+		private Vector3 startScale;
+		private Vector3 scaleMin;
+		private Vector3 scaleMax;
+		private float startDistance;
+		private float minDistance;
+		private float maxDistance;
+		
 		[HideInInspector] public SphereCollider sCl;
 		[HideInInspector] public SphereCollider sCr;
 
@@ -57,13 +64,18 @@ namespace VR_Prototyping.Scripts
 			Lerp		
 		}
 		
-		[TabGroup("Grab Settings")] public ManipulationType manipulationType;
-		[TabGroup("Grab Settings")] public bool directGrab;
-		[TabGroup("Grab Settings")] [ShowIf("directGrab")] [Indent] [Range(0f, 1f)] [SerializeField] private float directGrabDistance = .5f;
-		[TabGroup("Grab Settings")] public bool disableLeftGrab;
-		[TabGroup("Grab Settings")] public bool disableRightGrab;
-		[TabGroup("Rotation Settings")] public bool enableRotation;
-		[TabGroup("Rotation Settings")] [ShowIf("enableRotation")] [Indent] [Range(1f, 10f)] public float rotationForce;
+		[BoxGroup("Grab Settings")] public ManipulationType manipulationType;
+		[BoxGroup("Grab Settings")] public bool directGrab;
+		[BoxGroup("Grab Settings")] [ShowIf("directGrab")] [Indent] [Range(0f, 1f)] [SerializeField] private float directGrabDistance = .5f;
+		[BoxGroup("Grab Settings")] public bool disableLeftGrab;
+		[BoxGroup("Grab Settings")] public bool disableRightGrab;
+		
+		[BoxGroup("Rotation Settings")] public bool enableRotation;
+		[BoxGroup("Rotation Settings")] [ShowIf("enableRotation")] [Indent] [Range(1f, 10f)] public float rotationForce;
+		
+		[BoxGroup("Scaling Settings")] public bool enableScaling;
+		[BoxGroup("Scaling Settings")] [ShowIf("enableScaling")] [Indent] [Range(1f, 10f)] public float scalingMultiplier;
+		[BoxGroup("Scaling Settings")] [ShowIf("enableScaling")] [Indent] [Range(.001f, .005f)] public float lineRendererThickness;
 		
 		[BoxGroup("Snapping")] [SerializeField] private bool distanceSnapping = true;
 		[BoxGroup("Snapping")] [ShowIf("distanceSnapping")] [Indent] [Range(0f, 5f)] [SerializeField] private float snapDistance = 1f;
@@ -197,29 +209,61 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 
-		public void DualGrabStart(Transform target)
+		public void DualGrabStart(Transform target, bool rot, bool sca, float max, float min)
 		{
-			Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
-			pRot = mRp.transform.rotation;
-			mRc.transform.rotation = target.rotation;
-			mRc.transform.position = mRp.transform.position;
+			if (rot)
+			{
+				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
+				pRot = mRp.transform.rotation;
+				mRc.transform.rotation = target.rotation;
+				mRc.transform.position = mRp.transform.position;
+			}
+
+			if (sca)
+			{
+				startScale = target.localScale;
+				startDistance = Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position);
+				scaleLr = Setup.AddOrGetLineRenderer(target);
+				Setup.LineRender(scaleLr, c.Controller.lineRenderMat, lineRendererThickness, true);
+				scaleMin = Set.ScaledScale(startScale, min);
+				scaleMax = Set.ScaledScale(startScale, max);
+				minDistance = startDistance * min * scalingMultiplier;
+				maxDistance = startDistance * max * scalingMultiplier;
+			}
 		}
 
-		public void DualGrabStay(Rigidbody rb)
+		public void DualGrabStay(Rigidbody rb, Transform target, bool rot, bool sca)
 		{
-			Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
-
-			var rotation = mRp.transform.rotation;
+			if (rot && enableRotation)
+			{
+				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
 			
-			Quaternion aRot = pRot * Quaternion.Inverse(rotation);
-			mRc.transform.rotation = Quaternion.Inverse(Quaternion.LerpUnclamped(Quaternion.identity, aRot, Scalar)) * mRc.transform.rotation;
-			mRc.transform.position = mRp.transform.position;
+				var rotation = mRp.transform.rotation;
+			
+				var aRot = pRot * Quaternion.Inverse(rotation);
+				mRc.transform.rotation = Quaternion.Inverse(Quaternion.LerpUnclamped(Quaternion.identity, aRot, Scalar)) * mRc.transform.rotation;
+				mRc.transform.position = mRp.transform.position;
 
-			rb.AddTorque(Vector3.Cross(rb.transform.forward, mRc.transform.forward) * rotationForce, ForceMode.Acceleration);
-			rb.AddTorque(Vector3.Cross(rb.transform.right, mRc.transform.right) * rotationForce, ForceMode.Acceleration);
-			rb.AddTorque(Vector3.Cross(rb.transform.up, mRc.transform.up) * rotationForce, ForceMode.Acceleration);
+				rb.AddTorque(Vector3.Cross(rb.transform.forward, mRc.transform.forward) * rotationForce, ForceMode.Acceleration);
+				rb.AddTorque(Vector3.Cross(rb.transform.right, mRc.transform.right) * rotationForce, ForceMode.Acceleration);
+				rb.AddTorque(Vector3.Cross(rb.transform.up, mRc.transform.up) * rotationForce, ForceMode.Acceleration);
 
-			pRot = rotation;
+				pRot = rotation;	
+			}
+
+			if (sca && enableScaling)
+			{
+				var scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position));
+				scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
+				scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
+
+				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
+			}
+		}
+
+		public void DualGrabEnd()
+		{
+			
 		}
 		
 		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)
