@@ -102,7 +102,7 @@ namespace VR_Prototyping.Scripts
             Draw.CircleLineRenderer(targetLr, targetRadius, Draw.Orientation.Forward, circleQuality);
             
             rb = Setup.AddOrGetRigidbody(button.transform);
-            Set.RigidBody(rb, .1f, 4.5f, true, false);
+            Set.RigidBody(rb, .1f, 10f, true, false);
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             
             buttonSurface = visual.AddComponent<MeshFilter>();

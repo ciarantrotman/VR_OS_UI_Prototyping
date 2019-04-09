@@ -23,6 +23,8 @@ namespace VR_Prototyping.Scripts
 		private Vector3 defaultPosition;
 		private Vector3 defaultLocalPosition;
 		private Vector3 defaultLocalScale;
+		private Vector3 scaleMax;
+		private Vector3 scaleMin;
 
 		private bool active;
 		
@@ -126,7 +128,16 @@ namespace VR_Prototyping.Scripts
 		private void Start ()
 		{
 			InitialiseSelectableObject();
+			SetupScaling();
 		}
+
+		private void SetupScaling()
+		{
+			defaultLocalScale = transform.localScale;
+			scaleMin = Set.ScaledScale(defaultLocalScale, minScaleFactor);
+			scaleMax = Set.ScaledScale(defaultLocalScale, maxScaleFactor);
+		}
+		
 		private void OnEnable()
 		{
 			InitialiseSelectableObject();
@@ -398,7 +409,7 @@ namespace VR_Prototyping.Scripts
 					if (DualGrab() && pDualGrab)
 					{
 						Set.AddForcePosition(rb, transform, f.mP.transform, c.Controller.debugActive);
-						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled);
+						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMax, scaleMin);
 						break;
 					}
 					if (!DualGrab() && pDualGrab)

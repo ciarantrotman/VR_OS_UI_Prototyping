@@ -44,11 +44,12 @@ namespace VR_Prototyping.Scripts
 		private Quaternion pRot;
 		private const float Scalar = 1f;
 
-		private LineRenderer scaleLr;
-		private Vector3 startScale;
-		private Vector3 scaleMin;
-		private Vector3 scaleMax;
+		private LineRenderer scaleLr;	
+		private Vector3 initialScale;
 		private float startDistance;
+		private float scaleFactor;
+		private float differential;
+		private float initialScaleFactor;
 		private float minDistance;
 		private float maxDistance;
 		
@@ -221,18 +222,17 @@ namespace VR_Prototyping.Scripts
 
 			if (sca)
 			{
-				startScale = target.localScale;
-				startDistance = Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position);
 				scaleLr = Setup.AddOrGetLineRenderer(target);
 				Setup.LineRender(scaleLr, c.Controller.lineRenderMat, lineRendererThickness, true);
-				scaleMin = Set.ScaledScale(startScale, min);
-				scaleMax = Set.ScaledScale(startScale, max);
-				minDistance = startDistance * min * scalingMultiplier;
-				maxDistance = startDistance * max * scalingMultiplier;
+				startDistance = Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position);
+				minDistance = startDistance * min;
+				maxDistance = startDistance * max;
+				scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, startDistance);
+				differential = initialScaleFactor / scaleFactor;
 			}
 		}
 
-		public void DualGrabStay(Rigidbody rb, Transform target, bool rot, bool sca)
+		public void DualGrabStay(Rigidbody rb, Transform target, bool rot, bool sca, Vector3 max, Vector3 min)
 		{
 			if (rot && enableRotation)
 			{
@@ -253,17 +253,23 @@ namespace VR_Prototyping.Scripts
 
 			if (sca && enableScaling)
 			{
-				var scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position));
+				scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position)) * differential;
+            
 				scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
 				scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
-
-				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
+            
+				target.transform.localScale = Vector3.Lerp(min, max, scaleFactor);
+				
+				Draw.LineRender(scaleLr, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform());
 			}
 		}
 
 		public void DualGrabEnd()
 		{
-			
+			if (scaleLr != null)
+			{
+				Destroy(scaleLr);
+			}
 		}
 		
 		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)

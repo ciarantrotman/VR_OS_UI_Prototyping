@@ -952,6 +952,7 @@
             <e p="SetTransform.cs" t="Include" />
             <e p="Setup.cs" t="Include" />
             <e p="SortBy.cs" t="Include" />
+            <e p="TestScale.cs" t="Include" />
             <e p="VehicleController.cs" t="Include" />
           </e>
         </e>

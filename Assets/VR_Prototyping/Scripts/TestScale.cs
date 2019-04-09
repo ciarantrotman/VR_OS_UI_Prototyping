@@ -18,10 +18,12 @@ namespace VR_Prototyping.Scripts
         private bool scaling;
     
         private Vector3 startScale;
-        private Vector3 initialScale;
         private Vector3 scaleMin;
         private Vector3 scaleMax;
+        private Vector3 initialScale;
         private float startDistance;
+        private float scaleFactor;
+        private float differential;
         private float initialScaleFactor;
         private float minDistance;
         private float maxDistance;
@@ -35,13 +37,17 @@ namespace VR_Prototyping.Scripts
             
             initialScale = a.localScale;
             initialScaleFactor = Mathf.InverseLerp(scaleMin.x, scaleMax.x, initialScale.x);
-            Debug.Log(initialScaleFactor);
-
             startVis.localScale = initialScale;
-            
-            startDistance = Vector3.Distance(r.position,l.position);
+
+            var lPos = l.position;
+            var rPos = r.position;
+            startDistance = Vector3.Distance(rPos,lPos);
+            //minDistance = minDistance <= 0f ? startDistance * min : (startDistance * min / minDistance) * minDistance;
+            //maxDistance = maxDistance <= 0f ? startDistance * max : (startDistance * max / maxDistance) * maxDistance;
             minDistance = startDistance * min;
             maxDistance = startDistance * max;
+            scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, startDistance);
+            differential = initialScaleFactor / scaleFactor;
         }
 
         private void Start()
@@ -62,12 +68,11 @@ namespace VR_Prototyping.Scripts
             
             if (!scaling) return;
 
-            var scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(l.position, r.position));// * initialScaleFactor);
+            scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(l.position, r.position)) * differential;
+            
             scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
             scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
             
-            Debug.DrawRay(startVis.position, Vector3.up * scaleFactor, Color.red);
-
             a.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
         }
     }

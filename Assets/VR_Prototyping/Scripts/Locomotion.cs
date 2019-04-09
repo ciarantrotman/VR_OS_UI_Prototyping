@@ -240,12 +240,18 @@ namespace VR_Prototyping.Scripts
         private IEnumerator Uncouple(Transform a, float time)
         {
 
-            vignetteLayer.intensity.value = 1f;
+            SetVignette(vignetteStrength);
             yield return new WaitForSeconds(time);
             a.SetParent(null);
             active = false;
-            vignetteLayer.intensity.value = 0f;
+            SetVignette(0);
             yield return null;
+        }
+
+        private void SetVignette(float intensity)
+        {
+            if (!motionSicknessVignette) return;
+            vignetteLayer.intensity.value = intensity;
         }
     }
 }
