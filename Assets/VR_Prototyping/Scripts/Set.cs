@@ -199,8 +199,15 @@ namespace VR_Prototyping.Scripts
 
         public static void VisualState(Transform t, SelectableObject s, Vector3 scale, Vector3 pos, TMP_FontAsset font, Color color)
         {
-            s.buttonText.font = font;
-            s.Renderer.material.color = color;
+            if (s.buttonText != null)
+            {
+                s.buttonText.font = font;
+            }
+
+            if (s.buttonBack != null)
+            {
+                s.buttonBack.material.color = color;
+            }
         }
 
         public static Vector3 Offset(Transform a, Transform b)
@@ -241,6 +248,11 @@ namespace VR_Prototyping.Scripts
                 initialScale.x * factor,
                 initialScale.y * factor,
                 initialScale.z * factor);
+        }
+        
+        public static void LookAwayFrom(this Transform thisTransform, Transform transform, Vector3 upwards) 
+        {
+            thisTransform.rotation = Quaternion.LookRotation(thisTransform.position - transform.position, upwards);
         }
     }
 }

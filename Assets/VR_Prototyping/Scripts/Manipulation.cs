@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -47,8 +48,6 @@ namespace VR_Prototyping.Scripts
 		private LineRenderer scaleLr;	
 		private Vector3 initialScale;
 		private float startDistance;
-		private float scaleFactor;
-		private float differential;
 		private float initialScaleFactor;
 		private float minDistance;
 		private float maxDistance;
@@ -75,7 +74,6 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Rotation Settings")] [ShowIf("enableRotation")] [Indent] [Range(1f, 10f)] public float rotationForce;
 		
 		[BoxGroup("Scaling Settings")] public bool enableScaling;
-		[BoxGroup("Scaling Settings")] [ShowIf("enableScaling")] [Indent] [Range(1f, 10f)] public float scalingMultiplier;
 		[BoxGroup("Scaling Settings")] [ShowIf("enableScaling")] [Indent] [Range(.001f, .005f)] public float lineRendererThickness;
 		
 		[BoxGroup("Snapping")] [SerializeField] private bool distanceSnapping = true;
@@ -140,6 +138,9 @@ namespace VR_Prototyping.Scripts
 			cL = new GameObject(LTag);
 			cR.transform.SetParent(fM.transform);
 			cL.transform.SetParent(fM.transform);
+			
+			//scaleLr = Setup.AddOrGetLineRenderer(fM.transform);
+			//Setup.LineRender(scaleLr, c.Controller.lineRenderMat, lineRendererThickness, false);
 			
 			if(!directGrab) return;
 			sCr = cR.AddComponent<SphereCollider>();
@@ -210,8 +211,27 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 
-		public void DualGrabStart(Transform target, bool rot, bool sca, float max, float min)
+		public void DualGrabStart(Transform target, bool rot, bool sca, float max, float min, Vector3 scaleMax, Vector3 scaleMin)
 		{
+			if (sca)
+			{
+				scaleLr.enabled = true;
+				initialScale = target.localScale;
+				initialScaleFactor = Mathf.InverseLerp(scaleMin.x, scaleMax.x, initialScale.x);
+				startDistance = c.Controller.ControllerDistance();
+
+				if (Math.Abs(initialScaleFactor) < float.Epsilon)
+				{
+					maxDistance = startDistance * max;
+					minDistance = startDistance;
+				}
+				else
+				{
+					minDistance = startDistance * min;
+					maxDistance = ((startDistance - minDistance) / initialScaleFactor) + minDistance;
+				}
+			}
+			
 			if (rot)
 			{
 				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
@@ -219,21 +239,23 @@ namespace VR_Prototyping.Scripts
 				mRc.transform.rotation = target.rotation;
 				mRc.transform.position = mRp.transform.position;
 			}
-
-			if (sca)
-			{
-				scaleLr = Setup.AddOrGetLineRenderer(target);
-				Setup.LineRender(scaleLr, c.Controller.lineRenderMat, lineRendererThickness, true);
-				startDistance = Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position);
-				minDistance = startDistance * min;
-				maxDistance = startDistance * max;
-				scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, startDistance);
-				differential = initialScaleFactor / scaleFactor;
-			}
 		}
 
-		public void DualGrabStay(Rigidbody rb, Transform target, bool rot, bool sca, Vector3 max, Vector3 min)
+		public void DualGrabStay(Rigidbody rb, Transform target, bool rot, bool sca, Vector3 scaleMin, Vector3 scaleMax)
 		{
+			if (sca && enableScaling)
+			{				
+				var scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, c.Controller.ControllerDistance());
+            
+				scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
+				scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
+            
+				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
+				
+				if(scaleLr == null) return;
+				Draw.LineRender(scaleLr, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform());
+			}
+			
 			if (rot && enableRotation)
 			{
 				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
@@ -250,26 +272,11 @@ namespace VR_Prototyping.Scripts
 
 				pRot = rotation;	
 			}
-
-			if (sca && enableScaling)
-			{
-				scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, Vector3.Distance(c.Controller.LeftControllerTransform().position,c.Controller.RightControllerTransform().position)) * differential;
-            
-				scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
-				scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
-            
-				target.transform.localScale = Vector3.Lerp(min, max, scaleFactor);
-				
-				Draw.LineRender(scaleLr, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform());
-			}
 		}
 
 		public void DualGrabEnd()
 		{
-			if (scaleLr != null)
-			{
-				Destroy(scaleLr);
-			}
+			scaleLr.enabled = false;
 		}
 		
 		public static void DirectGrabStart(Rigidbody rigid, Transform target, Transform controller)
@@ -290,6 +297,7 @@ namespace VR_Prototyping.Scripts
 		
 		public void OnEnd(Transform con)
 		{
+			DualGrabEnd();
 			switch (con == c.Controller.LeftControllerTransform())
 			{
 				case true:

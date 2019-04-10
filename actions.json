@@ -46,15 +46,7 @@
       "requirement": "mandatory"
     },
     {
-      "name": "/actions/default/in/LeftDPad",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/default/in/RightDPad",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/default/in/BackDPad",
+      "name": "/actions/default/in/Menu",
       "type": "boolean"
     },
     {
@@ -160,7 +152,8 @@
       "/actions/default/in/Teleport": "Teleport",
       "/actions/default/out/Haptic": "Haptic",
       "/actions/platformer/in/Jump": "Jump",
-      "/actions/default/in/JoystickDirection": "Joystick and Touchpad Values"
+      "/actions/default/in/JoystickDirection": "Joystick and Touchpad Values",
+      "/actions/default/in/Menu": "Menu Button"
     }
   ]
 }

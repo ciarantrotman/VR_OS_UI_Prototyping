@@ -27,10 +27,8 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Button Events")] public SDK VR_SDK;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean triggerGrip;
+        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean menu;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean joystickPress;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean leftDPad;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean rightDPad;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean backDPad;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Vector2 joystickDirection;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Vibration haptic;
 
@@ -66,6 +64,11 @@ namespace VR_Prototyping.Scripts
             return rightController;
         }
 
+        public float ControllerDistance()
+        {
+            return Vector3.Distance(rightController.position, leftController.position);
+        }
+
         public Transform CameraTransform()
         {
             return hmdCamera;
@@ -84,6 +87,16 @@ namespace VR_Prototyping.Scripts
         public bool RightGrab()
         {
             return grabGrip.GetState(SteamVR_Input_Sources.RightHand);
+        }
+        
+        public bool LeftMenu()
+        {
+            return menu.GetState(SteamVR_Input_Sources.LeftHand);
+        }
+    
+        public bool RightMenu()
+        {
+            return menu.GetState(SteamVR_Input_Sources.RightHand);
         }
 
         public bool LeftSelect()

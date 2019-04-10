@@ -76,8 +76,8 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
 		[Header("Scaling Settings")]
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool scalingEnabled;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("scalingEnabled")] [Indent] [Range(.01f, 1f)] public float minScaleFactor;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("scalingEnabled")] [Indent] [Range(1f, 10f)] public float maxScaleFactor;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(.01f, 1f)] public float minScaleFactor;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(1f, 10f)] public float maxScaleFactor;
 		[Header("Visual Effects")]
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] private bool genericGrabEffect;
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [Indent] [SerializeField] private bool grabOutline;
@@ -88,9 +88,15 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float touchOutlineWidth;
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Color touchOutlineColor = new Color(0,0,0,255);
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Outline.Mode touchOutlineMode;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabStart;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabStay;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabEnd;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabStart;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabStay;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabEnd;
 		
 		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public Renderer buttonBack;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
 		[Header("Visual Effects")]
 		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
 		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
@@ -404,12 +410,12 @@ namespace VR_Prototyping.Scripts
 				case Manipulation.ManipulationType.Physics:
 					if (DualGrab() && !pDualGrab)
 					{
-						f.DualGrabStart(transform, freeRotationEnabled, scalingEnabled, maxScaleFactor, minScaleFactor);
+						f.DualGrabStart(transform, freeRotationEnabled, scalingEnabled, maxScaleFactor, minScaleFactor, scaleMax, scaleMin);
 					}
 					if (DualGrab() && pDualGrab)
 					{
 						Set.AddForcePosition(rb, transform, f.mP.transform, c.Controller.debugActive);
-						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMax, scaleMin);
+						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMin, scaleMax);
 						break;
 					}
 					if (!DualGrab() && pDualGrab)
@@ -429,9 +435,9 @@ namespace VR_Prototyping.Scripts
 				default:
 					throw new ArgumentException();
 			}
-			
 			pDualGrab = DualGrab();
 		}
+		
 		private bool DualGrab()
 		{
 			return c.Controller.LeftGrab() && c.Controller.RightGrab() && c.lSelectableObject == this && c.rSelectableObject == this;
@@ -439,6 +445,7 @@ namespace VR_Prototyping.Scripts
 		public void GrabEnd(Transform con)
 		{
 			c.gazeList.Clear();
+			defaultLocalScale = transform.localScale;
 			
 			Set.RigidBody(rb, moveForce, latency,false, gravity);
 			outline.enabled = false;
