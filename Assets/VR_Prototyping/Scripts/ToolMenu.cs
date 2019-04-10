@@ -8,13 +8,13 @@ namespace VR_Prototyping.Scripts
     public class ToolMenu : MonoBehaviour
     {
         [HideInInspector] public bool active;
-        
         public bool cMenu;
         private bool pMenu;
         
         private bool trigger;
         
-        private const float T = .01f;
+        private const float A = 3f;
+        private const float D = .01f;
         
         [BoxGroup("Script Setup")] [Required] [SerializeField] private ControllerTransforms player;
         [BoxGroup("Script Setup")] [Required] [SerializeField] private GameObject menuPrefab;
@@ -33,6 +33,13 @@ namespace VR_Prototyping.Scripts
 
         private void Start()
         {
+            SetupMenu();
+        }
+
+        private void SetupMenu()
+        {
+            menuPrefab = Instantiate(menuPrefab);
+            menuPrefab.name = "VR Tool Menu";
             menuPrefab.SetActive(active);
         }
 
@@ -41,14 +48,14 @@ namespace VR_Prototyping.Scripts
             switch (dominantHand)
             {
                 case Handedness.Right:
-                    //cMenu = player.RightMenu();
+                    cMenu = player.RightMenu();
                     CheckState(cMenu, pMenu, player.RightControllerTransform());
                     pMenu = cMenu;
                     if(!active) break;
                     RubberBanded(player.RightControllerTransform());
                     break;
                 case Handedness.Left:
-                    //cMenu = player.LeftMenu();
+                    cMenu = player.LeftMenu();
                     CheckState(cMenu, pMenu, player.LeftControllerTransform());
                     pMenu = cMenu;
                     if(!active) break;
@@ -74,7 +81,7 @@ namespace VR_Prototyping.Scripts
             
             if(!state) return;
             menuPrefab.transform.position = controller.position;
-            menuPrefab.transform.LookAwayFrom(controller.transform, Vector3.up);
+            Set.SplitRotation(controller, menuPrefab.transform, false);
         }
 
         private void RubberBanded(Transform target)
@@ -86,9 +93,10 @@ namespace VR_Prototyping.Scripts
             {
                 trigger = true;
             }
-            if (trigger && a > T && d < T)
+            if (trigger && (a > A || d > D))
             {
-                menuPrefab.transform.rotation = Quaternion.Lerp(menuPrefab.transform.rotation, target.rotation, rotateSpeed);
+                var rotation = target.rotation;
+                menuPrefab.transform.rotation = Quaternion.Lerp(menuPrefab.transform.rotation, new Quaternion(0, rotation.y, 0, rotation.w), rotateSpeed);
                 menuPrefab.transform.position = Vector3.Lerp(menuPrefab.transform.position, target.position, moveSpeed);
             }
             else

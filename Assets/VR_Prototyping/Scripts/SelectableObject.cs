@@ -420,6 +420,7 @@ namespace VR_Prototyping.Scripts
 					}
 					if (!DualGrab() && pDualGrab)
 					{
+						defaultLocalScale = transform.localScale;
 						f.DualGrabEnd();
 					}
 					if (c.Controller.RightGrab() && c.rSelectableObject == this)
@@ -445,7 +446,6 @@ namespace VR_Prototyping.Scripts
 		public void GrabEnd(Transform con)
 		{
 			c.gazeList.Clear();
-			defaultLocalScale = transform.localScale;
 			
 			Set.RigidBody(rb, moveForce, latency,false, gravity);
 			outline.enabled = false;

@@ -246,7 +246,6 @@ namespace VR_Prototyping.Scripts
         {
             var button = (DirectButton)target;
             var transform = button.transform;
-            var up = transform.up;
             var forward = transform.forward;
             var right = transform.right;
             var position = transform.position;
