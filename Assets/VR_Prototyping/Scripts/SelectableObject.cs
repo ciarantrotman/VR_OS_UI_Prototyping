@@ -16,6 +16,7 @@ namespace VR_Prototyping.Scripts
 	public class SelectableObject : MonoBehaviour
 	{
 		#region Inspector and Variables
+
 		private ObjectSelection c;
 		private Manipulation f;
 		private Outline outline;
@@ -58,7 +59,7 @@ namespace VR_Prototyping.Scripts
 		private readonly List<Vector3> rotations = new List<Vector3>();
 		private const float Sensitivity = 10f;
 	
-		[BoxGroup("Script Setup")] [SerializeField] [Required] private GameObject player;
+		[BoxGroup("Script Setup")] [Required] public GameObject player;
 		[Header("Define Object Behaviour")]
 		[BoxGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
 		[BoxGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
@@ -88,12 +89,12 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float touchOutlineWidth;
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Color touchOutlineColor = new Color(0,0,0,255);
 		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Outline.Mode touchOutlineMode;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabStart;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabStay;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent grabEnd;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabStart;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabStay;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private UnityEvent dualGrabEnd;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStart;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStay;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabEnd;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStart;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStay;
+		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabEnd;
 		
 		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
 		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
@@ -107,9 +108,9 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
 		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
 		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] [Space(10)] private UnityEvent selectStart;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectStay;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [SerializeField] private UnityEvent selectEnd;
+		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(10)] public UnityEvent selectStart;
+		[BoxGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectStay;
+		[BoxGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectEnd;
 
 		[BoxGroup("Hover Settings")] [SerializeField] private bool reactiveMat;
 		[BoxGroup("Hover Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
@@ -130,11 +131,12 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverEnd;
 		
 		private static readonly int Threshold = Shader.PropertyToID("_ClipThreshold");
+
 		#endregion
 		private void Start ()
 		{
-			InitialiseSelectableObject();
 			SetupScaling();
+			InitialiseSelectableObject();
 		}
 
 		private void SetupScaling()
@@ -151,9 +153,10 @@ namespace VR_Prototyping.Scripts
 		private void OnDisable()
 		{
 			var g = gameObject;
-			ToggleList(g, c.gazeList);
-			ToggleList(g, c.lHandList);
-			ToggleList(g, c.rHandList);
+			ToggleList(g, c.globalList, false);
+			ToggleList(g, c.gazeList, false);
+			ToggleList(g, c.lHandList, false);
+			ToggleList(g, c.rHandList, false);
 		}
 		private void InitialiseSelectableObject()
 		{
@@ -161,7 +164,8 @@ namespace VR_Prototyping.Scripts
 			SetupRigidBody();
 			SetupManipulation();
 			SetupOutline();
-			ToggleList(gameObject, c.gazeList);
+			ToggleList(gameObject, c.globalList, true);
+			ToggleList(gameObject, c.gazeList, true);
 			
 			if(!button) return;
 			SetState(startsActive);
@@ -194,19 +198,22 @@ namespace VR_Prototyping.Scripts
 			outline.enabled = false;
 			outline.precomputeOutline = true;
 		}
-		private static void ToggleList(GameObject g, ICollection<GameObject> l)
+		private static void ToggleList(GameObject g, ICollection<GameObject> l, bool add)
 		{
-			if (l.Contains(g))
+			switch (add)
 			{
-				l.Remove(g);
-			}
-			else if (!l.Contains(g))
-			{
-				l.Add(g);
+				case true when !l.Contains(g):
+					l.Add(g);
+					return;
+				case false when l.Contains(g):
+					l.Remove(g);
+					return;
+				default:
+					return;
 			}
 		}
 		private void Update()
-		{		
+		{					
 			GetAngles();
 			ReactiveMaterial();
 
@@ -357,8 +364,7 @@ namespace VR_Prototyping.Scripts
 				l.Remove(g);
 			}
 		}
-
-		private void SetState(bool a)
+		public void SetState(bool a)
 		{
 			switch (a)
 			{
@@ -371,8 +377,7 @@ namespace VR_Prototyping.Scripts
 				default:
 					throw new ArgumentException();
 			}
-		}
-		
+		}	
 		public void GrabStart(Transform con)
 		{
 			if (!grab) return;

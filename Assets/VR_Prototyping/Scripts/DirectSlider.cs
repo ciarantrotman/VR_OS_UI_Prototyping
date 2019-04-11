@@ -34,7 +34,7 @@ namespace VR_Prototyping.Scripts
 
         private Rigidbody rb;
 
-        [BoxGroup("Script Setup")] [SerializeField] [Required] private ControllerTransforms c;
+        [BoxGroup("Script Setup")] [Required] public ControllerTransforms c;
 
         [TabGroup("Slider Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
         [TabGroup("Slider Settings")] [Header("Slider Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
