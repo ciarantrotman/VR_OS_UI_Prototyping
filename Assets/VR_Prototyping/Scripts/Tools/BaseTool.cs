@@ -7,22 +7,22 @@ namespace VR_Prototyping.Scripts.Tools
     [Serializable] [RequireComponent(typeof(SelectableObject))]
     public class BaseTool : MonoBehaviour
     {
-        public SelectableObject button { get; private set; }
-        public ControllerTransforms controller { get; set; }
-        public ToolController toolController { get; set; }
-        public ToolMenu toolMenu { get; set; }
+        public SelectableObject Button { get; private set; }
+        public ControllerTransforms Controller { get; set; }
+        public ToolController ToolController { get; set; }
+        public ToolMenu ToolMenu { get; set; }
 
-        [HideInInspector] public ToolMenu.Handedness handedness;
-        public bool active { get; private set; }
+        public ToolMenu.Handedness Handedness { get; set; }
+        public bool Active { get; private set; }
 
         [BoxGroup("Tool Prefabs")] [Required] [SerializeField] public GameObject nonDominant;
         [BoxGroup("Tool Prefabs")] [Required] [SerializeField] public GameObject dominant;
 
         private void Awake()
         {
-            button = GetComponent<SelectableObject>();
-            button.enabled = false;
-            button.selectEnd.AddListener(SelectTool);
+            Button = GetComponent<SelectableObject>();
+            Button.enabled = false;
+            Button.selectEnd.AddListener(SelectTool);
             
             SetupMenuItems();
         }
@@ -40,29 +40,29 @@ namespace VR_Prototyping.Scripts.Tools
         {
             dominant.SetActive(state);
             nonDominant.SetActive(state);
-            toolController.SetState(state);
-            active = state;
+            ToolController.SetState(state);
+            Active = state;
             
-            toolMenu.SetState(state, transform);
+            ToolMenu.SetState(state, transform);
         }
 
         private void SelectTool()
         {
-            toolController.ToggleTool(this);
+            ToolController.ToggleTool(this);
         }
 
         private void Update()
         {
-            if(!active) return;
-            switch (handedness)
+            if(!Active) return;
+            switch (Handedness)
             {
                 case ToolMenu.Handedness.Right:
-                    Set.Transforms(dominant.transform, controller.RightControllerTransform());
-                    Set.Transforms(nonDominant.transform, controller.LeftControllerTransform());
+                    Set.Transforms(dominant.transform, Controller.RightControllerTransform());
+                    Set.Transforms(nonDominant.transform, Controller.LeftControllerTransform());
                     break;
                 case ToolMenu.Handedness.Left:
-                    Set.Transforms(dominant.transform, controller.LeftControllerTransform());
-                    Set.Transforms(nonDominant.transform, controller.RightControllerTransform());
+                    Set.Transforms(dominant.transform, Controller.LeftControllerTransform());
+                    Set.Transforms(nonDominant.transform, Controller.RightControllerTransform());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
