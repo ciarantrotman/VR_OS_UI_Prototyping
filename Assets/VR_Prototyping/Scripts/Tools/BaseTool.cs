@@ -8,7 +8,7 @@ namespace VR_Prototyping.Scripts.Tools
     [Serializable]
     public class BaseTool : MonoBehaviour
     {
-        public ControllerTransforms controller { private get; set; }
+        public ControllerTransforms controller { get; set; }
         public ToolController toolController { private get; set; }
         public ToolMenu toolMenu { private get; set; }
         public SelectableObject toolButton { get; private set; }
@@ -22,8 +22,6 @@ namespace VR_Prototyping.Scripts.Tools
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject buttonPrefab;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject nonDominant;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject dominant;
-        
-        [FoldoutGroup("Generic Tool References")] [SerializeField] private DirectButton closeButton;
         
         private void Awake()
         {

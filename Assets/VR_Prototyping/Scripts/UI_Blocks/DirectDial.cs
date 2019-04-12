@@ -32,8 +32,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float spokeLineRendererWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material dialMaterial;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(5)] private GameObject dialCap;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] private GameObject dialHandle;
+        [TabGroup("Aesthetics Settings")] [Required] [Space(5)] public GameObject dialCap;
+        [TabGroup("Aesthetics Settings")] [Required] public GameObject dialHandle;
 
         private void Start()
         {
@@ -45,7 +45,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             SetupDial();
         }
 
-        private void SetupDial()
+        public void SetupDial()
         {
             var o = gameObject;
             dial = o;

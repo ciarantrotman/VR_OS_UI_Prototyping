@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private LineRenderer targetLr;
 
         private MeshFilter buttonSurface;
-        private MeshRenderer buttonVisual;
+        protected MeshRenderer buttonVisual;
         private MeshCollider buttonCollider;
 
         private GameObject parent;
@@ -58,9 +58,9 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
         
-        [BoxGroup("Button Events")] [SerializeField] private UnityEvent activate;
-        [BoxGroup("Button Events")] [ShowIf("toggle")] [SerializeField] private UnityEvent deactivate;
-        [BoxGroup("Button Events")] [SerializeField] private UnityEvent hover;
+        [BoxGroup("Button Events")] public UnityEvent activate;
+        [BoxGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
+        [BoxGroup("Button Events")] public  UnityEvent hover;
         private void Start()
         {
             InitialiseSelectableObject();
@@ -71,7 +71,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             SetupButton();
         }
 
-        private void SetupButton()
+        public void SetupButton()
         {
             parent = gameObject;
             parent.name = "Button/Parent";

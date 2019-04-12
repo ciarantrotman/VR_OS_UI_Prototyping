@@ -118,11 +118,10 @@ MonoBehaviour:
     type: 3}
   dominant: {fileID: 3695830211362363385, guid: 8553eaa023a09734b9c74414ed226e1f,
     type: 3}
-  closeButton: {fileID: 0}
-  widthSlider: {fileID: 0}
-  minWidth: 0.01
+  minWidth: 0.003
   maxWidth: 0.1
-  sketchMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
+  sketchMaterial: {fileID: 2100000, guid: a96d560642c451749959d8e0518abc9c, type: 2}
+  sketchVisual: {fileID: 0}
 --- !u!114 &996178410202326001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,4 +140,3 @@ MonoBehaviour:
     type: 3}
   dominant: {fileID: 3695830211362363385, guid: 0ba219af5c5f089459eb31bb8a6f46f3,
     type: 3}
-  closeButton: {fileID: 0}

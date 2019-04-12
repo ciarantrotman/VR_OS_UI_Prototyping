@@ -8,8 +8,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
     [DisallowMultipleComponent]
     public class DirectSlider : BaseDirectBlock
     {
-        private LineRenderer activeLr;
-        private LineRenderer inactiveLr;
+        public LineRenderer ActiveLr { get; private set; }
+        public LineRenderer InactiveLr { get; private set; }
         
         private const float DirectDistance = .05f;
 
@@ -38,8 +38,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float activeWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [HideInPlayMode] [Range(.001f, .005f)] private float inactiveWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material sliderMaterial;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(5)] private GameObject sliderCap;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] private GameObject sliderHandle;
+        [TabGroup("Aesthetics Settings")] [Required] [Space(5)] public GameObject sliderCap;
+        [TabGroup("Aesthetics Settings")] [Required] public GameObject sliderHandle;
 
         [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStart;
         [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStay;
@@ -58,7 +58,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             SetupSlider();
         }
 
-        private void SetupSlider()
+        public void SetupSlider()
         {
             var o = gameObject;
             slider = o;
@@ -75,8 +75,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             handle.transform.SetParent(slider.transform);
             handleNormalised.transform.SetParent(slider.transform);
 
-            activeLr = LineRender(min.transform, activeWidth);
-            inactiveLr = LineRender(max.transform, inactiveWidth);
+            ActiveLr = LineRender(min.transform, activeWidth);
+            InactiveLr = LineRender(max.transform, inactiveWidth);
 
             rb = Setup.AddOrGetRigidbody(handle.transform);
             Set.RigidBody(rb, .1f, 4.5f, true, false);
@@ -98,8 +98,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private void FixedUpdate()
         {
-            Draw.LineRender(activeLr, min.transform, handle.transform);
-            Draw.LineRender(inactiveLr, max.transform, handle.transform);
+            Draw.LineRender(ActiveLr, min.transform, handle.transform);
+            Draw.LineRender(InactiveLr, max.transform, handle.transform);
 
             if (!ignoreRightHand)
             {
