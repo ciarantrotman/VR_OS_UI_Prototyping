@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,19 +13,15 @@ namespace VR_Prototyping.Scripts.Tools
         
         private bool trigger;
         
-        private const float A = 5f;
-        private const float D = .1f;
-        
         private ControllerTransforms c;
         private ToolController toolController;
         
         [BoxGroup("Script Setup")] [Required] [SerializeField] private GameObject menuPrefab;
         
-        [BoxGroup("RubberBanding Settings")] [SerializeField] private float angleThreshold = 45f;
-        [BoxGroup("RubberBanding Settings")] [SerializeField][Range(0,1)] private float rotateSpeed = .001f;
-        [BoxGroup("RubberBanding Settings")] [Space(10)][SerializeField] private float distanceThreshold = .1f;
-        [BoxGroup("RubberBanding Settings")] [SerializeField][Range(0,1)] private float moveSpeed = .001f;
-
+        [BoxGroup("RubberBanding Settings")] [SerializeField] private bool rubberBanded = true;
+        [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField][Range(0,1)] private float moveSpeed = .5f;
+        [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [Space(10)] [SerializeField] private float angleThreshold = 45f;
+        [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField] private float distanceThreshold = .1f;
         public enum Handedness
         {
             Right,
@@ -33,7 +29,7 @@ namespace VR_Prototyping.Scripts.Tools
         }
         [BoxGroup("Tool Settings")] public Handedness dominantHand;
 
-        private void Start()
+        private void Awake()
         {
             c = GetComponent<ControllerTransforms>();
             SetupMenu();
@@ -42,10 +38,10 @@ namespace VR_Prototyping.Scripts.Tools
         private void SetupMenu()
         {
             menuPrefab = Instantiate(menuPrefab);
-            menuPrefab.name = "VR Tool Menu";
-            menuPrefab.SetActive(active);
+            menuPrefab.name = "Tools/Menu";
             toolController = menuPrefab.GetComponent<ToolController>();
             toolController.Initialise(gameObject, active, c, dominantHand, this);
+            toolController.ToggleButtonState(false);
         }
 
         private void Update()
@@ -55,35 +51,33 @@ namespace VR_Prototyping.Scripts.Tools
                 case Handedness.Right:
                     cMenu = c.RightMenu();
                     CheckState(cMenu, pMenu, c.RightControllerTransform());
-                    pMenu = cMenu;
-                    if(!active) break;
                     RubberBanded(c.RightControllerTransform());
-                    break;
+                    pMenu = cMenu;
+                    return;
                 case Handedness.Left:
                     cMenu = c.LeftMenu();
                     CheckState(cMenu, pMenu, c.LeftControllerTransform());
-                    pMenu = cMenu;
-                    if(!active) break;
                     RubberBanded(c.LeftControllerTransform());
-                    break;
+                    pMenu = cMenu;
+                    return;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return;
             }
         }
 
         private void CheckState(bool current, bool previous, Transform controller)
         {
-            if (!current && previous)
-            {
-                active = !active;
-                SetState(active, controller);
-            }
+            if (current || !previous) return;
+            
+            active = !active;
+            SetState(active, controller);
         }
 
         public void SetState(bool state, Transform controller)
         {
-            toolController.SetState(state);
-            menuPrefab.SetActive(state);
+            toolController.ToggleButtonState(state);
+            active = state;
+            
             if(!state) return;
             menuPrefab.transform.position = controller.position;
             Set.SplitRotation(controller, menuPrefab.transform, false);
@@ -91,23 +85,17 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void RubberBanded(Transform target)
         {
+            if(!rubberBanded) return;
+            
             var d = Vector3.Distance(menuPrefab.transform.position, target.position);
             var a = Set.Divergence(menuPrefab.transform, target);
+
+            if (!(a >= angleThreshold) && !(d >= distanceThreshold)) return;
             
-            if (a >= angleThreshold && !trigger || d >= distanceThreshold && !trigger)
-            {
-                trigger = true;
-            }
-            if (trigger && (a > A || d > D))
-            {
-                var rotation = target.rotation;
-                menuPrefab.transform.rotation = Quaternion.Lerp(menuPrefab.transform.rotation, new Quaternion(0, rotation.y, 0, rotation.w), rotateSpeed);
-                menuPrefab.transform.position = Vector3.Lerp(menuPrefab.transform.position, target.position, moveSpeed);
-            }
-            else
-            {
-                trigger = false;
-            }
+            var rotTarget = new Vector3(0, target.rotation.eulerAngles.y, 0);
+            
+            menuPrefab.transform.DORotate(rotTarget, moveSpeed);
+            menuPrefab.transform.DOMove(target.position, moveSpeed);
         }
     }
 }
