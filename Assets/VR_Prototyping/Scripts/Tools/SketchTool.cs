@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools
 {
@@ -26,33 +25,7 @@ namespace VR_Prototyping.Scripts.Tools
         private GameObject sketchObject;
         private LineRenderer sketchLr;
 
-        private void LateUpdate()
-        {
-            if(!active) return;
-            
-            if (cTrigger && !pTrigger)
-            {
-                SketchStart();
-            }
-
-            if (cTrigger && pTrigger)
-            {
-                SketchStay();
-            }
-
-            if (!cTrigger && pTrigger)
-            {
-                SketchEnd();
-            }
-
-            pTrigger = cTrigger;
-            
-            if(SketchVisual == null) return;
-            
-            SketchVisual.SetVisual(brushColor, brushWidth);
-        }
-        
-        private void SketchStart()
+        protected override void ToolStart()
         {
             sketchCount++;
             sketchObject = new GameObject("Sketch_" + sketchCount);
@@ -65,19 +38,26 @@ namespace VR_Prototyping.Scripts.Tools
             sketchTrail = false;
         }
 
-        private void SketchStay()
+        protected override void ToolStay()
         {
             sketchLr.positionCount = position + 1;
             sketchLr.SetPosition(position, dominant.transform.position);
             position++;
         }
 
-        private void SketchEnd()
+        protected override void ToolEnd()
         {
             sketchLr.BakeMesh(new Mesh(), true);
             sketchObject = null;
             sketchLr = null;
             sketchTrail = true;
+        }
+
+        protected override void ToolInactive()
+        {
+            if(SketchVisual == null) return;
+
+            SketchVisual.SetVisual(brushColor, brushWidth);
         }
 
         public void SetColor(Color color)

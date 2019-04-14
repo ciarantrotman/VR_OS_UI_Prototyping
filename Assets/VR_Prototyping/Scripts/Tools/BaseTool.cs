@@ -6,16 +6,16 @@ using VR_Prototyping.Scripts.UI_Blocks;
 namespace VR_Prototyping.Scripts.Tools
 {
     [Serializable]
-    public class BaseTool : MonoBehaviour
+    public abstract class BaseTool : MonoBehaviour
     {
         public ControllerTransforms controller { get; set; }
         public ToolController toolController { private get; set; }
         public ToolMenu toolMenu { private get; set; }
         public SelectableObject toolButton { get; private set; }
         public ToolMenu.Handedness handedness { private get; set; }
-        protected bool active { get; private set; }
-        protected bool cTrigger { get; private set; }
-        protected bool pTrigger { get; set; }
+        private bool active { get; set; }
+        private bool cTrigger { get; set; }
+        private bool pTrigger { get; set; }
 
         private BaseDirectBlock[] directInterfaceBlocks;
         
@@ -73,6 +73,26 @@ namespace VR_Prototyping.Scripts.Tools
             toolMenu.SetState(false, transform);
         }
 
+        protected virtual void ToolStart()
+        {
+            
+        }
+
+        protected virtual void ToolStay()
+        {
+            
+        }
+
+        protected virtual void ToolEnd()
+        {
+            
+        }
+
+        protected virtual void ToolInactive()
+        {
+            
+        }
+
         private void SelectTool()
         {
             handedness = toolMenu.dominantHand;
@@ -96,6 +116,30 @@ namespace VR_Prototyping.Scripts.Tools
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            if(!active) return;
+            
+            if (cTrigger && !pTrigger)
+            {
+                ToolStart();
+            }
+
+            if (cTrigger && pTrigger)
+            {
+                ToolStay();
+            }
+
+            if (!cTrigger && pTrigger)
+            {
+                ToolEnd();
+            }
+            
+            if (!cTrigger && !pTrigger)
+            {
+                ToolInactive();
+            }
+
+            pTrigger = cTrigger;
         }
     }
 }

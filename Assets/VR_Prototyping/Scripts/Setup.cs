@@ -12,6 +12,8 @@ namespace VR_Prototyping.Scripts
         public static void LineRender(LineRenderer lr, Material m, float w, bool e)
         {
             lr.material = m;
+            lr.castShadows = false;
+            lr.receiveShadows = false;
             lr.startWidth = w;
             lr.endWidth = w;
             lr.numCapVertices = 32;

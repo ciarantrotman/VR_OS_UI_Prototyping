@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 010005000000746f6f6c732f00000000008500000053797374656d2e436f6c6c656374696f6e732e47656e657269632e44696374696f6e61727960325b5b53797374656d2e537472696e672c206d73636f726c69625d2c5b56525f50726f746f747970696e672e536372697074732e546f6f6c732e42617365546f6f6c2c20417373656d626c792d4353686172705d5d2c206d73636f726c696200000000010008000000636f6d70617265722f01000000005900000053797374656d2e436f6c6c656374696f6e732e47656e657269632e47656e65726963457175616c697479436f6d706172657260315b5b53797374656d2e537472696e672c206d73636f726c69625d5d2c206d73636f726c69620100000005060200000000000000042e280006000000536b657463680c0000000005042e2800070000004d6561737572650c01000000050705
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 1548152124150935786}
     - {fileID: 996178410202326001}
@@ -55,7 +55,51 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: tools
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[VR_Prototyping.Scripts.Tools.BaseTool,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 1
+      Data: Sketch
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 1
+      Data: Measure
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!114 &1548152124150935786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,8 +118,8 @@ MonoBehaviour:
     type: 3}
   dominant: {fileID: 3695830211362363385, guid: 8553eaa023a09734b9c74414ed226e1f,
     type: 3}
-  dominantSpeed: 0.01
-  nonDominantSpeed: 0.01
+  dominantSpeed: 0.5
+  nonDominantSpeed: 1
   minWidth: 0.003
   maxWidth: 0.1
   sketchMaterial: {fileID: 2100000, guid: a96d560642c451749959d8e0518abc9c, type: 2}
@@ -124,3 +168,7 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 1
   nonDominantSpeed: 1
+  tapeNodePrefab: {fileID: 2758839382525824194, guid: c727b7b7628755b469eda845d64ba6ca,
+    type: 3}
+  tapeWidth: 0.005
+  tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}

@@ -8,10 +8,11 @@ namespace VR_Prototyping.Scripts.Tools
     public class ToolController : SerializedMonoBehaviour
     {
         [OdinSerialize] public Dictionary<string, BaseTool> tools;
+        private const float Spacing = .1f;
         
         public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller, ToolMenu.Handedness handedness, ToolMenu toolMenu)
         {
-            var x = -.05f;
+            var x = 0f;
             foreach (var item in tools)
             {
                 var n = item.Key;
@@ -30,7 +31,7 @@ namespace VR_Prototyping.Scripts.Tools
                 tool.buttonPrefab.transform.localPosition = new Vector3(x, 0, .2f);
                 tool.dominant.transform.SetParent(transform);
                 tool.nonDominant.transform.SetParent(transform);
-                x = -x;
+                x = x + Spacing;
             }
         }
 
