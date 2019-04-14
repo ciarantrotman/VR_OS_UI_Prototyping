@@ -6,6 +6,7 @@ namespace VR_Prototyping.Scripts.Tools
     public class SketchBrushColor : DirectDial
     {
         private SketchTool sketchTool;
+        private MeshRenderer dialCapMeshRenderer;
 
         private void Start()
         {
@@ -13,6 +14,9 @@ namespace VR_Prototyping.Scripts.Tools
             c = sketchTool.controller;
             
             SetupDial();
+
+            dialCapMeshRenderer = dialCap.GetComponent<MeshRenderer>();
+            dialCapMeshRenderer.material = sketchTool.sketchMaterial;
         }
 
         private void LateUpdate()
@@ -22,7 +26,9 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SetColor(float colorValue)
         {
-            sketchTool.SetColor(Color.HSVToRGB(colorValue, 1, 1, true));
+            var color = Color.HSVToRGB(colorValue, 1, 1, true);
+            sketchTool.SetColor(color);
+            dialCapMeshRenderer.sharedMaterial.color = color;
         }
     }
 }

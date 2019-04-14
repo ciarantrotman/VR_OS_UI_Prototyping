@@ -9,7 +9,9 @@ namespace VR_Prototyping.Scripts.Tools
     {        
         [BoxGroup("Sketch Tool Settings")] [Range(.001f, .05f)] public float minWidth;
         [BoxGroup("Sketch Tool Settings")] [Range(.05f, .1f)] public float maxWidth;
-        [BoxGroup("Sketch Tool Settings")] [Space(5)] [SerializeField] private Material sketchMaterial;
+        [BoxGroup("Sketch Tool Settings")] [Space(5)] public Material sketchMaterial;
+        [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool sketchTrail;
+        [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchTrail")] public AnimationCurve trailWidth;
         
         public SketchBrushVisual SketchVisual { private get; set; }
 
@@ -27,7 +29,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void LateUpdate()
         {
             if(!active) return;
-
+            
             if (cTrigger && !pTrigger)
             {
                 SketchStart();
@@ -40,8 +42,7 @@ namespace VR_Prototyping.Scripts.Tools
 
             if (!cTrigger && pTrigger)
             {
-                sketchObject = null;
-                sketchLr = null;
+                SketchEnd();
             }
 
             pTrigger = cTrigger;
@@ -61,6 +62,7 @@ namespace VR_Prototyping.Scripts.Tools
             sketchLr.material.color = brushColor;
             sketches.Add(sketchLr);
             position = 0;
+            sketchTrail = false;
         }
 
         private void SketchStay()
@@ -68,6 +70,14 @@ namespace VR_Prototyping.Scripts.Tools
             sketchLr.positionCount = position + 1;
             sketchLr.SetPosition(position, dominant.transform.position);
             position++;
+        }
+
+        private void SketchEnd()
+        {
+            sketchLr.BakeMesh(new Mesh(), true);
+            sketchObject = null;
+            sketchLr = null;
+            sketchTrail = true;
         }
 
         public void SetColor(Color color)

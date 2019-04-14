@@ -50,8 +50,8 @@ MonoBehaviour:
   sliderValue: 0
   directGrabDistance: 0.01
   startingValue: 0
-  sliderMax: 0.01
-  sliderMin: 0.01
+  sliderMax: 0.05
+  sliderMin: 0.05
   ignoreLeftHand: 0
   ignoreRightHand: 0
   activeWidth: 0.001

@@ -30,6 +30,8 @@ namespace VR_Prototyping.Scripts
             transform.localRotation = Quaternion.identity;
         }
         
+        
+        
         public static void AddForceRotation(Rigidbody rb, Transform a, Transform b, float force)
         {
             if (a == null || b == null || rb == null) return;
@@ -54,11 +56,24 @@ namespace VR_Prototyping.Scripts
             if(!follow) return;
             Position(target, controller);
         }
+
+        public static void TrailRender(TrailRenderer tr, float start, float end, Color c)
+        {
+            tr.startWidth = start;
+            tr.endWidth = end;
+            tr.material.color = c;
+        }
         
         public static void TransformLerpPosition(Transform a, Transform b, float l)
         {
             if (a == null || b == null) return;
             a.position = Vector3.Lerp(a.position, b.position, l);
+        }
+        
+        public static void TransformLerpRotation(Transform a, Transform b, float l)
+        {
+            if (a == null || b == null) return;
+            a.rotation = Quaternion.Lerp(a.rotation, b.rotation, l);
         }
         
         public static void VectorLerpPosition(Transform a, Vector3 b, float l)
@@ -78,6 +93,13 @@ namespace VR_Prototyping.Scripts
             if (a == null || b == null) return;
             Position(a, b);
             Rotation(a, b);
+        }
+        
+        public static void LerpTransforms(Transform a, Transform b, float l)
+        {
+            if (a == null || b == null) return;
+            TransformLerpPosition(a, b, l);
+            TransformLerpRotation(a, b, l);
         }
 
         public static float Midpoint(Transform a, Transform b)

@@ -18,6 +18,16 @@ namespace VR_Prototyping.Scripts
             lr.useWorldSpace = true;
             lr.enabled = e;
         }
+        
+        public static void TrailRender(TrailRenderer tr, Material m, float time, AnimationCurve widthCurve, bool e)
+        {
+            tr.material = m;
+            tr.minVertexDistance = .01f;
+            tr.time = time;
+            tr.widthCurve = widthCurve;
+            tr.numCapVertices = 32;
+            tr.enabled = e;
+        }
 
         public static Rigidbody AddOrGetRigidbody(Transform a)
         {

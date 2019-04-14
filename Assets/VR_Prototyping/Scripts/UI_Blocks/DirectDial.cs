@@ -22,7 +22,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [HideInInspector] public float dialValue;
 
         [TabGroup("Dial Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
-        [TabGroup("Dial Settings")] [Header("Dial Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
+        [TabGroup("Dial Settings")] [Header("Dial Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] protected float startingValue;
         [TabGroup("Dial Settings")] [Range(.01f, .25f)] public float dialRadius;
         [TabGroup("Dial Settings")] [Space(5)] public bool ignoreLeftHand;
         [TabGroup("Dial Settings")] public bool ignoreRightHand;
@@ -31,9 +31,9 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float inactiveCircleLineRendererWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float spokeLineRendererWidth;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material dialMaterial;
-        [TabGroup("Aesthetics Settings")] [Required] [Space(5)] public GameObject dialCap;
-        [TabGroup("Aesthetics Settings")] [Required] public GameObject dialHandle;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] protected Material dialMaterial;
+        [TabGroup("Aesthetics Settings")] [Required] [Space(5)] [SerializeField] protected GameObject dialCap;
+        [TabGroup("Aesthetics Settings")] [Required] [SerializeField] protected GameObject dialHandle;
 
         private void Start()
         {

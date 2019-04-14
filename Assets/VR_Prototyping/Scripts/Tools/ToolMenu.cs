@@ -8,6 +8,7 @@ namespace VR_Prototyping.Scripts.Tools
     public class ToolMenu : MonoBehaviour
     {
         [HideInInspector] public bool active;
+        [HideInInspector] public bool rubberBanded;
         private bool cMenu;
         private bool pMenu;
         
@@ -18,7 +19,6 @@ namespace VR_Prototyping.Scripts.Tools
         
         [BoxGroup("Script Setup")] [Required] [SerializeField] private GameObject menuPrefab;
         
-        [BoxGroup("RubberBanding Settings")] [SerializeField] private bool rubberBanded = true;
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField][Range(0,1)] private float moveSpeed = .5f;
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [Space(10)] [SerializeField] private float angleThreshold = 45f;
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField] private float distanceThreshold = .1f;
@@ -77,6 +77,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             toolController.ToggleButtonState(state);
             active = state;
+            rubberBanded = state;
             
             if(!state) return;
             menuPrefab.transform.position = controller.position;

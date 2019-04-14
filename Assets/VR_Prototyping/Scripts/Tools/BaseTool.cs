@@ -23,6 +23,9 @@ namespace VR_Prototyping.Scripts.Tools
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject nonDominant;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject dominant;
         
+        [BoxGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float dominantSpeed = 1;
+        [BoxGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float nonDominantSpeed = 1;
+        
         private void Awake()
         {
             SetupMenuItems();
@@ -41,6 +44,7 @@ namespace VR_Prototyping.Scripts.Tools
             
             nonDominant = Instantiate(nonDominant);
             nonDominant.SetActive(false);
+            
             InitialiseDirectInterface();
         }
 
@@ -81,13 +85,13 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 case ToolMenu.Handedness.Right:
                     cTrigger = controller.RightSelect();
-                    Set.Transforms(dominant.transform, controller.RightControllerTransform());
-                    Set.Transforms(nonDominant.transform, controller.LeftControllerTransform());
+                    Set.LerpTransforms(dominant.transform, controller.RightControllerTransform(), dominantSpeed);
+                    Set.LerpTransforms(nonDominant.transform, controller.LeftControllerTransform(), nonDominantSpeed);
                     break;
                 case ToolMenu.Handedness.Left:
                     cTrigger = controller.LeftSelect();
-                    Set.Transforms(dominant.transform, controller.LeftControllerTransform());
-                    Set.Transforms(nonDominant.transform, controller.RightControllerTransform());
+                    Set.LerpTransforms(dominant.transform, controller.LeftControllerTransform(), dominantSpeed);
+                    Set.LerpTransforms(nonDominant.transform, controller.RightControllerTransform(), nonDominantSpeed);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

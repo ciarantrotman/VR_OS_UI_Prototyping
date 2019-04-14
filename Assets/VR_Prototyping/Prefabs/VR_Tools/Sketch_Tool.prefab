@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4224412486723263547}
   - component: {fileID: 90672920952845140}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: SketchBrushVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
