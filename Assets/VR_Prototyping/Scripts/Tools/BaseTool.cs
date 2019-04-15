@@ -29,6 +29,12 @@ namespace VR_Prototyping.Scripts.Tools
         private void Awake()
         {
             SetupMenuItems();
+            Initialise();
+        }
+        
+        protected virtual void Initialise()
+        {
+            
         }
 
         private void SetupMenuItems()

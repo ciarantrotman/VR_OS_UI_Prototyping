@@ -30,8 +30,6 @@ namespace VR_Prototyping.Scripts
             transform.localRotation = Quaternion.identity;
         }
         
-        
-        
         public static void AddForceRotation(Rigidbody rb, Transform a, Transform b, float force)
         {
             if (a == null || b == null || rb == null) return;

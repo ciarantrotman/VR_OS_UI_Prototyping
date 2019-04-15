@@ -172,3 +172,4 @@ MonoBehaviour:
     type: 3}
   tapeWidth: 0.005
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
+  tapeColor: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}
