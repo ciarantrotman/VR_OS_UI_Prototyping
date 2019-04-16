@@ -932,7 +932,6 @@
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
             <e p="Draw.cs" t="Include" />
-            <e p="DrivenValue.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
@@ -953,6 +952,8 @@
               <e p="BaseTool.cs" t="Include" />
               <e p="CloseButton.cs" t="Include" />
               <e p="MeasureNewTape.cs" t="Include" />
+              <e p="MeasureNode.cs" t="Include" />
+              <e p="MeasureTape.cs" t="Include" />
               <e p="MeasureText.cs" t="Include" />
               <e p="MeasureTool.cs" t="Include" />
               <e p="MeasureVisual.cs" t="Include" />

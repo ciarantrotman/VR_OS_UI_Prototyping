@@ -20,9 +20,11 @@ namespace VR_Prototyping.Scripts.Tools
             transform.LookAwayFrom(measureTool.controller.CameraTransform(), Vector3.up);
         }
 
-        public void SetText(float distance)
+        public void SetText(float distance, float total, float tapeCount)
         {
-            text.SetText("Tape: <b>{0:2}</b>", distance);
+            text.SetText("Current: <b>{0:2}</b> " +
+                         "Total: <b>{1:2}</b> " +
+                         "Tapes: {3:0}", distance, total, tapeCount);
         }
     }
 }
