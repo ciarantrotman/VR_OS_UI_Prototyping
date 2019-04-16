@@ -949,7 +949,14 @@
             <e p="SortBy.cs" t="Include" />
             <e p="Tools" t="Include">
               <e p="BaseTool.cs" t="Include" />
+              <e p="CloseButton.cs" t="Include" />
+              <e p="MeasureNewTape.cs" t="Include" />
+              <e p="MeasureText.cs" t="Include" />
               <e p="MeasureTool.cs" t="Include" />
+              <e p="MeasureVisual.cs" t="Include" />
+              <e p="SketchBrushColor.cs" t="Include" />
+              <e p="SketchBrushVisual.cs" t="Include" />
+              <e p="SketchBrushWidth.cs" t="Include" />
               <e p="SketchTool.cs" t="Include" />
               <e p="ToolController.cs" t="Include" />
               <e p="ToolMenu.cs" t="Include" />

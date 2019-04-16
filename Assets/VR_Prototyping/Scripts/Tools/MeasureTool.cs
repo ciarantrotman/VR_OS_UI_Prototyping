@@ -28,14 +28,11 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolStart()
         {
-            CreateNode();
             startPos = dominant.transform.position;
         }
 
         protected override void ToolStay()
-        {
-            Set.Transforms(node.transform, dominant.transform);
-            
+        {            
             if (MeasureText == null || tapeLr == null || tapeLr.positionCount <= 2) return;
             MeasureText.SetText(CurrentDistance());
         }
@@ -79,8 +76,8 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void CreateNode()
         {
-            node = Instantiate(tapeNodePrefab);
-            tapeNodePrefab.transform.position = dominant.transform.position;
+            node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
+            node.transform.position = dominant.transform.position;
         }
     }
 }
