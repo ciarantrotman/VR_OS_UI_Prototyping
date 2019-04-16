@@ -10,7 +10,6 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            measureTool.MeasureVisual = this;
             meshRenderer = transform.GetComponent<MeshRenderer>();
             meshRenderer.material = measureTool.tapeMaterial;
         }

@@ -168,8 +168,9 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 1
   nonDominantSpeed: 1
-  tapeNodePrefab: {fileID: 2758839382525824194, guid: c727b7b7628755b469eda845d64ba6ca,
+  tapeNodePrefab: {fileID: 2758839382525824194, guid: bb196f17f0ff6e149891d484bbd0cfba,
     type: 3}
   tapeWidth: 0.005
+  nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
   tapeColor: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}

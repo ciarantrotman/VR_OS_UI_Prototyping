@@ -24,7 +24,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             text.SetText("Current: <b>{0:2}</b> " +
                          "Total: <b>{1:2}</b> " +
-                         "Tapes: {3}", distance, total, tapeCount);
+                         "Tapes: {3:0}", distance, total, tapeCount);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,20 +9,18 @@ namespace VR_Prototyping.Scripts.Tools
     {        
         [BoxGroup("Tape Tool Settings")] [Required] public GameObject tapeNodePrefab;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
+        [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
         [BoxGroup("Tape Tool Settings")] [Space(5)] public Material tapeMaterial;
         [BoxGroup("Tape Tool Settings")] [Space(5)] public Color tapeColor = new Color(0,0,0,255);
-        
-        public MeasureVisual MeasureVisual { private get; set; }
-        public MeasureText MeasureText { private get; set; }
+
+        public MeasureText MeasureText { get; set; }
+        private MeasureTape measureTape;
+        private MeasureNode measureNode;
         
         private int tapeCount;
         
         private GameObject tapeObject;
         private GameObject node;
-        private LineRenderer tapeLr;
-
-        private Vector3 startPos = Vector3.zero;
-        private float totalLength;
 
         protected override void Initialise()
         {
@@ -31,36 +30,31 @@ namespace VR_Prototyping.Scripts.Tools
         protected override void ToolStart()
         {
             var position = dominant.transform.position;
-            startPos = position;
-            var positionCount = tapeLr.positionCount;
+            var positionCount = measureTape.TapeLr.positionCount;
             positionCount++;
-            tapeLr.positionCount = positionCount;
-            tapeLr.SetPosition(positionCount - 1, position);
+            measureTape.TapeLr.positionCount = positionCount;
+            measureTape.TapeLr.SetPosition(positionCount - 1, position);
             CreateNode();
         }
 
         protected override void ToolStay()
         {            
-            MeasureText.SetText(CurrentDistance(), totalLength, tapeCount);
             Set.Transforms(node.transform, dominant.transform);
-            tapeLr.SetPosition(tapeLr.positionCount - 1, dominant.transform.position);
+            measureTape.TapeLr.SetPosition(measureTape.TapeLr.positionCount - 1, dominant.transform.position);
+            measureTape.AdjustTape();
+            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
         }
 
         protected override void ToolEnd()
         {
-            totalLength = totalLength + CurrentDistance();
-            MeasureText.SetText(CurrentDistance(), totalLength, tapeCount);
+            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
             ReleaseNode();
         }
 
         protected override void ToolInactive()
         {
-            
-        }
-
-        private float CurrentDistance()
-        {
-            return Vector3.Distance(startPos, dominant.transform.position);
+            if(measureTape == null || measureNode == null) return;
+            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
         }
 
         public void NewTape()
@@ -69,24 +63,30 @@ namespace VR_Prototyping.Scripts.Tools
             
             tapeObject = new GameObject("Tape_" + tapeCount);
             Set.Transforms(tapeObject.transform, dominant.transform);
+            measureTape = tapeObject.AddComponent<MeasureTape>();
+            measureTape.MeasureTool = this;
             
-            tapeLr = tapeObject.AddComponent<LineRenderer>();
-            Setup.LineRender(tapeLr, tapeMaterial, tapeWidth, true);
-            tapeLr.positionCount = 0;
-            tapeLr.material.color = tapeColor;
-            
-            totalLength = 0f;
+            measureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
+            Setup.LineRender(measureTape.TapeLr, tapeMaterial, tapeWidth, true);
+            measureTape.TapeLr.positionCount = 0;
+            measureTape.TapeLr.material.color = tapeColor;
         }
 
         private void CreateNode()
         {
             node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
             node.transform.position = dominant.transform.position;
+            measureNode = node.GetComponent<MeasureNode>();
+            measureNode.C = controller;
+            measureNode.MeasureTape = measureTape;
+            measureNode.LockNode = false;
+            measureTape.measureNodes.Add(measureNode);
         }
 
         private void ReleaseNode()
         {
             node = null;
+            measureNode = null;
         }
     }
 }
