@@ -10,7 +10,7 @@ namespace VR_Prototyping.Scripts.Tools
     {
         public ControllerTransforms controller { get; set; }
         public ToolController toolController { private get; set; }
-        public ToolMenu toolMenu { private get; set; }
+        public ToolMenu toolMenu { get; set; }
         public SelectableObject toolButton { get; private set; }
         public ToolMenu.Handedness handedness { private get; set; }
         private bool active { get; set; }

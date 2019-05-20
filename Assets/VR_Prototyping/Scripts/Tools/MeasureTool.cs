@@ -80,9 +80,10 @@ namespace VR_Prototyping.Scripts.Tools
             MeasureTape.TapeName = tapeCount.ToString();
         }
 
-        private void CreateNode()
+        public void CreateNode()
         {
             node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
+            node.transform.name = "NODE_" + MeasureTape.measureNodes.Count;
             node.transform.position = dominant.transform.position;
             MeasureNode = node.GetComponent<MeasureNode>();
             MeasureNode.MeasureTool = this;
@@ -90,6 +91,19 @@ namespace VR_Prototyping.Scripts.Tools
             MeasureNode.MeasureTape = MeasureTape;
             MeasureNode.LockNode = false;
             MeasureTape.measureNodes.Add(MeasureNode);
+        }
+        
+        public void InsertNode(MeasureTape tape, Vector3 position, int index)
+        {
+            node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
+            node.transform.name = "NODE_" + index;
+            node.transform.position = position;
+            MeasureNode = node.GetComponent<MeasureNode>();
+            MeasureNode.MeasureTool = this;
+            MeasureNode.C = controller;
+            MeasureNode.MeasureTape = tape;
+            MeasureNode.LockNode = false;
+            tape.measureNodes.Insert(index, MeasureNode);
         }
 
         private void ReleaseNode()

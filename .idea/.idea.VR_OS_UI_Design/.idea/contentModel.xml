@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\ciara\.Rider2018.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\ciara\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_VR_OS_UI_Design.155589170.00" t="ExcludeRecursive" />
+    <e p="C:\Users\ciara\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\ciara\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_VR_OS_UI_Design.155589170.00" t="ExcludeRecursive" />
     <e p="S:\Personal\Projects\Unity Development\HDRP Sketches\VR_OS_UI_Design\VR_OS_UI_Design" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
@@ -951,6 +951,7 @@
             <e p="Tools" t="Include">
               <e p="BaseTool.cs" t="Include" />
               <e p="CloseButton.cs" t="Include" />
+              <e p="InsertPointTEMP.cs" t="Include" />
               <e p="MeasureNewTape.cs" t="Include" />
               <e p="MeasureNode.cs" t="Include" />
               <e p="MeasureTape.cs" t="Include" />
@@ -974,7 +975,6 @@
           </e>
         </e>
       </e>
-      <e p="Library" t="ExcludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="SteamVR.csproj" t="IncludeRecursive" />
@@ -982,9 +982,7 @@
       <e p="SteamVR_Editor.csproj" t="IncludeRecursive" />
       <e p="SteamVR_Input_Editor.csproj" t="IncludeRecursive" />
       <e p="SteamVR_Windows_EditorHelper.csproj" t="IncludeRecursive" />
-      <e p="Temp" t="ExcludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
-      </e>
+      <e p="Temp\bin" t="ExcludeRecursive" />
       <e p="VR_OS_UI_Design.sln" t="IncludeFlat" />
     </e>
   </component>
