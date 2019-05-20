@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa3fcd3a-94a9-4d17-8e49-0507c2719a5e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VR_OS_UI_Design/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VR_OS_UI_Design/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VR_OS_UI_Design/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VR_OS_UI_Design/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Materials/SketchMat.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Materials/SketchMat.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Materials/TapeMat.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Materials/TapeMat.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Prefabs/VR_Tools/Measure_Tool.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Prefabs/VR_Tools/Measure_Tool.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Prefabs/VR_Tools/Tool_Menu.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Prefabs/VR_Tools/Tool_Menu.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureText.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureVisual.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureVisual.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/BaseDirectBlock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/BaseDirectBlock.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VR_Prototyping/Scenes/00_Demo_Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VR_Prototyping/Scenes/00_Demo_Scene.unity" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +19,7 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/BaseTool.cs">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="238">
+                  <state relative-caret-position="252">
                     <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
                     <folding>
                       <marker date="1555356806495" expanded="false" signature="6:101" ph="..." />
@@ -66,10 +58,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTool.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="18" column="8" lean-forward="true" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
+            <state relative-caret-position="196">
+              <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
               <folding>
-                <marker date="1555373311269" expanded="true" signature="7:82" ph="..." />
+                <marker date="1555373311269" expanded="false" signature="7:82" ph="..." />
                 <marker date="1555373311269" expanded="true" signature="122:3306" ph="{...}" />
                 <marker date="1555373311269" expanded="true" signature="164:3304" ph="{...}" />
                 <marker date="1555373311269" expanded="true" signature="933:976" ph="{...}" />
@@ -88,10 +80,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTape.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="98">
-              <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+            <state relative-caret-position="56">
+              <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
               <folding>
-                <marker date="1555372835628" expanded="true" signature="6:52" ph="..." />
+                <marker date="1555372835628" expanded="false" signature="6:52" ph="..." />
                 <marker date="1555372835628" expanded="true" signature="92:1250" ph="{...}" />
                 <marker date="1555372835628" expanded="true" signature="139:1248" ph="{...}" />
                 <marker date="1555372835628" expanded="true" signature="422:556" ph="{...}" />
@@ -106,10 +98,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureNode.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="112">
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
               <folding>
-                <marker date="1555373286179" expanded="true" signature="6:31" ph="..." />
+                <marker date="1555373286179" expanded="false" signature="6:31" ph="..." />
                 <marker date="1555373286179" expanded="true" signature="71:1291" ph="{...}" />
                 <marker date="1555373286179" expanded="true" signature="118:1289" ph="{...}" />
                 <marker date="1555373286179" expanded="true" signature="511:618" ph="{...}" />
@@ -123,8 +115,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/BaseDirectBlock.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="70">
-              <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+            <state relative-caret-position="56">
+              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
               <folding>
                 <marker date="1555369694996" expanded="false" signature="6:91" ph="..." />
                 <marker date="1555369694996" expanded="true" signature="135:436" ph="{...}" />
@@ -137,7 +129,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureVisual.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
+            <state relative-caret-position="126">
               <caret line="11" column="89" selection-start-line="11" selection-start-column="89" selection-end-line="11" selection-end-column="89" />
               <folding>
                 <marker date="1555372882766" expanded="true" signature="58:489" ph="{...}" />
@@ -151,8 +143,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureText.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+            <state relative-caret-position="336">
+              <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
               <folding>
                 <marker date="1555371768227" expanded="false" signature="6:31" ph="..." />
                 <marker date="1555371768227" expanded="true" signature="71:857" ph="{...}" />
@@ -373,11 +365,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AssemblyExplorer" />
-      <pane id="FileSystemExplorer" />
       <pane id="SolutionExplorer">
         <option name="show-all-files" value="false" />
       </pane>
+      <pane id="AssemblyExplorer" />
       <pane id="UnityExplorer">
         <subPane>
           <expand>
@@ -416,6 +407,7 @@
         <option name="show-hidden-items" value="false" />
         <option name="show-project-names" value="true" />
       </pane>
+      <pane id="FileSystemExplorer" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -469,12 +461,13 @@
       <workItem from="1555091012261" duration="13018000" />
       <workItem from="1555157742637" duration="26119000" />
       <workItem from="1555347335149" duration="6970000" />
-      <workItem from="1555368895177" duration="4548000" />
+      <workItem from="1555368895177" duration="5154000" />
+      <workItem from="1556816961208" duration="2362000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149955000" />
+    <option name="totallyTimeSpent" value="152923000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -489,7 +482,7 @@
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18710022" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18923241" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -1407,6 +1400,107 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/DirectDial.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="13" selection-start-line="13" selection-end-line="13" selection-end-column="50" />
+          <folding>
+            <marker date="1555169137579" expanded="false" signature="6:66" ph="..." />
+            <marker date="1555169137579" expanded="true" signature="110:6687" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="190:6148" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="1936:1998" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="2049:2094" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="2127:3911" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="3981:4149" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="4193:4711" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="4453:4561" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="4595:4701" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="4784:5414" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="4916:5023" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="5130:5323" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="5499:5577" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="5615:6142" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="6314:6674" ph="{...}" />
+            <marker date="1555169137579" expanded="true" signature="6354:6668" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTool.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
+          <folding>
+            <marker date="1555373311269" expanded="false" signature="7:82" ph="..." />
+            <marker date="1555373311269" expanded="true" signature="122:3306" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="164:3304" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="933:976" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="1021:1353" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="1397:1730" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="1773:1908" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="1956:2131" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="2162:2739" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="2774:3185" ph="{...}" />
+            <marker date="1555373311269" expanded="true" signature="3221:3298" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTape.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+          <folding>
+            <marker date="1555372835628" expanded="false" signature="6:52" ph="..." />
+            <marker date="1555372835628" expanded="true" signature="92:1250" ph="{...}" />
+            <marker date="1555372835628" expanded="true" signature="139:1248" ph="{...}" />
+            <marker date="1555372835628" expanded="true" signature="422:556" ph="{...}" />
+            <marker date="1555372835628" expanded="true" signature="479:546" ph="{...}" />
+            <marker date="1555372835628" expanded="true" signature="590:1242" ph="{...}" />
+            <marker date="1555372835628" expanded="true" signature="745:1232" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureNode.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <marker date="1555373286179" expanded="false" signature="6:31" ph="..." />
+            <marker date="1555373286179" expanded="true" signature="71:1291" ph="{...}" />
+            <marker date="1555373286179" expanded="true" signature="118:1289" ph="{...}" />
+            <marker date="1555373286179" expanded="true" signature="511:618" ph="{...}" />
+            <marker date="1555373286179" expanded="true" signature="654:952" ph="{...}" />
+            <marker date="1555373286179" expanded="true" signature="1033:1283" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/BaseDirectBlock.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+          <folding>
+            <marker date="1555369694996" expanded="false" signature="6:91" ph="..." />
+            <marker date="1555369694996" expanded="true" signature="135:436" ph="{...}" />
+            <marker date="1555369694996" expanded="true" signature="195:434" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureVisual.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="11" column="89" selection-start-line="11" selection-start-column="89" selection-end-line="11" selection-end-column="89" />
+          <folding>
+            <marker date="1555372882766" expanded="true" signature="58:489" ph="{...}" />
+            <marker date="1555372882766" expanded="true" signature="107:487" ph="{...}" />
+            <marker date="1555372882766" expanded="true" signature="242:481" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/ToolMenu.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="994">
@@ -1487,7 +1581,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/BaseTool.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="252">
           <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
           <folding>
             <marker date="1555356806495" expanded="false" signature="6:101" ph="..." />
@@ -1515,111 +1609,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/DirectDial.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="13" selection-start-line="13" selection-end-line="13" selection-end-column="50" />
-          <folding>
-            <marker date="1555169137579" expanded="false" signature="6:66" ph="..." />
-            <marker date="1555169137579" expanded="true" signature="110:6687" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="190:6148" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="1936:1998" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="2049:2094" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="2127:3911" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="3981:4149" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="4193:4711" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="4453:4561" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="4595:4701" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="4784:5414" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="4916:5023" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="5130:5323" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="5499:5577" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="5615:6142" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="6314:6674" ph="{...}" />
-            <marker date="1555169137579" expanded="true" signature="6354:6668" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/UI_Blocks/BaseDirectBlock.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-          <folding>
-            <marker date="1555369694996" expanded="false" signature="6:91" ph="..." />
-            <marker date="1555369694996" expanded="true" signature="135:436" ph="{...}" />
-            <marker date="1555369694996" expanded="true" signature="195:434" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureVisual.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="11" column="89" selection-start-line="11" selection-start-column="89" selection-end-line="11" selection-end-column="89" />
-          <folding>
-            <marker date="1555372882766" expanded="true" signature="58:489" ph="{...}" />
-            <marker date="1555372882766" expanded="true" signature="107:487" ph="{...}" />
-            <marker date="1555372882766" expanded="true" signature="242:481" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTape.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-          <folding>
-            <marker date="1555372835628" expanded="true" signature="6:52" ph="..." />
-            <marker date="1555372835628" expanded="true" signature="92:1250" ph="{...}" />
-            <marker date="1555372835628" expanded="true" signature="139:1248" ph="{...}" />
-            <marker date="1555372835628" expanded="true" signature="422:556" ph="{...}" />
-            <marker date="1555372835628" expanded="true" signature="479:546" ph="{...}" />
-            <marker date="1555372835628" expanded="true" signature="590:1242" ph="{...}" />
-            <marker date="1555372835628" expanded="true" signature="745:1232" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureTool.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="18" column="8" lean-forward="true" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
-          <folding>
-            <marker date="1555373311269" expanded="true" signature="7:82" ph="..." />
-            <marker date="1555373311269" expanded="true" signature="122:3306" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="164:3304" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="933:976" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="1021:1353" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="1397:1730" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="1773:1908" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="1956:2131" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="2162:2739" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="2774:3185" ph="{...}" />
-            <marker date="1555373311269" expanded="true" signature="3221:3298" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureNode.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <marker date="1555373286179" expanded="true" signature="6:31" ph="..." />
-            <marker date="1555373286179" expanded="true" signature="71:1291" ph="{...}" />
-            <marker date="1555373286179" expanded="true" signature="118:1289" ph="{...}" />
-            <marker date="1555373286179" expanded="true" signature="511:618" ph="{...}" />
-            <marker date="1555373286179" expanded="true" signature="654:952" ph="{...}" />
-            <marker date="1555373286179" expanded="true" signature="1033:1283" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/VR_Prototyping/Scripts/Tools/MeasureText.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        <state relative-caret-position="336">
+          <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
           <folding>
             <marker date="1555371768227" expanded="false" signature="6:31" ph="..." />
             <marker date="1555371768227" expanded="true" signature="71:857" ph="{...}" />
