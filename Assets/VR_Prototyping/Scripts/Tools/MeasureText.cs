@@ -5,26 +5,22 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class MeasureText : MonoBehaviour
     {
-        private MeasureTool measureTool;
-        private TextMeshPro text;
+        public MeasureTool MeasureTool { get; set; }
+        public TextMeshPro HighLevelText  { get; set; }
 
         private void Start()
         {
-            measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            measureTool.MeasureText = this;
-            text = transform.GetComponent<TextMeshPro>();
+            if (MeasureTool != null) return;
+            
+            MeasureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
+            MeasureTool.MeasureText = this;
+            HighLevelText = GetComponent<TextMeshPro>();
         }
 
-        private void Update()
+        public void SetText(float total, string tapeName)
         {
-            transform.LookAwayFrom(measureTool.controller.CameraTransform(), Vector3.up);
-        }
-
-        public void SetText(float distance, float total, float tapeCount)
-        {
-            text.SetText("Current: <b>{0:2}</b> " +
-                         "Total: <b>{1:2}</b> " +
-                         "Tapes: {3:0}", distance, total, tapeCount);
+            HighLevelText.SetText("Total: <b>{1:2}</b> " +
+                         "Tape: " + tapeName, total);
         }
     }
 }

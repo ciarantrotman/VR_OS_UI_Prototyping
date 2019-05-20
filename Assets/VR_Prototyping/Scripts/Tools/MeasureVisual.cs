@@ -12,6 +12,7 @@ namespace VR_Prototyping.Scripts.Tools
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             meshRenderer = transform.GetComponent<MeshRenderer>();
             meshRenderer.material = measureTool.tapeMaterial;
+            meshRenderer.material.color = measureTool.tapeColor;
         }
     }
 }

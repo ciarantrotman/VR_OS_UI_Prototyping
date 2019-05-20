@@ -107,6 +107,8 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void Update()
         {
+            ToolUpdate();
+            
             switch (handedness)
             {
                 case ToolMenu.Handedness.Right:
@@ -146,6 +148,11 @@ namespace VR_Prototyping.Scripts.Tools
             }
 
             pTrigger = cTrigger;
+        }
+
+        protected virtual void ToolUpdate()
+        {
+            
         }
     }
 }

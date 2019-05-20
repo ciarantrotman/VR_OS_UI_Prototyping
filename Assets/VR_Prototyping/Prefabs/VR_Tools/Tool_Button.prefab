@@ -209,11 +209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_text

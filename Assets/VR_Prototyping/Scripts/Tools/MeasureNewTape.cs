@@ -12,7 +12,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             c = measureTool.controller;
-            activate.AddListener(NewTape);
+            activate.AddListener(NewTape);    
             
             SetupButton();
         }
