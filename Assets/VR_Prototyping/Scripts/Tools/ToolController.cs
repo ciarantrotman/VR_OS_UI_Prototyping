@@ -31,7 +31,7 @@ namespace VR_Prototyping.Scripts.Tools
                 tool.buttonPrefab.transform.localPosition = new Vector3(x, 0, .2f);
                 tool.dominant.transform.SetParent(transform);
                 tool.nonDominant.transform.SetParent(transform);
-                x = x + Spacing;
+                x += Spacing;
             }
         }
 

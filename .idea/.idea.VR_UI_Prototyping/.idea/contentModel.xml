@@ -930,7 +930,6 @@
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
             <e p="Draw.cs" t="Include" />
-            <e p="DrivenValue.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
@@ -949,7 +948,17 @@
             <e p="SortBy.cs" t="Include" />
             <e p="Tools" t="Include">
               <e p="BaseTool.cs" t="Include" />
+              <e p="CloseButton.cs" t="Include" />
+              <e p="InsertPointTEMP.cs" t="Include" />
+              <e p="MeasureNewTape.cs" t="Include" />
+              <e p="MeasureNode.cs" t="Include" />
+              <e p="MeasureTape.cs" t="Include" />
+              <e p="MeasureText.cs" t="Include" />
               <e p="MeasureTool.cs" t="Include" />
+              <e p="MeasureVisual.cs" t="Include" />
+              <e p="SketchBrushColor.cs" t="Include" />
+              <e p="SketchBrushVisual.cs" t="Include" />
+              <e p="SketchBrushWidth.cs" t="Include" />
               <e p="SketchTool.cs" t="Include" />
               <e p="ToolController.cs" t="Include" />
               <e p="ToolMenu.cs" t="Include" />
@@ -964,7 +973,6 @@
           </e>
         </e>
       </e>
-      <e p="Library" t="ExcludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="SteamVR.csproj" t="IncludeRecursive" />
@@ -972,12 +980,10 @@
       <e p="SteamVR_Editor.csproj" t="IncludeRecursive" />
       <e p="SteamVR_Input_Editor.csproj" t="IncludeRecursive" />
       <e p="SteamVR_Windows_EditorHelper.csproj" t="IncludeRecursive" />
-      <e p="Temp" t="ExcludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
-      </e>
+      <e p="Temp\bin" t="ExcludeRecursive" />
       <e p="VR_UI_Prototyping.sln" t="IncludeFlat" />
     </e>
-    <e p="C:\Users\TROT8018\.Rider2018.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\TROT8018\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_VR_UI_Prototyping.1072581290.00" t="ExcludeRecursive" />
+    <e p="C:\Users\TROT8018\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\TROT8018\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_VR_UI_Prototyping.1072581290.00" t="ExcludeRecursive" />
   </component>
 </project>

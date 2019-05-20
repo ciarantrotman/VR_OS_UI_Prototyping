@@ -14,8 +14,8 @@ namespace VR_Prototyping.Scripts.Tools
         [BoxGroup("Tape Tool Settings")] [Space(5)] public Color tapeColor = new Color(0,0,0,255);
 
         public MeasureText MeasureText { get; set; }
-        private MeasureTape measureTape;
-        private MeasureNode measureNode;
+        public MeasureTape MeasureTape { get; set; }
+        public MeasureNode MeasureNode  { get; set; }
         
         private int tapeCount;
         
@@ -27,34 +27,40 @@ namespace VR_Prototyping.Scripts.Tools
             NewTape();
         }
 
+        protected override void ToolUpdate()
+        {
+            if (MeasureText == null) return;
+            MeasureText.transform.LookAwayFrom(controller.CameraTransform(), Vector3.up);
+            
+            if (MeasureText == null || MeasureNode == null || MeasureTape == null) return;
+            MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
+        }
+
         protected override void ToolStart()
         {
             var position = dominant.transform.position;
-            var positionCount = measureTape.TapeLr.positionCount;
+            var positionCount = MeasureTape.TapeLr.positionCount;
             positionCount++;
-            measureTape.TapeLr.positionCount = positionCount;
-            measureTape.TapeLr.SetPosition(positionCount - 1, position);
+            MeasureTape.TapeLr.positionCount = positionCount;
+            MeasureTape.TapeLr.SetPosition(positionCount - 1, position);
             CreateNode();
         }
 
         protected override void ToolStay()
         {            
             Set.Transforms(node.transform, dominant.transform);
-            measureTape.TapeLr.SetPosition(measureTape.TapeLr.positionCount - 1, dominant.transform.position);
-            measureTape.AdjustTape();
-            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
+            MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
+            MeasureTape.AdjustTape(); 
         }
 
         protected override void ToolEnd()
         {
-            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
             ReleaseNode();
         }
 
         protected override void ToolInactive()
         {
-            if(measureTape == null || measureNode == null) return;
-            MeasureText.SetText(measureNode.Distance, measureTape.Distance, tapeCount);
+            
         }
 
         public void NewTape()
@@ -63,30 +69,33 @@ namespace VR_Prototyping.Scripts.Tools
             
             tapeObject = new GameObject("Tape_" + tapeCount);
             Set.Transforms(tapeObject.transform, dominant.transform);
-            measureTape = tapeObject.AddComponent<MeasureTape>();
-            measureTape.MeasureTool = this;
+            MeasureTape = tapeObject.AddComponent<MeasureTape>();
+            MeasureTape.MeasureTool = this;
             
-            measureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
-            Setup.LineRender(measureTape.TapeLr, tapeMaterial, tapeWidth, true);
-            measureTape.TapeLr.positionCount = 0;
-            measureTape.TapeLr.material.color = tapeColor;
+            MeasureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
+            Setup.LineRender(MeasureTape.TapeLr, tapeMaterial, tapeWidth, true);
+            MeasureTape.TapeLr.positionCount = 0;
+            MeasureTape.TapeLr.material.color = tapeColor;
+
+            MeasureTape.TapeName = tapeCount.ToString();
         }
 
         private void CreateNode()
         {
             node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
             node.transform.position = dominant.transform.position;
-            measureNode = node.GetComponent<MeasureNode>();
-            measureNode.C = controller;
-            measureNode.MeasureTape = measureTape;
-            measureNode.LockNode = false;
-            measureTape.measureNodes.Add(measureNode);
+            MeasureNode = node.GetComponent<MeasureNode>();
+            MeasureNode.MeasureTool = this;
+            MeasureNode.C = controller;
+            MeasureNode.MeasureTape = MeasureTape;
+            MeasureNode.LockNode = false;
+            MeasureTape.measureNodes.Add(MeasureNode);
         }
 
         private void ReleaseNode()
         {
             node = null;
-            measureNode = null;
+            MeasureNode = null;
         }
     }
 }
