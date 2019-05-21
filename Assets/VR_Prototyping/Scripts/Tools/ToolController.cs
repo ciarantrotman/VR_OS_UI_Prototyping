@@ -44,6 +44,16 @@ namespace VR_Prototyping.Scripts.Tools
                 SetButtonVisualState(tool, activeTool == tool);
             }
         }
+        
+        public void SetAllToolState(bool state)
+        {
+            foreach (var item in tools)
+            {
+                var tool = item.Value;
+                tool.SetToolState(state);
+                SetButtonVisualState(tool, state);
+            }
+        }
 
         public void ToggleButtonState(bool state)
         {

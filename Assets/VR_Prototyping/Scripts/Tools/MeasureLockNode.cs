@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools
 {
-    public class MeasureVisual : MonoBehaviour
+    public class MeasureLockNode : DirectButton
     {
         private MeasureTool _measureTool;
         private MeshRenderer _meshRenderer;       
@@ -10,9 +11,9 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            _meshRenderer = transform.GetComponent<MeshRenderer>();
-            _meshRenderer.material = _measureTool.tapeMaterial;
-            _meshRenderer.material.color = _measureTool.tapeColor;
+            c = _measureTool.controller;
+            activate.AddListener(_measureTool.LockNode);
+            SetupButton();
         }
     }
 }

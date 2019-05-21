@@ -219,8 +219,8 @@ namespace VR_Prototyping.Scripts
 
 			var o = gameObject;
 			CheckGaze(o, gazeAngle, c.gaze, c.gazeList, c.lHandList, c.rHandList, c.globalList);
-			ManageList(o, c.lHandList, CheckHand(o, c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftControllerTransform(), c.selectionRange));
-			ManageList(o, c.rHandList, CheckHand(o, c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightControllerTransform(), c.selectionRange));
+			ManageList(o, c.lHandList, CheckHand(o, c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftTransform(), c.selectionRange));
+			ManageList(o, c.rHandList, CheckHand(o, c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightTransform(), c.selectionRange));
 		}
 
 		private void OnTriggerEnter(Collider col)
@@ -308,14 +308,14 @@ namespace VR_Prototyping.Scripts
 			if (!reactiveMat) return;
 			
 			Renderer.material.SetFloat(Threshold, clippingDistance);
-			Set.ReactiveMaterial(Renderer, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform());
+			Set.ReactiveMaterial(Renderer, c.Controller.LeftTransform(), c.Controller.RightTransform());
 		}
 		private void GetAngles()
 		{
 			var position = transform.position;
 			gazeAngle = Vector3.Angle(position - c.Controller.CameraPosition(), c.Controller.CameraForwardVector());
-			AngleL = Vector3.Angle(position - c.Controller.LeftControllerTransform().position, c.Controller.LeftForwardVector());
-			AngleR = Vector3.Angle(position - c.Controller.RightControllerTransform().position, c.Controller.RightForwardVector());
+			AngleL = Vector3.Angle(position - c.Controller.LeftTransform().position, c.Controller.LeftForwardVector());
+			AngleR = Vector3.Angle(position - c.Controller.RightTransform().position, c.Controller.RightForwardVector());
 		}
 		private static void CheckGaze(GameObject o, float a, float c, ICollection<GameObject> g, ICollection<GameObject> l, ICollection<GameObject> r, ICollection<GameObject> global)
 		{

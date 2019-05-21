@@ -105,14 +105,14 @@ namespace VR_Prototyping.Scripts
 
         private void DualMovement()
         {
-            l.localRotation = controller.LeftControllerTransform().localRotation;
-            r.localRotation = controller.RightControllerTransform().localRotation;
+            l.localRotation = controller.LeftTransform().localRotation;
+            r.localRotation = controller.RightTransform().localRotation;
             var averageRotation = v.localRotation;
             
             averageRotation = Quaternion.Lerp(averageRotation, 
                 Quaternion.Lerp(
-                    controller.LeftControllerTransform().localRotation, 
-                    controller.RightControllerTransform().localRotation, 
+                    controller.LeftTransform().localRotation, 
+                    controller.RightTransform().localRotation, 
                     .5f), 
                 .1f);
             

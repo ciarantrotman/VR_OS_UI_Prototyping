@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools
@@ -8,6 +6,8 @@ namespace VR_Prototyping.Scripts.Tools
     public class MeasureTool : BaseTool
     {        
         [BoxGroup("Tape Tool Settings")] [Required] public GameObject tapeNodePrefab;
+        [BoxGroup("Tape Tool Settings")] [Required] public GameObject intersectionPointPrefab;
+        [BoxGroup("Tape Tool Settings")] [Range(.00001f, .1f)] public float insertionTolerance = .01f;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
         [BoxGroup("Tape Tool Settings")] [Space(5)] public Material tapeMaterial;
@@ -15,16 +15,21 @@ namespace VR_Prototyping.Scripts.Tools
 
         public MeasureText MeasureText { get; set; }
         public MeasureTape MeasureTape { get; set; }
+        public MeasureTape LastMeasureTape { get; set; }
         public MeasureNode MeasureNode  { get; set; }
+        public MeasureNode LastMeasureNode  { get; set; }
         
-        private int tapeCount;
+        public bool Insertion { get; set; }
         
-        private GameObject tapeObject;
-        private GameObject node;
+        private int _tapeCount;
+        
+        private GameObject _tapeObject;
+        private GameObject _node;
 
         protected override void Initialise()
         {
             NewTape();
+            intersectionPointPrefab = Instantiate(intersectionPointPrefab, transform);
         }
 
         protected override void ToolUpdate()
@@ -38,23 +43,21 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolStart()
         {
-            var position = dominant.transform.position;
-            var positionCount = MeasureTape.TapeLr.positionCount;
-            positionCount++;
-            MeasureTape.TapeLr.positionCount = positionCount;
-            MeasureTape.TapeLr.SetPosition(positionCount - 1, position);
-            CreateNode();
+            if (Insertion) return;
+            InsertNode(MeasureTape, dominant.transform.position, MeasureTape.measureNodes.Count);
         }
 
         protected override void ToolStay()
-        {            
-            Set.Transforms(node.transform, dominant.transform);
+        {
+            if (Insertion) return;
+            Set.Transforms(_node.transform, dominant.transform);
             MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
             MeasureTape.AdjustTape(); 
         }
 
         protected override void ToolEnd()
         {
+            if (Insertion) return;
             ReleaseNode();
         }
 
@@ -65,51 +68,71 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void NewTape()
         {
-            tapeCount++;
+            _tapeCount++;
             
-            tapeObject = new GameObject("Tape_" + tapeCount);
-            Set.Transforms(tapeObject.transform, dominant.transform);
-            MeasureTape = tapeObject.AddComponent<MeasureTape>();
+            _tapeObject = new GameObject("Tape_" + _tapeCount);
+            Set.Transforms(_tapeObject.transform, dominant.transform);
+            MeasureTape = _tapeObject.AddComponent<MeasureTape>();
             MeasureTape.MeasureTool = this;
             
-            MeasureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
+            MeasureTape.TapeLr = _tapeObject.AddComponent<LineRenderer>();
             Setup.LineRender(MeasureTape.TapeLr, tapeMaterial, tapeWidth, true);
             MeasureTape.TapeLr.positionCount = 0;
             MeasureTape.TapeLr.material.color = tapeColor;
 
-            MeasureTape.TapeName = tapeCount.ToString();
+            MeasureTape.TapeName = _tapeCount.ToString();
         }
 
-        public void CreateNode()
-        {
-            node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
-            node.transform.name = "NODE_" + MeasureTape.measureNodes.Count;
-            node.transform.position = dominant.transform.position;
-            MeasureNode = node.GetComponent<MeasureNode>();
-            MeasureNode.MeasureTool = this;
-            MeasureNode.C = controller;
-            MeasureNode.MeasureTape = MeasureTape;
-            MeasureNode.LockNode = false;
-            MeasureTape.measureNodes.Add(MeasureNode);
-        }
-        
         public void InsertNode(MeasureTape tape, Vector3 position, int index)
         {
-            node = Instantiate(tapeNodePrefab, tapeObject.transform, true);
-            node.transform.name = "NODE_" + index;
-            node.transform.position = position;
-            MeasureNode = node.GetComponent<MeasureNode>();
-            MeasureNode.MeasureTool = this;
-            MeasureNode.C = controller;
-            MeasureNode.MeasureTape = tape;
-            MeasureNode.LockNode = false;
+            _node = Instantiate(tapeNodePrefab, position, Quaternion.identity, _tapeObject.transform);
+            MeasureNode = _node.GetComponent<MeasureNode>();
+            LastMeasureTape = tape;
+            LastMeasureNode = MeasureNode;
+            MeasureNode.Initialise(this, controller, tape);
             tape.measureNodes.Insert(index, MeasureNode);
+            tape.RefactorNodes();
+            AddLineRenderNode(tape.TapeLr, position);
+            tape.AdjustTape();
         }
 
         private void ReleaseNode()
         {
-            node = null;
+            _node = null;
             MeasureNode = null;
+        }
+
+        public void DeleteNode()
+        {
+            if (LastMeasureNode == null) return;
+            
+            ReleaseNode();
+            LastMeasureNode.DeleteNode();
+            LastMeasureTape.RefactorNodes();
+            RemoveLineRenderNode(LastMeasureTape.TapeLr);
+            LastMeasureTape.AdjustTape();
+        }
+        
+        public void LockNode()
+        {
+            if (LastMeasureNode == null) return;
+            
+            LastMeasureNode.LockNode = !LastMeasureNode.LockNode;
+        }
+
+        private static void AddLineRenderNode(LineRenderer lr, Vector3 position)
+        {
+            var positionCount = lr.positionCount;
+            positionCount++;
+            lr.positionCount = positionCount;
+            lr.SetPosition(positionCount - 1, position);
+        }
+        
+        private static void RemoveLineRenderNode(LineRenderer lr)
+        {
+            var positionCount = lr.positionCount;
+            positionCount--;
+            lr.positionCount = positionCount;
         }
     }
 }

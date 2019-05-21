@@ -20,6 +20,7 @@ namespace VR_Prototyping.Scripts
             }
             return Vector3.zero;
         }
+        
         public static Vector3 LineSegment(Vector3 point1, Vector3 vector1, Vector3 point2, Vector3 vector2, Vector3 point3, float tolerance)
         {
             var v3 = point2 - point1;

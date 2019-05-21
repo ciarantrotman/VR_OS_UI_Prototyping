@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
@@ -270,6 +272,11 @@ namespace VR_Prototyping.Scripts
             Set.Transforms(objO, focus);
             Set.Position(conO, con);
             Set.Position(objP, con);
+        }
+
+        public static bool IsCollinear(Vector3 a, Vector3 b, Vector3 x, float tolerance)
+        {
+            return Math.Abs(Vector3.Distance(a, x) + Vector3.Distance(b, x) - Vector3.Distance(a, b)) < tolerance;
         }
     }
 }

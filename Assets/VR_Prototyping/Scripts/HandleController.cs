@@ -106,18 +106,18 @@ namespace VR_Prototyping.Scripts
             switch (handle)
             {
                 case Handle.Left:
-                    HandleCheck(controller.LeftControllerTransform(), controller.LeftGrab(), controller.LeftSource());
-                    MidpointCalculation(transform, controller.LeftControllerTransform());
-                    SetTransform.Follow(midpointParent.transform, controller.LeftControllerTransform());
-                    Visual(controller.LeftControllerTransform(), handleVisual.transform, controller.LeftGrab());
-                    SetSmoothness(controller.LeftControllerTransform());
+                    HandleCheck(controller.LeftTransform(), controller.LeftGrab(), controller.LeftSource());
+                    MidpointCalculation(transform, controller.LeftTransform());
+                    SetTransform.Follow(midpointParent.transform, controller.LeftTransform());
+                    Visual(controller.LeftTransform(), handleVisual.transform, controller.LeftGrab());
+                    SetSmoothness(controller.LeftTransform());
                     break;
                 case Handle.Right:
-                    HandleCheck(controller.RightControllerTransform(), controller.RightGrab(), controller.RightSource());
-                    MidpointCalculation(transform, controller.RightControllerTransform());
-                    SetTransform.Follow(midpointParent.transform, controller.RightControllerTransform());
-                    Visual(controller.RightControllerTransform(), handleVisual.transform, controller.RightGrab());
-                    SetSmoothness(controller.RightControllerTransform());
+                    HandleCheck(controller.RightTransform(), controller.RightGrab(), controller.RightSource());
+                    MidpointCalculation(transform, controller.RightTransform());
+                    SetTransform.Follow(midpointParent.transform, controller.RightTransform());
+                    Visual(controller.RightTransform(), handleVisual.transform, controller.RightGrab());
+                    SetSmoothness(controller.RightTransform());
                     break;
                 case Handle.Center:
 //                    HandleCheck(controller.LeftControllerTransform(), controller.LeftGrab());

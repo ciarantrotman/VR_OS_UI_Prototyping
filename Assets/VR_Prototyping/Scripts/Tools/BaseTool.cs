@@ -113,13 +113,13 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 case ToolMenu.Handedness.Right:
                     cTrigger = controller.RightSelect();
-                    Set.LerpTransforms(dominant.transform, controller.RightControllerTransform(), dominantSpeed);
-                    Set.LerpTransforms(nonDominant.transform, controller.LeftControllerTransform(), nonDominantSpeed);
+                    Set.LerpTransforms(dominant.transform, controller.RightTransform(), dominantSpeed);
+                    Set.LerpTransforms(nonDominant.transform, controller.LeftTransform(), nonDominantSpeed);
                     break;
                 case ToolMenu.Handedness.Left:
                     cTrigger = controller.LeftSelect();
-                    Set.LerpTransforms(dominant.transform, controller.LeftControllerTransform(), dominantSpeed);
-                    Set.LerpTransforms(nonDominant.transform, controller.RightControllerTransform(), nonDominantSpeed);
+                    Set.LerpTransforms(dominant.transform, controller.LeftTransform(), dominantSpeed);
+                    Set.LerpTransforms(nonDominant.transform, controller.RightTransform(), nonDominantSpeed);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

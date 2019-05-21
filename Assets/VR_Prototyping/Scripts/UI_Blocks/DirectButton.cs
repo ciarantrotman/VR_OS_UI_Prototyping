@@ -37,12 +37,12 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Button Settings")] [Header("Button Function")] public bool toggle;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [SerializeField] [Indent] private bool startsActive;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [Indent] [Range(.01f, .05f)] public float toggleDepth;
-        [TabGroup("Button Settings")] [Header("Button Parameters")] [Space(5)] [Range(0f, 10f)] public float springiness;
-        [TabGroup("Button Settings")] [Space(5)] [Range(.01f, .5f)] [SerializeField] private float hoverDistance = .05f;
-        [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth;
-        [TabGroup("Button Settings")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth;
-        [TabGroup("Button Settings")] [Range(.01f, .05f)] public float buttonRadius;
-        [TabGroup("Button Settings")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius;
+        [TabGroup("Button Settings")] [Header("Button Parameters")] [Space(5)] [Range(0f, 10f)] public float springiness = 10f;
+        [TabGroup("Button Settings")] [Space(5)] [Range(.01f, .5f)] [SerializeField] private float hoverDistance = .01f;
+        [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth = .005f;
+        [TabGroup("Button Settings")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth = .02f;
+        [TabGroup("Button Settings")] [Range(.01f, .05f)] public float buttonRadius = .02f;
+        [TabGroup("Button Settings")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius = .025f;
         [TabGroup("Button Settings")] [Space(5)] public bool ignoreLeftHand;
         [TabGroup("Button Settings")] public bool ignoreRightHand;
         private bool ValidateRadius(float value)
@@ -53,8 +53,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         {
             return value > restDepth;
         }
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
         
@@ -180,7 +180,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             
             if (buttonState == ButtonState.Hover && ActiveDistance())
             {
-                buttonState = toggle? ButtonState.Active : ButtonState.Inactive;
+                buttonState = toggle ? ButtonState.Active : ButtonState.Inactive;
                 activate.Invoke();
             }
 
@@ -207,16 +207,16 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             
             if (ignoreLeftHand)
             {
-                return Vector3.Distance(buttonPos, c.RightControllerTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, c.RightTransform().position) <= hoverDistance;
             }
 
             if (ignoreRightHand)
             {
-                return Vector3.Distance(buttonPos, c.LeftControllerTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, c.LeftTransform().position) <= hoverDistance;
             }
             
-            return Vector3.Distance(buttonPos, c.LeftControllerTransform().position) <= hoverDistance ||
-                   Vector3.Distance(buttonPos, c.RightControllerTransform().position) <= hoverDistance;
+            return Vector3.Distance(buttonPos, c.LeftTransform().position) <= hoverDistance ||
+                   Vector3.Distance(buttonPos, c.RightTransform().position) <= hoverDistance;
         }
 
         private static Vector3 Offset(Transform local, float offset)

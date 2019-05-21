@@ -5,22 +5,21 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class MeasureText : MonoBehaviour
     {
-        public MeasureTool MeasureTool { get; set; }
-        public TextMeshPro HighLevelText  { get; set; }
+        private MeasureTool MeasureTool { get; set; }
+        private TextMeshPro HighLevelText  { get; set; }
 
         private void Start()
         {
             if (MeasureTool != null) return;
-            
             MeasureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            MeasureTool.MeasureText = this;
+            MeasureTool.MeasureText = MeasureTool.MeasureText == null ? this : MeasureTool.MeasureText;
             HighLevelText = GetComponent<TextMeshPro>();
         }
 
         public void SetText(float total, string tapeName)
         {
-            HighLevelText.SetText("Total: <b>{1:2}</b> " +
-                         "Tape: " + tapeName, total);
+            HighLevelText.SetText("Tape: <b>" + tapeName +
+                                  "</b> | Length: <b>{0:2}</b> ", total);
         }
     }
 }

@@ -51,15 +51,25 @@ namespace VR_Prototyping.Scripts
 
         private void FixedUpdate()
         {
-            Set.Transforms(lHandDirect.transform, LeftControllerTransform());
-            Set.Transforms(rHandDirect.transform, RightControllerTransform());
+            Set.Transforms(lHandDirect.transform, LeftTransform());
+            Set.Transforms(rHandDirect.transform, RightTransform());
         }
-        public Transform LeftControllerTransform()
+        public Vector3 LeftPosition()
+        {
+            return leftController.position;
+        }
+    
+        public Vector3 RightPosition()
+        {
+            return rightController.position;
+        }
+        
+        public Transform LeftTransform()
         {
             return leftController;
         }
     
-        public Transform RightControllerTransform()
+        public Transform RightTransform()
         {
             return rightController;
         }

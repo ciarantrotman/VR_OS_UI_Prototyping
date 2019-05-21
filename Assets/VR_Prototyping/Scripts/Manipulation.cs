@@ -155,11 +155,11 @@ namespace VR_Prototyping.Scripts
 		
 		private void Update()
 		{				
-			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.LeftControllerTransform(), cFl.transform);
-			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.RightControllerTransform(), cFr.transform);
+			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.LeftTransform(), cFl.transform);
+			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.RightTransform(), cFr.transform);
 			Set.MidpointPosition(mP.transform, tSl.transform, tSr.transform, true);
-			Set.Transforms(cR.transform, c.Controller.RightControllerTransform());
-			Set.Transforms(cL.transform, c.Controller.LeftControllerTransform());
+			Set.Transforms(cR.transform, c.Controller.RightTransform());
+			Set.Transforms(cL.transform, c.Controller.LeftTransform());
 			
 			FollowFocusObjects();
 		}
@@ -168,17 +168,17 @@ namespace VR_Prototyping.Scripts
 		{
 			if (c.lFocusObject != null)
 			{
-				Check.FocusObjectFollow(c.lFocusObject.transform, c.Controller.LeftControllerTransform(), tl.transform, tSl.transform, oOl.transform, cOl.transform, oPl.transform, c.Controller.LeftGrab());
+				Check.FocusObjectFollow(c.lFocusObject.transform, c.Controller.LeftTransform(), tl.transform, tSl.transform, oOl.transform, cOl.transform, oPl.transform, c.Controller.LeftGrab());
 			}
 
 			if (c.rFocusObject != null)
 			{
-				Check.FocusObjectFollow(c.rFocusObject.transform, c.Controller.RightControllerTransform(), tr.transform, tSr.transform, oOr.transform, cOr.transform, oPr.transform, c.Controller.RightGrab());
+				Check.FocusObjectFollow(c.rFocusObject.transform, c.Controller.RightTransform(), tr.transform, tSr.transform, oOr.transform, cOr.transform, oPr.transform, c.Controller.RightGrab());
 			}
 		}
 		public void OnStart(Transform con)
 		{
-			switch (con == c.Controller.LeftControllerTransform())
+			switch (con == c.Controller.LeftTransform())
 			{
 				case true:
 					Check.GrabStart(cFl, cPl, tl, cOl, con);
@@ -201,7 +201,7 @@ namespace VR_Prototyping.Scripts
 
 		public void OnStay(Transform con)
 		{
-			switch (con == c.Controller.LeftControllerTransform())
+			switch (con == c.Controller.LeftTransform())
 			{
 				case true:
 					ControllerFollowing(con, cFl, cPl, tl);
@@ -220,7 +220,7 @@ namespace VR_Prototyping.Scripts
 		{
 			if (rot)
 			{
-				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
+				Set.MidpointPosition(mRp.transform, c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
 				pRot = mRp.transform.rotation;
 				mRc.transform.rotation = target.rotation;
 				mRc.transform.position = mRp.transform.position;
@@ -251,7 +251,7 @@ namespace VR_Prototyping.Scripts
 		{
 			if (rot && enableRotation)
 			{
-				Set.MidpointPosition(mRp.transform, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform(), true);
+				Set.MidpointPosition(mRp.transform, c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
 			
 				var rotation = mRp.transform.rotation;
 			
@@ -275,7 +275,7 @@ namespace VR_Prototyping.Scripts
 				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
 				
 				if(scaleLr == null) return;
-				Draw.LineRender(scaleLr, c.Controller.LeftControllerTransform(), c.Controller.RightControllerTransform());
+				Draw.LineRender(scaleLr, c.Controller.LeftTransform(), c.Controller.RightTransform());
 			}
 		}
 
@@ -304,7 +304,7 @@ namespace VR_Prototyping.Scripts
 		public void OnEnd(Transform con)
 		{
 			DualGrabEnd();
-			switch (con == c.Controller.LeftControllerTransform())
+			switch (con == c.Controller.LeftTransform())
 			{
 				case true:
 					tl.transform.SetParent(null);

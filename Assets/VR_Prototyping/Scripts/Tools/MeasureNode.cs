@@ -7,33 +7,34 @@ namespace VR_Prototyping.Scripts.Tools
     {
         public MeasureTool MeasureTool { get; set; }
         public MeasureTape MeasureTape { private get; set; }
-        public bool LockNode { private get; set; }
-        public ControllerTransforms C { private get; set; }      
-        public TextMeshPro Text { get; private set; }      
-        public float Distance { get; set; }      
-        
+        public bool LockNode { get; set; }
+        public ControllerTransforms Controller { private get; set; }      
+        public TextMeshPro Text { get; private set; }
+        public float Distance { get; set; }
+        public int NodeIndex { get; set; }
+
         private const float DirectDistance = .05f;
         
         private bool rGrabP;
         private bool lGrabP;
 
-        private void Awake()
+        public void Initialise(MeasureTool tool, ControllerTransforms c, MeasureTape tape)
         {
-            LockNode = true;
-            Text = GetComponentInChildren<TextMeshPro>(); 
+            MeasureTool = tool;
+            Controller = c;
+            MeasureTape = tape;
+            Text = GetComponentInChildren<TextMeshPro>();
         }
 
         private void FixedUpdate()
         {
-            transform.LookAwayFrom(C.CameraTransform(), Vector3.up);
+            transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
             
-            if(LockNode) return;
-            
-            DirectGrabCheck(C.RightControllerTransform(), C.RightGrab(), rGrabP);
-            DirectGrabCheck(C.LeftControllerTransform(), C.LeftGrab(), lGrabP);
+            DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), rGrabP);
+            DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);
 
-            rGrabP = C.RightGrab();
-            lGrabP = C.LeftGrab();
+            rGrabP = Controller.RightGrab();
+            lGrabP = Controller.LeftGrab();
         }
         
         private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
@@ -44,23 +45,29 @@ namespace VR_Prototyping.Scripts.Tools
             
             if (grab && !pGrab)
             {
-                Debug.Log("Node Start");
                 MeasureTool.MeasureNode = this;
+                MeasureTool.LastMeasureNode = this;
                 MeasureTool.MeasureTape = MeasureTape;
+                MeasureTool.LastMeasureTape = MeasureTape;
             }
 
             if (grab && pGrab)
             {
-                Debug.Log("Node Stay");
+                if(LockNode) return;
                 MeasureTape.AdjustTape();
                 Set.TransformLerpPosition(transform, controller, .5f);
             }
 
             if (!grab && pGrab)
             {
-                Debug.Log("Node End");
                 MeasureTool.MeasureNode = null;
             }
+        }
+
+        public void DeleteNode()
+        {
+            MeasureTape.measureNodes.RemoveAt(NodeIndex);
+            Destroy(transform.gameObject);
         }
     }
 }

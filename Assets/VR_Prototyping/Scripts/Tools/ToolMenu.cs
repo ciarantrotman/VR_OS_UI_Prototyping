@@ -50,14 +50,14 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 case Handedness.Right:
                     cMenu = c.RightMenu();
-                    CheckState(cMenu, pMenu, c.RightControllerTransform());
-                    RubberBanded(c.RightControllerTransform());
+                    CheckState(cMenu, pMenu, c.RightTransform());
+                    RubberBanded(c.RightTransform());
                     pMenu = cMenu;
                     return;
                 case Handedness.Left:
                     cMenu = c.LeftMenu();
-                    CheckState(cMenu, pMenu, c.LeftControllerTransform());
-                    RubberBanded(c.LeftControllerTransform());
+                    CheckState(cMenu, pMenu, c.LeftTransform());
+                    RubberBanded(c.LeftTransform());
                     pMenu = cMenu;
                     return;
                 default:
@@ -82,6 +82,7 @@ namespace VR_Prototyping.Scripts.Tools
             if(!state) return;
             menuPrefab.transform.position = controller.position;
             Set.SplitRotation(controller, menuPrefab.transform, false);
+            toolController.SetAllToolState(false);
         }
 
         private void RubberBanded(Transform target)

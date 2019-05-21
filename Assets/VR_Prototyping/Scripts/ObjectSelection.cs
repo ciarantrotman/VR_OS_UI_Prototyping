@@ -71,8 +71,8 @@ namespace VR_Prototyping.Scripts
 			
 			SetupGameObjects();
 			
-			lLr = Controller.LeftControllerTransform().gameObject.AddComponent<LineRenderer>();
-			rLr = Controller.RightControllerTransform().gameObject.AddComponent<LineRenderer>();
+			lLr = Controller.LeftTransform().gameObject.AddComponent<LineRenderer>();
+			rLr = Controller.RightTransform().gameObject.AddComponent<LineRenderer>();
 			
 			Setup.LineRender(lLr, Controller.lineRenderMat, .005f, true);
 			Setup.LineRender(rLr, Controller.lineRenderMat, .005f, true);
@@ -89,11 +89,11 @@ namespace VR_Prototyping.Scripts
 			lTarget.transform.SetParent(transform);
 			rTarget.transform.SetParent(transform);
 						
-			Setup.LineRenderObjects(lDefault.transform, Controller.LeftControllerTransform(), defaultOffset);
-			Setup.LineRenderObjects(rDefault.transform, Controller.RightControllerTransform(), defaultOffset);
+			Setup.LineRenderObjects(lDefault.transform, Controller.LeftTransform(), defaultOffset);
+			Setup.LineRenderObjects(rDefault.transform, Controller.RightTransform(), defaultOffset);
 			
-			Setup.LineRenderObjects(lMidPoint.transform, Controller.LeftControllerTransform(), 0f);
-			Setup.LineRenderObjects(rMidPoint.transform, Controller.RightControllerTransform(), 0f);
+			Setup.LineRenderObjects(lMidPoint.transform, Controller.LeftTransform(), 0f);
+			Setup.LineRenderObjects(rMidPoint.transform, Controller.RightTransform(), 0f);
 		}
 
 		private void FixedUpdate()
@@ -107,12 +107,12 @@ namespace VR_Prototyping.Scripts
 					rFocusObject = Check.FuzzyFindFocusObject(rHandList, rFocusObject, rTarget, rDefault, Controller.RightGrab() || rTouch);
 					break;
 				case SelectionType.RayCast:
-					lFocusObject = Check.RayCastFindFocusObject(lHandList, lFocusObject, lTarget, lDefault, Controller.LeftControllerTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
-					rFocusObject = Check.RayCastFindFocusObject(rHandList, rFocusObject, rTarget, rDefault, Controller.RightControllerTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
+					lFocusObject = Check.RayCastFindFocusObject(lHandList, lFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
+					rFocusObject = Check.RayCastFindFocusObject(rHandList, rFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
 					break;
 				case SelectionType.Fusion:
-					lFocusObject = Check.FusionFindFocusObject(lHandList, lFocusObject, lTarget, lDefault, Controller.LeftControllerTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
-					rFocusObject = Check.FusionFindFocusObject(rHandList, rFocusObject, rTarget, rDefault, Controller.RightControllerTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
+					lFocusObject = Check.FusionFindFocusObject(lHandList, lFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
+					rFocusObject = Check.FusionFindFocusObject(rHandList, rFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
 					break;
 				default:
 					lFocusObject = null;
@@ -120,11 +120,11 @@ namespace VR_Prototyping.Scripts
 					break;
 			}
 			
-			Check.DrawLineRenderer(lLr, lFocusObject, lMidPoint, Controller.LeftControllerTransform(), lTarget, lineRenderQuality, Controller.LeftGrab());
-			Check.DrawLineRenderer(rLr, rFocusObject, rMidPoint, Controller.RightControllerTransform() ,rTarget, lineRenderQuality, Controller.RightGrab());
+			Check.DrawLineRenderer(lLr, lFocusObject, lMidPoint, Controller.LeftTransform(), lTarget, lineRenderQuality, Controller.LeftGrab());
+			Check.DrawLineRenderer(rLr, rFocusObject, rMidPoint, Controller.RightTransform() ,rTarget, lineRenderQuality, Controller.RightGrab());
 			
-			Check.Manipulation(lFocusObject, rFocusObject, lSelectableObject, pLSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftControllerTransform(), lTouch, rTouch);
-			Check.Manipulation(rFocusObject, lFocusObject, rSelectableObject, pRSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightControllerTransform(), rTouch, lTouch);
+			Check.Manipulation(lFocusObject, rFocusObject, lSelectableObject, pLSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftTransform(), lTouch, rTouch);
+			Check.Manipulation(rFocusObject, lFocusObject, rSelectableObject, pRSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightTransform(), rTouch, lTouch);
 			
 			lSelectableObject = Check.FindSelectableObject(lFocusObject, lSelectableObject, Controller.LeftGrab());
 			rSelectableObject = Check.FindSelectableObject(rFocusObject, rSelectableObject, Controller.RightGrab());

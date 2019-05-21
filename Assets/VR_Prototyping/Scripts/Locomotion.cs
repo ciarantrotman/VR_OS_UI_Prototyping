@@ -153,8 +153,8 @@ namespace VR_Prototyping.Scripts
 
         private void Update()
         {
-            Set.LocalDepth(rTs.transform, Check.CalculateDepth(Check.ControllerAngle(rCf, rCp, rCn, c.RightControllerTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
-            Set.LocalDepth(lTs.transform, Check.CalculateDepth(Check.ControllerAngle(lCf, lCp, lCn, c.LeftControllerTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
+            Set.LocalDepth(rTs.transform, Check.CalculateDepth(Check.ControllerAngle(rCf, rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
+            Set.LocalDepth(lTs.transform, Check.CalculateDepth(Check.ControllerAngle(lCf, lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
             Check.TargetLocation(rTs, rHp, transform);
             Check.TargetLocation(lTs, lHp, transform);
@@ -165,8 +165,8 @@ namespace VR_Prototyping.Scripts
             Check.Target(rVo, rHp, rCn.transform, c.RightJoystick(), rRt, advancedLocomotion);
             Check.Target(lVo, lHp, lCn.transform, c.LeftJoystick(), lRt, advancedLocomotion);
             
-            Draw.BezierLineRenderer(rLr,c.RightControllerTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
-            Draw.BezierLineRenderer(lLr, c.LeftControllerTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
+            Draw.BezierLineRenderer(rLr,c.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
+            Draw.BezierLineRenderer(lLr, c.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
 
         }
 

@@ -96,12 +96,12 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             if (!ignoreRightHand)
             {
-                DirectSliderCheck(c.RightControllerTransform(), c.RightGrab());
+                DirectSliderCheck(c.RightTransform(), c.RightGrab());
             }
 
             if (!ignoreLeftHand)
             {
-                DirectSliderCheck(c.LeftControllerTransform(), c.LeftGrab());
+                DirectSliderCheck(c.LeftTransform(), c.LeftGrab());
             }
         }
 
