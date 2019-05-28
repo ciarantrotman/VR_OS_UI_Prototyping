@@ -45,7 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiatedElement: 1
   c: {fileID: 0}
-  buttonState: 0
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -122,7 +121,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiatedElement: 1
   c: {fileID: 0}
-  buttonState: 0
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -184,6 +182,7 @@ Transform:
   - {fileID: 4458832399516740339}
   - {fileID: 5934798719175067118}
   - {fileID: 5452844623154899926}
+  - {fileID: 184427754386165092}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -212,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5995087944397106233}
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.1, y: 0, z: -0.2}
+  m_LocalPosition: {x: 0.1, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5856006291299973253}
@@ -232,7 +231,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiatedElement: 1
   c: {fileID: 0}
-  buttonState: 0
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -308,7 +306,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiatedElement: 1
   c: {fileID: 0}
-  buttonState: 0
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -339,3 +336,62 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &8743333508173170768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 184427754386165092}
+  - component: {fileID: 111271324922542178}
+  m_Layer: 0
+  m_Name: TapeColor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &184427754386165092
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8743333508173170768}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -1, y: 0, z: -0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5856006291299973253}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &111271324922542178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8743333508173170768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5903996684932a4494324fae5dceaf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiatedElement: 1
+  c: {fileID: 0}
+  dialValue: 0
+  directGrabDistance: 0.01
+  startingValue: 0
+  dialRadius: 0.05
+  ignoreLeftHand: 1
+  ignoreRightHand: 0
+  activeCircleLineRendererWidth: 0.002
+  inactiveCircleLineRendererWidth: 0.001
+  spokeLineRendererWidth: 0.002
+  circleQuality: 360
+  dialMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
+  dialCap: {fileID: 5024416642937821125, guid: 203ddb5455f104648ae5cdf296ee923d, type: 3}
+  dialHandle: {fileID: 2758839382525824194, guid: c727b7b7628755b469eda845d64ba6ca,
+    type: 3}

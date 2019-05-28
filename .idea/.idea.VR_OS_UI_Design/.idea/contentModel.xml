@@ -951,10 +951,12 @@
             <e p="Tools" t="Include">
               <e p="BaseTool.cs" t="Include" />
               <e p="CloseButton.cs" t="Include" />
-              <e p="InsertPointTEMP.cs" t="Include" />
+              <e p="MeasureDeleteNode.cs" t="Include" />
+              <e p="MeasureLockNode.cs" t="Include" />
               <e p="MeasureNewTape.cs" t="Include" />
               <e p="MeasureNode.cs" t="Include" />
               <e p="MeasureTape.cs" t="Include" />
+              <e p="MeasureTapeColor.cs" t="Include" />
               <e p="MeasureText.cs" t="Include" />
               <e p="MeasureTool.cs" t="Include" />
               <e p="MeasureVisual.cs" t="Include" />

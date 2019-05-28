@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace VR_Prototyping.Scripts.Tools
 {
@@ -14,8 +15,11 @@ namespace VR_Prototyping.Scripts.Tools
         public string TapeName { get; set; }
 
         private Vector3 _x;
+        private Vector3 _xP;
         private bool _rSelectP;
         private bool _lSelectP;
+
+        public Color tapeColor;
 
         public float TapeDistance()
         {
@@ -26,6 +30,7 @@ namespace VR_Prototyping.Scripts.Tools
             foreach (var node in measureNodes)
             {
                 var position = node.transform.position;
+                
                 TapeLr.SetPosition(count, position);
                 previousNode = previousNode == Vector3.zero ? position : previousNode;
                 node.Distance = Vector3.Distance(position, previousNode);
@@ -38,6 +43,7 @@ namespace VR_Prototyping.Scripts.Tools
                         node.Text.SetText("Node: {0} - Distance: {1:2}", node.NodeIndex, node.Distance);
                         break;
                 }
+
                 previousNode = position;
                 distance += node.Distance;
                 count++;
@@ -79,40 +85,56 @@ namespace VR_Prototyping.Scripts.Tools
                         }
                         break;
                     case ToolMenu.Handedness.Right:
-                        _x = Intersection.Line(
+                        _xP = Intersection.Line(
                             Controller.RightPosition(),
                             Controller.RightForwardVector(),
                             currNodePos,
                             line,
                             MeasureTool.tolerance);
-                        if (_x != Vector3.zero)
+                        
+                        if (_xP != Vector3.zero)
                         {
-                            Debug.DrawRay(_x, Vector3.up * .5f, Color.blue);
+                            Debug.DrawRay(_xP, Vector3.up * .5f, Color.blue);
 
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance))
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance))
                             {
-                                Debug.DrawRay(_x, Vector3.down * .5f, Color.green);
+                                Debug.DrawRay(_xP, Vector3.down * .5f, Color.green);
+                                _x = _xP;
                             }
                             
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
                             {
                                 index = i + 1;
                             }
                         }
+                        /*
+                        else
+                        {
+                            _x = Vector3.zero;
+                        }
+                        */
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
             
+            Debug.DrawRay(_x, Vector3.forward * .5f, Color.red);
+            
+            MeasureTool.Insertion = _xP != Vector3.zero;
+            
+            if(!MeasureTool.Insertion) return;
+            
+            Debug.DrawRay(_x, Vector3.back * .5f, Color.yellow);
+
             MeasureTool.intersectionPointPrefab.transform.position = _x;
             
             switch (MeasureTool.toolMenu.dominantHand)
             {
-                case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition()) > .01f:
+                case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition())  > .02f:// <= MeasureTool.nodeGrabDistance:
                     MeasureTool.InsertNode(this, _x, index);
                     break;
-                case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .01f:
+                case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .02f:// <= MeasureTool.nodeGrabDistance:
                     MeasureTool.InsertNode(this, _x, index);
                     break;
             }
@@ -120,7 +142,7 @@ namespace VR_Prototyping.Scripts.Tools
             _rSelectP = Controller.RightSelect();
             _lSelectP = Controller.LeftSelect();
 
-            MeasureTool.Insertion = _x != Vector3.zero;
+            
         }
         
         public void SetTapeState(bool state)
@@ -140,12 +162,22 @@ namespace VR_Prototyping.Scripts.Tools
                 node.name = "Node_" + index;
                 index++;
             }
-            TapeDistance();
+            AdjustTape();
         }
 
         public void AdjustTape()
         {
             TapeDistance();
+        }
+
+        public void SetColor(Color color)
+        {
+            tapeColor = color;
+            TapeLr.material.color = color;
+            foreach (var node in measureNodes)
+            {
+                node.SetColor(color);
+            }
         }
     }
 }

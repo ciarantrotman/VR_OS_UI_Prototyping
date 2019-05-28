@@ -96,16 +96,16 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             if (!ignoreRightHand)
             {
-                DirectSliderCheck(c.RightTransform(), c.RightGrab());
+                DirectDialCheck(c.RightTransform(), c.RightGrab());
             }
 
             if (!ignoreLeftHand)
             {
-                DirectSliderCheck(c.LeftTransform(), c.LeftGrab());
+                DirectDialCheck(c.LeftTransform(), c.LeftGrab());
             }
         }
 
-        private void DirectSliderCheck(Transform controller, bool grab)
+        private void DirectDialCheck(Transform controller, bool grab)
         {          
             if (Vector3.Distance(anchor.transform.position, controller.position) < directGrabDistance && !grab)
             {

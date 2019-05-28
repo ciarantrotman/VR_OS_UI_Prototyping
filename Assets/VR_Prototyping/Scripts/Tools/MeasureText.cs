@@ -19,7 +19,7 @@ namespace VR_Prototyping.Scripts.Tools
         public void SetText(float total, string tapeName)
         {
             HighLevelText.SetText("Tape: <b>" + tapeName +
-                                  "</b> | Length: <b>{0:2}</b> ", total);
+                                  "</b> - Length: <b>{0:2}</b> ", total);
         }
     }
 }

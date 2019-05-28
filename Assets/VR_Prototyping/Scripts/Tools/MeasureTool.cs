@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = System.Random;
 
 namespace VR_Prototyping.Scripts.Tools
 {
@@ -20,6 +21,8 @@ namespace VR_Prototyping.Scripts.Tools
         public MeasureTape FocusMeasureTape { get; set; }
         public MeasureNode MeasureNode  { get; set; }
         public MeasureNode FocusMeasureNode  { get; set; }
+        
+        public MeasureVisual MeasureVisual { get; set; }
         
         public bool Insertion { get; set; }
         
@@ -71,6 +74,7 @@ namespace VR_Prototyping.Scripts.Tools
         public void NewTape()
         {
             _tapeCount++;
+            var color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true);
             
             _tapeObject = new GameObject("Tape_" + _tapeCount);
             Set.Transforms(_tapeObject.transform, dominant.transform);
@@ -80,8 +84,12 @@ namespace VR_Prototyping.Scripts.Tools
 
             MeasureTape.TapeLr = _tapeObject.AddComponent<LineRenderer>();
             Setup.LineRender(MeasureTape.TapeLr, tapeMaterial, tapeWidth, true);
+            MeasureTape.SetColor(color);
+            if (_tapeCount > 1)
+            {
+                MeasureVisual.SetColor(color);
+            }
             MeasureTape.TapeLr.positionCount = 0;
-            MeasureTape.TapeLr.material.color = tapeColor;
 
             MeasureTape.TapeName = _tapeCount.ToString();
         }
@@ -92,7 +100,9 @@ namespace VR_Prototyping.Scripts.Tools
             MeasureNode = _node.GetComponent<MeasureNode>();
             FocusMeasureTape = tape;
             FocusMeasureNode = MeasureNode;
+            FocusMeasureTape.Controller = controller;
             MeasureNode.Initialise(this, controller, tape);
+            MeasureNode.SetColor(FocusMeasureTape.tapeColor);
             tape.measureNodes.Insert(index, MeasureNode);
             tape.RefactorNodes();
             AddLineRenderNode(tape.TapeLr, position);
@@ -121,7 +131,8 @@ namespace VR_Prototyping.Scripts.Tools
             if (FocusMeasureNode == null) return;
             
             FocusMeasureNode.LockNode = !FocusMeasureNode.LockNode;
-            MeasureTape.AdjustTape();
+            FocusMeasureTape.RefactorNodes();
+            ReleaseNode();
         }
 
         private static void AddLineRenderNode(LineRenderer lr, Vector3 position)
@@ -137,6 +148,12 @@ namespace VR_Prototyping.Scripts.Tools
             var positionCount = lr.positionCount;
             positionCount--;
             lr.positionCount = positionCount;
+        }
+
+        public void SetColor(Color color)
+        {
+            if (FocusMeasureTape == null) return;
+            FocusMeasureTape.SetColor(color);
         }
     }
 }

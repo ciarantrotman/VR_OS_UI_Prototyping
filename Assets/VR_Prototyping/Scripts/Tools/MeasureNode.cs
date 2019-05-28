@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools
@@ -13,6 +14,9 @@ namespace VR_Prototyping.Scripts.Tools
         public float Distance { get; set; }
         public int NodeIndex { get; set; }
 
+        private MeshRenderer _renderer;
+        
+
         private const float DirectDistance = .05f;
         
         private bool rGrabP;
@@ -24,6 +28,7 @@ namespace VR_Prototyping.Scripts.Tools
             Controller = c;
             MeasureTape = tape;
             Text = GetComponentInChildren<TextMeshPro>();
+            _renderer = GetComponent<MeshRenderer>();
         }
 
         private void FixedUpdate()
@@ -49,29 +54,28 @@ namespace VR_Prototyping.Scripts.Tools
         
         private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
         {
-            
             if (!(Vector3.Distance(transform.position, controller.position) < DirectDistance)) return;
             if(MeasureTool.MeasureNode != null && MeasureTool.MeasureNode != this) return;
-            
+
             if (grab && !pGrab)
             {
                 MeasureTool.MeasureNode = this;
                 MeasureTool.FocusMeasureNode = this;
                 MeasureTool.MeasureTape = MeasureTape;
                 MeasureTool.FocusMeasureTape = MeasureTape;
+                MeasureTool.MeasureVisual.SetColor(MeasureTape.tapeColor);
+                return;
             }
 
-            if (grab && pGrab)
+            if (grab)
             {
-                if(LockNode) return;
+                if (LockNode) return;
                 MeasureTape.AdjustTape();
-                Set.TransformLerpPosition(transform, controller, .5f);
+                Set.TransformLerpPosition(transform, controller, .85f);
+                return;
             }
 
-            if (!grab && pGrab)
-            {
-                MeasureTool.MeasureNode = null;
-            }
+            MeasureTool.MeasureNode = null;
         }
 
         public void DeleteNode()
@@ -88,6 +92,11 @@ namespace VR_Prototyping.Scripts.Tools
         private void NodeOutFocus()
         {
             Text.fontSize = MeasureTool.nodeTextStandardHeight;
+        }
+
+        public void SetColor(Color color)
+        {
+            _renderer.material.color = color;
         }
     }
 }

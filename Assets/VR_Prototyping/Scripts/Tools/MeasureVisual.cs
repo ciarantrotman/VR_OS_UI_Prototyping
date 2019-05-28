@@ -13,6 +13,13 @@ namespace VR_Prototyping.Scripts.Tools
             _meshRenderer = transform.GetComponent<MeshRenderer>();
             _meshRenderer.material = _measureTool.tapeMaterial;
             _meshRenderer.material.color = _measureTool.tapeColor;
+            _measureTool.MeasureVisual = this;
+            SetColor(_measureTool.MeasureTape.tapeColor);
+        }
+
+        public void SetColor(Color color)
+        {
+            _meshRenderer.material.color = color;
         }
     }
 }

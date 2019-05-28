@@ -181,7 +181,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                 return;
             }
             
-            if (buttonState == ButtonState.Hover && ActiveDistance() && previousButtonState != buttonState)
+            if (buttonState == ButtonState.Hover && ActiveDistance())// && previousButtonState != buttonState)
             {
                 buttonState = toggle ? ButtonState.Active : ButtonState.Inactive;
                 activate.Invoke();
