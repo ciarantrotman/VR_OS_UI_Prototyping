@@ -35,6 +35,16 @@ namespace VR_Prototyping.Scripts.Tools
 
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
+
+            switch (MeasureTool.FocusMeasureNode == this)
+            {
+                case true:
+                    NodeInFocus();
+                    break;
+                case false:
+                    NodeOutFocus();
+                    break;
+            }
         }
         
         private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
@@ -46,9 +56,9 @@ namespace VR_Prototyping.Scripts.Tools
             if (grab && !pGrab)
             {
                 MeasureTool.MeasureNode = this;
-                MeasureTool.LastMeasureNode = this;
+                MeasureTool.FocusMeasureNode = this;
                 MeasureTool.MeasureTape = MeasureTape;
-                MeasureTool.LastMeasureTape = MeasureTape;
+                MeasureTool.FocusMeasureTape = MeasureTape;
             }
 
             if (grab && pGrab)
@@ -68,6 +78,16 @@ namespace VR_Prototyping.Scripts.Tools
         {
             MeasureTape.measureNodes.RemoveAt(NodeIndex);
             Destroy(transform.gameObject);
+        }
+
+        private void NodeInFocus()
+        {
+            Text.fontSize = MeasureTool.nodeTextFocusHeight;
+        }
+
+        private void NodeOutFocus()
+        {
+            Text.fontSize = MeasureTool.nodeTextStandardHeight;
         }
     }
 }

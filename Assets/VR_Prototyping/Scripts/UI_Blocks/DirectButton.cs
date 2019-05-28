@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace VR_Prototyping.Scripts.UI_Blocks
 {
-    public class DirectButton : BaseDirectBlock
+    public abstract class DirectButton : BaseDirectBlock
     {
         private LineRenderer targetLr;
 
@@ -31,8 +31,9 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             Hover,
             Active
         }
-        
-        [HideInInspector] public ButtonState buttonState;
+
+        public ButtonState buttonState { get; private set; }
+        private ButtonState previousButtonState;
 
         [TabGroup("Button Settings")] [Header("Button Function")] public bool toggle;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [SerializeField] [Indent] private bool startsActive;
@@ -153,6 +154,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                     throw new ArgumentOutOfRangeException();
             }
 
+            previousButtonState = buttonState;
+
             if (!c.debugActive) return;
             Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
             Debug.DrawRay(buttonPos, Force(restTarget, buttonPos, springiness), Color.red);
@@ -178,7 +181,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                 return;
             }
             
-            if (buttonState == ButtonState.Hover && ActiveDistance())
+            if (buttonState == ButtonState.Hover && ActiveDistance() && previousButtonState != buttonState)
             {
                 buttonState = toggle ? ButtonState.Active : ButtonState.Inactive;
                 activate.Invoke();

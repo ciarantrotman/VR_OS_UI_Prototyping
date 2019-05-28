@@ -8,6 +8,7 @@ namespace VR_Prototyping.Scripts.Tools
     public class MeasureTape : MonoBehaviour
     {
         public MeasureTool MeasureTool { get; set; }
+        public ControllerTransforms Controller { get; set; }
         public List<MeasureNode> measureNodes = new List<MeasureNode>();
         public LineRenderer TapeLr { get; set; }
         public string TapeName { get; set; }
@@ -60,19 +61,18 @@ namespace VR_Prototyping.Scripts.Tools
                 {
                     case ToolMenu.Handedness.Left:
                         _x = Intersection.Line(
-                            MeasureTool.controller.LeftPosition(),
-                            MeasureTool.controller.LeftForwardVector(),
+                            Controller.LeftPosition(),
+                            Controller.LeftForwardVector(),
                             currNodePos,
                             line,
-                            MeasureTool.insertionTolerance);
-                        
+                            MeasureTool.tolerance);
                         if (_x != Vector3.zero)
                         {
-                            _x = Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.insertionTolerance) ? 
+                            _x = Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance) ? 
                                     _x : 
                                     Vector3.zero;
                             
-                            if (_x != Vector3.zero && !MeasureTool.controller.LeftSelect() && _lSelectP)
+                            if (_x != Vector3.zero && !Controller.LeftSelect() && _lSelectP)
                             {
                                 index = i + 1;
                             }
@@ -80,18 +80,21 @@ namespace VR_Prototyping.Scripts.Tools
                         break;
                     case ToolMenu.Handedness.Right:
                         _x = Intersection.Line(
-                            MeasureTool.controller.RightPosition(),
-                            MeasureTool.controller.RightForwardVector(),
+                            Controller.RightPosition(),
+                            Controller.RightForwardVector(),
                             currNodePos,
                             line,
-                            MeasureTool.insertionTolerance);
+                            MeasureTool.tolerance);
                         if (_x != Vector3.zero)
                         {
-                            _x = Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.insertionTolerance) ? 
-                                    _x :
-                                    Vector3.zero;
+                            Debug.DrawRay(_x, Vector3.up * .5f, Color.blue);
+
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance))
+                            {
+                                Debug.DrawRay(_x, Vector3.down * .5f, Color.green);
+                            }
                             
-                            if (_x != Vector3.zero && !MeasureTool.controller.RightSelect() && _rSelectP)
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
                             {
                                 index = i + 1;
                             }
@@ -106,16 +109,16 @@ namespace VR_Prototyping.Scripts.Tools
             
             switch (MeasureTool.toolMenu.dominantHand)
             {
-                case ToolMenu.Handedness.Right when !MeasureTool.controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, MeasureTool.controller.RightPosition()) > .01f:
+                case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition()) > .01f:
                     MeasureTool.InsertNode(this, _x, index);
                     break;
-                case ToolMenu.Handedness.Left when !MeasureTool.controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, MeasureTool.controller.LeftPosition()) > .01f:
+                case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .01f:
                     MeasureTool.InsertNode(this, _x, index);
                     break;
             }
 
-            _rSelectP = MeasureTool.controller.RightSelect();
-            _lSelectP = MeasureTool.controller.LeftSelect();
+            _rSelectP = Controller.RightSelect();
+            _lSelectP = Controller.LeftSelect();
 
             MeasureTool.Insertion = _x != Vector3.zero;
         }

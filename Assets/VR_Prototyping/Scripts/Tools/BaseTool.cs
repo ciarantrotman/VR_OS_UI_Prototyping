@@ -23,8 +23,8 @@ namespace VR_Prototyping.Scripts.Tools
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject nonDominant;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject dominant;
         
-        [BoxGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float dominantSpeed = 1;
-        [BoxGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float nonDominantSpeed = 1;
+        [FoldoutGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float dominantSpeed = 1;
+        [FoldoutGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float nonDominantSpeed = 1;
         
         private void Awake()
         {

@@ -172,8 +172,10 @@ MonoBehaviour:
     type: 3}
   intersectionPointPrefab: {fileID: 2758839382525824194, guid: b0e9f7e6c706e6a47b77e11b4059055f,
     type: 3}
-  insertionTolerance: 0.1
+  tolerance: 0.01
   tapeWidth: 0.005
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
-  tapeColor: {r: 1, g: 0.63924867, b: 0.07075471, a: 1}
+  tapeColor: {r: 0, g: 0.9612417, b: 1, a: 1}
+  nodeTextFocusHeight: 0.2
+  nodeTextStandardHeight: 0.15
