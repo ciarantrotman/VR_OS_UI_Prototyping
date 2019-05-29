@@ -203,17 +203,13 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1081544451, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1233034995, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_text
@@ -251,6 +247,18 @@ PrefabInstance:
       propertyPath: m_fontStyle
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 1835677948, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1081544451, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1233034997, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1081544453, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -262,14 +270,6 @@ PrefabInstance:
     - target: {fileID: 1081544453, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_Intensity
       value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1835677948, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1233034997, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}

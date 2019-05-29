@@ -23,6 +23,9 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private GameObject hoverTarget;
         private GameObject toggleTarget;
 
+        private bool state;
+        private bool statePrevious;
+
         private const float Tolerance = .005f;
 
         public enum ButtonState
@@ -154,7 +157,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                     throw new ArgumentOutOfRangeException();
             }
 
-            previousButtonState = buttonState;
+            statePrevious = state;
 
             if (!c.debugActive) return;
             Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
@@ -178,13 +181,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             else if (!DirectCheck() && buttonState != ButtonState.Active)
             {
                 buttonState = ButtonState.Inactive;
+                state = false;
                 return;
             }
             
-            if (buttonState == ButtonState.Hover && ActiveDistance())// && previousButtonState != buttonState)
+            if (/*buttonState == ButtonState.Hover && */ActiveDistance())// && state != statePrevious)
             {
                 buttonState = toggle ? ButtonState.Active : ButtonState.Inactive;
                 activate.Invoke();
+                state = true;
             }
 
             if (buttonState == ButtonState.Active && ToggleDistance() && toggle)

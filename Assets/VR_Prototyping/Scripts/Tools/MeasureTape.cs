@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Leap.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -54,10 +55,11 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void Update()
         {
-            if (measureNodes.Count < 2 || MeasureTool == null || MeasureTool.MeasureTape != this) return;
+            if (measureNodes.Count < 2 || MeasureTool.MeasureTape != this) return;
             
             int index = 0;
-
+            int intersectionCount = 0;
+            
             for (int i = 0; i < measureNodes.Count - 1; i++)
             {
                 var currNodePos = measureNodes[i].transform.position;
@@ -72,13 +74,15 @@ namespace VR_Prototyping.Scripts.Tools
                             currNodePos,
                             line,
                             MeasureTool.tolerance);
-                        if (_x != Vector3.zero)
+                        if (_xP != Vector3.zero)
                         {
-                            _x = Check.IsCollinear(currNodePos, nextNodePos, _x, MeasureTool.tolerance) ? 
-                                    _x : 
-                                    Vector3.zero;
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance))
+                            {
+                                _x = _xP;
+                                intersectionCount++;
+                            }
                             
-                            if (_x != Vector3.zero && !Controller.LeftSelect() && _lSelectP)
+                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance) && !Controller.LeftSelect() && _lSelectP)
                             {
                                 index = i + 1;
                             }
@@ -94,12 +98,10 @@ namespace VR_Prototyping.Scripts.Tools
                         
                         if (_xP != Vector3.zero)
                         {
-                            Debug.DrawRay(_xP, Vector3.up * .5f, Color.blue);
-
                             if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance))
                             {
-                                Debug.DrawRay(_xP, Vector3.down * .5f, Color.green);
                                 _x = _xP;
+                                intersectionCount++;
                             }
                             
                             if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
@@ -107,42 +109,36 @@ namespace VR_Prototyping.Scripts.Tools
                                 index = i + 1;
                             }
                         }
-                        /*
-                        else
-                        {
-                            _x = Vector3.zero;
-                        }
-                        */
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
             
-            Debug.DrawRay(_x, Vector3.forward * .5f, Color.red);
-            
-            MeasureTool.Insertion = _xP != Vector3.zero;
-            
-            if(!MeasureTool.Insertion) return;
-            
-            Debug.DrawRay(_x, Vector3.back * .5f, Color.yellow);
+            MeasureTool.Insertion = intersectionCount > 0;
 
-            MeasureTool.intersectionPointPrefab.transform.position = _x;
-            
-            switch (MeasureTool.toolMenu.dominantHand)
+            if (MeasureTool.Insertion)
             {
-                case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition())  > .02f:// <= MeasureTool.nodeGrabDistance:
-                    MeasureTool.InsertNode(this, _x, index);
-                    break;
-                case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .02f:// <= MeasureTool.nodeGrabDistance:
-                    MeasureTool.InsertNode(this, _x, index);
-                    break;
+                MeasureTool.intersectionPointPrefab.transform.position = _x;
+                MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform());
+            
+                switch (MeasureTool.toolMenu.dominantHand)
+                {
+                    case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition())  > .02f:
+                        MeasureTool.InsertNode(this, _x, index);
+                        break;
+                    case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .02f:
+                        MeasureTool.InsertNode(this, _x, index);
+                        break;
+                }
+            }
+            else
+            {
+                MeasureTool.intersectionPointPrefab.transform.position = Vector3.zero;
             }
 
             _rSelectP = Controller.RightSelect();
             _lSelectP = Controller.LeftSelect();
-
-            
         }
         
         public void SetTapeState(bool state)
