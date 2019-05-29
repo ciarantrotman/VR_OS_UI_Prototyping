@@ -8,12 +8,19 @@ namespace VR_Prototyping.Scripts.Tools
     {        
         [BoxGroup("Memo Tool Settings")] [Required] public GameObject memoPrefab;
         [BoxGroup("Memo Tool Settings")] public List<string> microphones;
+        [BoxGroup("Memo Tool Settings")] [Range(.01f, .1f)] public float triggerDistance = .05f;
+
+        private List<AudioSource> _audioSources = new List<AudioSource>();
         
         private MemoNode _memoNode;
 
         private string _microphone;
-        private int _index;
         
+        private int _index;
+        private int _clipLength;
+
+        private float _time;
+
         protected override void Initialise()
         {
             SetupMicrophone();
@@ -48,19 +55,22 @@ namespace VR_Prototyping.Scripts.Tools
         protected override void ToolStart()
         {
             NewMemo();
-            
-            _memoNode.AudioSource.clip = Microphone.Start(_microphone, true, 10, 44100);
+            _time = Time.time;
+            _audioSources.Add(_memoNode.AudioSource);
+            _memoNode.AudioSource.clip = Microphone.Start(_microphone, true, 30, 44100);
         }
 
         protected override void ToolStay()
         {
-            Set.Transforms(_memoNode.transform, dominant.transform);
+            _clipLength++;
+            Set.Position(_memoNode.transform, dominant.transform);
         }
 
         protected override void ToolEnd()
         {
-            _memoNode = null;
             Microphone.End(_microphone);
+            _memoNode.ReleaseMemo(Time.time - _time);
+            _memoNode = null;
         }
 
         protected override void ToolInactive()
@@ -70,10 +80,28 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void NewMemo()
         {
-            _index++;
             var node = Instantiate(memoPrefab);
             _memoNode = node.GetComponent<MemoNode>();
-            _memoNode.Initialise(Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true), _index, this);
+            _memoNode.Initialise(Color.HSVToRGB(Random.Range(0f, 1f), 1, 1, true), _index, this);
+            _index++;
+        }
+
+        public void PlayAudio(int index)
+        {
+            var i = 0;
+            foreach (var audioSource in _audioSources)
+            {
+                if (index == i)
+                {
+                    audioSource.Play();
+                }
+                else
+                {
+                    audioSource.Stop();
+                }
+
+                i++;
+            }
         }
     }
 }

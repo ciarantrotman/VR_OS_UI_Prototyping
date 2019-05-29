@@ -55,7 +55,7 @@ namespace VR_Prototyping.Scripts.Tools
         protected override void ToolStay()
         {
             if (Insertion) return;
-            Set.Transforms(_node.transform, dominant.transform);
+            Set.Position(_node.transform, dominant.transform);
             MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
             MeasureTape.AdjustTape(); 
         }
