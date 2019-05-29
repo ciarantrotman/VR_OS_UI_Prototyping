@@ -9,10 +9,10 @@ namespace VR_Prototyping.Scripts.Tools
         [BoxGroup("Memo Tool Settings")] [Required] public GameObject memoPrefab;
         [BoxGroup("Memo Tool Settings")] public List<string> microphones;
         
-        private MemoNode memoNode;
+        private MemoNode _memoNode;
 
-        private string microphone;
-        private int index;
+        private string _microphone;
+        private int _index;
         
         protected override void Initialise()
         {
@@ -29,14 +29,14 @@ namespace VR_Prototyping.Scripts.Tools
                 }
             }
 
-            microphone = microphones[0];
+            _microphone = microphones[0];
         }
 
         public void ChangeMicrophone(int i)
         {
             if (i <= microphones.Count - 1)
             {
-                microphone = microphones[i];
+                _microphone = microphones[i];
             }
         }
 
@@ -49,18 +49,18 @@ namespace VR_Prototyping.Scripts.Tools
         {
             NewMemo();
             
-            memoNode.audioSource.clip = Microphone.Start(microphone, true, 10, 44100);
+            _memoNode.AudioSource.clip = Microphone.Start(_microphone, true, 10, 44100);
         }
 
         protected override void ToolStay()
         {
-            Set.Transforms(memoNode.transform, dominant.transform);
+            Set.Transforms(_memoNode.transform, dominant.transform);
         }
 
         protected override void ToolEnd()
         {
-            memoNode = null;
-            Microphone.End(microphone);
+            _memoNode = null;
+            Microphone.End(_microphone);
         }
 
         protected override void ToolInactive()
@@ -70,10 +70,10 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void NewMemo()
         {
-            index++;
+            _index++;
             var node = Instantiate(memoPrefab);
-            memoNode = node.GetComponent<MemoNode>();
-            memoNode.Initialise(Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true), index);
+            _memoNode = node.GetComponent<MemoNode>();
+            _memoNode.Initialise(Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true), _index, this);
         }
     }
 }
@@ -100,7 +100,7 @@ public class CubeController : MonoBehaviour {
         audioSource.Play();
         //resize our temporary vector every second
         Invoke("ResizeRecording", 1);
-    }
+    } 
  
     void ResizeRecording()
     {

@@ -1,25 +1,28 @@
 ﻿using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools
 {
     public class MemoNode : MonoBehaviour
     {
-        public MemoTool memoTool { get; set; }
-        private Color nodeColor;
-        private int nodeIndex;
-        public AudioSource audioSource { get; private set; }
+        public MemoTool MemoTool { get; set; }
+        public ControllerTransforms Controller { get; set; }
+        private Color _nodeColor;
+        private int _nodeIndex;
+        public AudioSource AudioSource { get; private set; }
 
         [Button]
         public void PlayAudio()
         {
-            audioSource.Play();
+            AudioSource.Play();
         }
         
-        public void Initialise(Color color, int index)
+        public void Initialise(Color color, int index, MemoTool memoTool)
         {
             name = "Memo_" + index;
-            
+            MemoTool = memoTool;
+            Controller = MemoTool.controller;
             SetColor(color);
             SetIndex(index);
             SetupAudio();
@@ -27,18 +30,19 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SetupAudio()
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
+            AudioSource = gameObject.AddComponent<AudioSource>();
         }
 
         private void SetColor(Color color)
         {
-            nodeColor = color;
+            _nodeColor = color;
             GetComponentInChildren<MeshRenderer>().material.color = color;
         }
 
         private void SetIndex(int index)
         {
-            nodeIndex = index;
+            _nodeIndex = index;
+            GetComponentInChildren<TextMeshPro>().SetText(index.ToString());
         }
     }
 }
