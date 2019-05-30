@@ -21,6 +21,7 @@ namespace VR_Prototyping.Scripts
         [BoxGroup("Transforms")] [SerializeField] [Required] private Transform leftController;
         [BoxGroup("Transforms")] [SerializeField] [Required] private Transform rightController;
         [BoxGroup("Transforms")] [SerializeField] [Required] private Transform hmdCamera;
+        [BoxGroup("Transforms")] [SerializeField] [Required] private GameObject vrPlayer;
 
         [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material lineRenderMat;
         
@@ -53,6 +54,11 @@ namespace VR_Prototyping.Scripts
         {
             Set.Transforms(lHandDirect.transform, LeftTransform());
             Set.Transforms(rHandDirect.transform, RightTransform());
+        }
+
+        public GameObject Player()
+        {
+            return vrPlayer;
         }
         public Vector3 LeftPosition()
         {

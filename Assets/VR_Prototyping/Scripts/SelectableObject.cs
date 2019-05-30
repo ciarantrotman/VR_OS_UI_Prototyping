@@ -59,76 +59,77 @@ namespace VR_Prototyping.Scripts
 		private readonly List<Vector3> rotations = new List<Vector3>();
 		private const float Sensitivity = 10f;
 	
-		[BoxGroup("Script Setup")] [Required] public GameObject player;
+		[FoldoutGroup("Script Setup")] public bool instantiated;
+		[FoldoutGroup("Script Setup")] [Required] [HideIf("instantiated")] public GameObject player;
 		[Header("Define Object Behaviour")]
-		[BoxGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
-		[BoxGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
-		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
-		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
-		[BoxGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
+		[FoldoutGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
+		[FoldoutGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
+		[FoldoutGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
+		[FoldoutGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
+		[FoldoutGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
 		
 		[Header("Grab Settings")]
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 1f)] public float moveForce = .15f;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 10f)] public float latency = 4.5f;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")]  [SerializeField] private bool gravity;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("grab")] public bool directGrab = true;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 1f)] public float moveForce = .15f;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 10f)] public float latency = 4.5f;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")]  [SerializeField] private bool gravity;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("grab")] public bool directGrab = true;
 		[Header("Rotation Settings")]
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool freeRotationEnabled;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool freeRotationEnabled;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("freeRotationEnabled")] [Indent] [SerializeField] public RotationLock rotationLock;
 		[Header("Scaling Settings")]
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool scalingEnabled;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(.01f, 1f)] public float minScaleFactor;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(1f, 10f)] public float maxScaleFactor;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] public bool scalingEnabled;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(.01f, 1f)] public float minScaleFactor;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideInPlayMode] [ShowIf("scalingEnabled")] [Indent] [Range(1f, 10f)] public float maxScaleFactor;
 		[Header("Visual Effects")]
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] private bool genericGrabEffect;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [Indent] [SerializeField] private bool grabOutline;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float grabOutlineWidth;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Color grabOutlineColor = new Color(0,0,0,255);
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Outline.Mode grabOutlineMode;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private bool touchOutline;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float touchOutlineWidth;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Color touchOutlineColor = new Color(0,0,0,255);
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Outline.Mode touchOutlineMode;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStart;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStay;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabEnd;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStart;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStay;
-		[BoxGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabEnd;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Space(5)] [SerializeField] private bool genericGrabEffect;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [Indent] [SerializeField] private bool grabOutline;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float grabOutlineWidth;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Color grabOutlineColor = new Color(0,0,0,255);
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("grabOutline")] [Indent(2)] [SerializeField] private Outline.Mode grabOutlineMode;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] [SerializeField] private bool touchOutline;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float touchOutlineWidth;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Color touchOutlineColor = new Color(0,0,0,255);
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [ShowIf("genericGrabEffect")] [ShowIf("directGrab")] [ShowIf("touchOutline")] [Indent(2)] [SerializeField] private Outline.Mode touchOutlineMode;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStart;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabStay;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent grabEnd;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStart;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStay;
+		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabEnd;
 		
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
 		[Header("Visual Effects")]
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset activeFont;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset inactiveFont;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
-		[BoxGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
-		[BoxGroup("Button Settings")] [ShowIf("button")] [Space(10)] public UnityEvent selectStart;
-		[BoxGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectStay;
-		[BoxGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectEnd;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset activeFont;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset inactiveFont;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(10)] public UnityEvent selectStart;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectStay;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectEnd;
 
-		[BoxGroup("Hover Settings")] [SerializeField] private bool reactiveMat;
-		[BoxGroup("Hover Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
-		[BoxGroup("Hover Settings")] [SerializeField] private bool hover;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] public bool toolTip;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("toolTip")] [Indent] public string toolTipText = "Enter hover state text here.";
+		[FoldoutGroup("Hover Settings")] [SerializeField] private bool reactiveMat;
+		[FoldoutGroup("Hover Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
+		[FoldoutGroup("Hover Settings")] [SerializeField] private bool hover;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] public bool toolTip;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("toolTip")] [Indent] public string toolTipText = "Enter hover state text here.";
 		[Header("Visual Effects")]
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [Space(5)] [Indent] [SerializeField] private bool genericHoverEffect;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverOffset;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverScale;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverEffectDuration;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent] [SerializeField] private bool hoverOutline;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float hoverOutlineWidth;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Color hoverOutlineColor = new Color(0,0,0,255);
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Outline.Mode hoverOutlineMode;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [Space(10)] [SerializeField] private UnityEvent hoverStart;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverStay;
-		[BoxGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverEnd;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [Space(5)] [Indent] [SerializeField] private bool genericHoverEffect;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverOffset;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverScale;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent(2)] [Range(0, 1f)] [SerializeField] private float hoverEffectDuration;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [Indent] [SerializeField] private bool hoverOutline;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float hoverOutlineWidth;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Color hoverOutlineColor = new Color(0,0,0,255);
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Outline.Mode hoverOutlineMode;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [Space(10)] [SerializeField] private UnityEvent hoverStart;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverStay;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverEnd;
 		
 		private static readonly int Threshold = Shader.PropertyToID("_ClipThreshold");
 
@@ -160,6 +161,8 @@ namespace VR_Prototyping.Scripts
 		}
 		private void InitialiseSelectableObject()
 		{
+			InitialiseOverride();
+			
 			AssignComponents();
 			SetupRigidBody();
 			SetupManipulation();
@@ -172,6 +175,12 @@ namespace VR_Prototyping.Scripts
 			active = startsActive;
 			ResetState = transform;
 		}
+
+		protected virtual void InitialiseOverride()
+		{
+			
+		}
+		
 		private void AssignComponents()
 		{
 			c = player.GetComponent<ObjectSelection>();
@@ -366,6 +375,8 @@ namespace VR_Prototyping.Scripts
 		}
 		public void SetState(bool a)
 		{
+			if (!genericSelectState) return;
+			
 			switch (a)
 			{
 				case true:
@@ -520,6 +531,8 @@ namespace VR_Prototyping.Scripts
 		}
 		public void SelectEnd()
 		{
+			Debug.Log(name + " PRESSED!");
+			
 			selectEnd.Invoke();
 			
 			if (!genericSelectState || !button) return;
