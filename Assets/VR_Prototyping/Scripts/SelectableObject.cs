@@ -531,8 +531,6 @@ namespace VR_Prototyping.Scripts
 		}
 		public void SelectEnd()
 		{
-			Debug.Log(name + " PRESSED!");
-			
 			selectEnd.Invoke();
 			
 			if (!genericSelectState || !button) return;

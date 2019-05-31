@@ -2,19 +2,24 @@
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using VR_Prototyping.Scripts.Keyboard;
 
 namespace VR_Prototyping.Scripts.Tools
 {
     public class ToolController : SerializedMonoBehaviour
     {
-        [OdinSerialize] public Dictionary<string, BaseTool> tools;
-        private const float Spacing = .1f;
-        
+        [BoxGroup("Tool Controls")] [OdinSerialize] public Dictionary<string, BaseTool> tools;
+        [BoxGroup("Tool Controls")] [Range(0, 5)] public int gridSize = 3;
+        [BoxGroup("Tool Controls")] [Range(0f, 1f)] public float spacing = .1f;
         public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller, ToolMenu.Handedness handedness, ToolMenu toolMenu)
         {
             var x = 0f;
+            var y = 0f;
+            var toolNumber = 0;
+            
             foreach (var item in tools)
             {
+                toolNumber++;
                 var n = item.Key;
                 var tool = item.Value;
                 tool.toolController = this;
@@ -28,13 +33,25 @@ namespace VR_Prototyping.Scripts.Tools
                 tool.handedness = handedness;
                 tool.buttonPrefab.name = n + "/Button";
                 tool.buttonPrefab.transform.SetParent(transform);
-                tool.buttonPrefab.transform.localPosition = new Vector3(x, 0, .2f);
+                tool.buttonPrefab.transform.localPosition = new Vector3(x, y, .2f);
                 tool.dominant.transform.SetParent(transform);
                 tool.nonDominant.transform.SetParent(transform);
-                x += Spacing;
+                x += spacing;
+
+                continue;
+
+                Debug.Log(toolNumber);
+                               
+                Debug.Log(toolNumber % gridSize == 0);
+                
+                continue;
+                
+                if (toolNumber % gridSize != 0) continue;
+                x = 0f;
+                y -= spacing;
             }
         }
-
+        
         public void ToggleTool(BaseTool activeTool)
         {
             foreach (var item in tools)

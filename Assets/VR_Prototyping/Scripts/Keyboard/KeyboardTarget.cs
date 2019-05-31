@@ -18,5 +18,11 @@ namespace VR_Prototyping.Scripts.Keyboard
             text = text + newText;
             textField.SetText(text);
         }
+        
+        public void DeleteText()
+        {
+            text = text.Substring(0, text.Length - 1);
+            textField.SetText(text);
+        }
     }
 }

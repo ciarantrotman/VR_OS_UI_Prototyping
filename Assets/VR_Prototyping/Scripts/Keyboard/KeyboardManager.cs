@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VR_Prototyping.Scripts.Tools;
 
 namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardManager : MonoBehaviour
     {
-        public KeyboardTarget keyboardTarget;
-        public ControllerTransforms controllerTransforms;
+        private KeyboardTarget keyboardTarget { get; set; }
+        public ToolMenu toolMenu { private get; set; }
+        public ControllerTransforms controllerTransforms { get; set; }
         public enum KeyboardKeyValues
         {
             Q = 'Q',
@@ -53,7 +55,6 @@ namespace VR_Prototyping.Scripts.Keyboard
             Back, 
             Enter
         }
-
         public List<KeyboardKey> keyboardKeys = new List<KeyboardKey>(); 
 
         private void Start()
@@ -63,16 +64,34 @@ namespace VR_Prototyping.Scripts.Keyboard
             {
                 if (child.GetComponent<KeyboardKey>() == null) continue;
                 var key = child.GetComponent<KeyboardKey>();
+                key.keyboardManager = this;
+                key.player = controllerTransforms.Player();
                 key.index = index;
+                key.enabled = false;
                 keyboardKeys.Add(key);
                 index++;
             }
+
+            keyboardTarget = GetComponentInChildren<KeyboardTarget>();
         }
 
-        public void Keystroke(int index)
+        //public void 
+
+        public void Keystroke(int index, KeyboardKeyValues key)
         {
             if (keyboardTarget == null) return;
-            keyboardTarget.SetText((char)keyboardKeys[index].keyValue);
+
+            switch (key)
+            {
+                case KeyboardKeyValues.Back:
+                    keyboardTarget.DeleteText();
+                    break;
+                case KeyboardKeyValues.Enter:
+                    break;
+                default:
+                    keyboardTarget.SetText((char)keyboardKeys[index].keyValue);
+                    break;
+            }
         }
     }
 }

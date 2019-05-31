@@ -9,7 +9,6 @@ namespace VR_Prototyping.Scripts.Demo_Scripts
         private void LateUpdate()
         {
             var y = Mathf.Lerp(0, 360, sliderValue);
-            Debug.Log(y);
             tableParent.transform.eulerAngles =  new Vector3(0, y,0);
         }
     }
