@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using VR_Prototyping.Scripts.Tools;
 
 namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardManager : MonoBehaviour
     {
-        private KeyboardTarget keyboardTarget { get; set; }
+        public KeyboardTarget keyboardTarget { get; set; }
         public ToolMenu toolMenu { private get; set; }
         public ControllerTransforms controllerTransforms { get; set; }
         public enum KeyboardKeyValues
@@ -55,8 +56,8 @@ namespace VR_Prototyping.Scripts.Keyboard
             Back, 
             Enter
         }
-        public List<KeyboardKey> keyboardKeys = new List<KeyboardKey>(); 
-
+        public List<KeyboardKey> keyboardKeys = new List<KeyboardKey>();
+        public UnityEvent Enter { get; set; }
         private void Start()
         {
             var index = 0;
@@ -75,7 +76,14 @@ namespace VR_Prototyping.Scripts.Keyboard
             keyboardTarget = GetComponentInChildren<KeyboardTarget>();
         }
 
-        //public void 
+        public void ToggleKeyboard(bool state)
+        {
+            foreach (var key in keyboardKeys)
+            {
+                key.SetState(state);
+                key.gameObject.SetActive(state);
+            }
+        }
 
         public void Keystroke(int index, KeyboardKeyValues key)
         {
@@ -87,6 +95,7 @@ namespace VR_Prototyping.Scripts.Keyboard
                     keyboardTarget.DeleteText();
                     break;
                 case KeyboardKeyValues.Enter:
+                    Enter.Invoke();
                     break;
                 default:
                     keyboardTarget.SetText((char)keyboardKeys[index].keyValue);

@@ -9,16 +9,11 @@ namespace VR_Prototyping.Scripts.Tools
         [BoxGroup("Memo Tool Settings")] [Required] public GameObject memoPrefab;
         [BoxGroup("Memo Tool Settings")] public List<string> microphones;
         [BoxGroup("Memo Tool Settings")] [Range(.01f, .1f)] public float triggerDistance = .05f;
-
         private List<AudioSource> _audioSources = new List<AudioSource>();
-        
         private MemoNode _memoNode;
-
         private string _microphone;
-        
         private int _index;
         private int _clipLength;
-
         private float _time;
 
         protected override void Initialise()
