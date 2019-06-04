@@ -7,9 +7,9 @@ namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardManager : MonoBehaviour
     {
-        public KeyboardTarget keyboardTarget { get; set; }
-        public ToolMenu toolMenu { private get; set; }
-        public ControllerTransforms controllerTransforms { get; set; }
+        public KeyboardTarget KeyboardTarget { get; private set; }
+        private ToolMenu ToolMenu { get; set; }
+        private ControllerTransforms ControllerTransforms { get; set; }
         public enum KeyboardKeyValues
         {
             Q = 'Q',
@@ -61,8 +61,8 @@ namespace VR_Prototyping.Scripts.Keyboard
 
         public void InitialiseKeyboard(ControllerTransforms c, ToolMenu t, Transform parent)
         {
-            controllerTransforms = c;
-            toolMenu = t;
+            ControllerTransforms = c;
+            ToolMenu = t;
             transform.SetParent(parent);
             
             var index = 0;
@@ -71,14 +71,14 @@ namespace VR_Prototyping.Scripts.Keyboard
                 if (child.GetComponent<KeyboardKey>() == null) continue;
                 var key = child.GetComponent<KeyboardKey>();
                 key.keyboardManager = this;
-                key.player = controllerTransforms.Player();
+                key.player = ControllerTransforms.Player();
                 key.index = index;
-                key.SetupKey(this, controllerTransforms.Player());
+                key.SetupKey(this, ControllerTransforms.Player());
                 keyboardKeys.Add(key);
                 index++;
             }
 
-            keyboardTarget = GetComponentInChildren<KeyboardTarget>();
+            KeyboardTarget = GetComponentInChildren<KeyboardTarget>();
             
             ToggleKeyboard(false);
         }
@@ -89,24 +89,24 @@ namespace VR_Prototyping.Scripts.Keyboard
             {
                 key.enabled = state;
                 key.gameObject.SetActive(state);
-                keyboardTarget.gameObject.SetActive(state);
+                KeyboardTarget.gameObject.SetActive(state);
             }
         }
 
         public void Keystroke(int index, KeyboardKeyValues key)
         {
-            if (keyboardTarget == null) return;
+            if (KeyboardTarget == null) return;
 
             switch (key)
             {
                 case KeyboardKeyValues.BACK:
-                    keyboardTarget.DeleteText();
+                    KeyboardTarget.DeleteText();
                     break;
                 case KeyboardKeyValues.ENTER:
                     enter.Invoke();
                     break;
                 default:
-                    keyboardTarget.SetText((char)keyboardKeys[index].keyValue);
+                    KeyboardTarget.SetText((char)keyboardKeys[index].keyValue);
                     break;
             }
         }

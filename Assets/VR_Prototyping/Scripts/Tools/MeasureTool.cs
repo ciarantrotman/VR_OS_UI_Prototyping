@@ -44,8 +44,9 @@ namespace VR_Prototyping.Scripts.Tools
             if (MeasureText == null) return;
             MeasureText.transform.LookAwayFrom(controller.CameraTransform(), Vector3.up);
             
-            if (MeasureText == null || MeasureNode == null || MeasureTape == null) return;
             MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
+
+            intersectionPointPrefab.SetActive(Insertion);
         }
 
         protected override void ToolStart()
@@ -116,9 +117,6 @@ namespace VR_Prototyping.Scripts.Tools
         private void ReleaseNode()
         {
             return;
-            
-            _node = null;
-            MeasureNode = null;
         }
 
         public void DeleteNode()

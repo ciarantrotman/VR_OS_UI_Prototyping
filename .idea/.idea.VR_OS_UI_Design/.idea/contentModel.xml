@@ -1040,6 +1040,7 @@
               <e p="MeasureTool.cs" t="Include" />
               <e p="MeasureVisual.cs" t="Include" />
               <e p="MemoNode.cs" t="Include" />
+              <e p="MemoPlayButton.cs" t="Include" />
               <e p="MemoTool.cs" t="Include" />
               <e p="NoteObject.cs" t="Include" />
               <e p="NoteTool.cs" t="Include" />

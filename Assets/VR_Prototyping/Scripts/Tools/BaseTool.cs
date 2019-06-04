@@ -101,7 +101,7 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 Debug.Log(dominant.name + " has been set to " + state);
             }
-            /*
+
             switch (state)
             {
                 case true:
@@ -110,8 +110,8 @@ namespace VR_Prototyping.Scripts.Tools
                 case false:
                     ToolDeactivate();
                     break;
-            }*/
-            
+            }
+
             if(!state) return;
             toolMenu.SetState(false, transform);
         }

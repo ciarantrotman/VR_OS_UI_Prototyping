@@ -115,9 +115,10 @@ namespace VR_Prototyping.Scripts.Tools
             }
             
             MeasureTool.Insertion = intersectionCount > 0 && MeasureTool.Placing == false && MeasureTool.Grabbing == false;
-
+            
             if (MeasureTool.Insertion)
             {
+                
                 MeasureTool.intersectionPointPrefab.transform.position = _x;
                 MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform());
             

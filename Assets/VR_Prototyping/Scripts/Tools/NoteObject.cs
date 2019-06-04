@@ -1,18 +1,20 @@
 ﻿using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace VR_Prototyping.Scripts.Tools
 {
     public class NoteObject : MonoBehaviour
     {
-        public NoteTool NoteTool { get; set; }
-        public ControllerTransforms Controller { get; set; }
-        [BoxGroup] public TextMeshPro NoteText;
-        [BoxGroup] public TextMeshPro NoteTitle;
+        private NoteTool NoteTool { get; set; }
+        private ControllerTransforms Controller { get; set; }
+        [BoxGroup] public TextMeshPro noteText;
+        [BoxGroup] public TextMeshPro noteTitle;
 
-        public void Initialise(NoteTool noteTool)
+        public void Initialise(NoteTool noteTool, ControllerTransforms controllerTransforms)
         {
+            Controller = controllerTransforms;
             NoteTool = noteTool;
         }
 
@@ -24,8 +26,8 @@ namespace VR_Prototyping.Scripts.Tools
         public void SetNote(string text, string title, Vector3 position)
         {
             transform.position = position;
-            NoteText.SetText(text);
-            NoteTitle.SetText(title);
+            noteText.SetText(text);
+            noteTitle.SetText(title);
         }
     }
 }

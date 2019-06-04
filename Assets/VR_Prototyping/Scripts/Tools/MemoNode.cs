@@ -62,6 +62,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void PlayMemo()
         {
+            Debug.Log("PLAY");
             MemoTool.PlayAudio(_nodeIndex);
         }
         

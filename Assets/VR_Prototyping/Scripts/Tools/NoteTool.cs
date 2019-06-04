@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using System.Globalization;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using VR_Prototyping.Scripts.Keyboard;
 
@@ -7,8 +9,8 @@ namespace VR_Prototyping.Scripts.Tools
     public class NoteTool : BaseTool
     {
         [BoxGroup("Note Tool Settings")] [Required] public GameObject notePrefab;
-
-        public KeyboardManager KeyboardManager { get; set; }
+        private float _index;
+        private KeyboardManager KeyboardManager { get; set; }
 
         private GameObject _note;
         private NoteObject _noteObject;
@@ -26,6 +28,7 @@ namespace VR_Prototyping.Scripts.Tools
         
         protected override void ToolDeactivate()
         {
+            if(KeyboardManager == null) return;
             KeyboardManager.ToggleKeyboard(false);
             KeyboardManager.enter.RemoveListener(FinishNote);
         }
@@ -34,16 +37,19 @@ namespace VR_Prototyping.Scripts.Tools
         {
             _note = Instantiate(notePrefab);
             _noteObject = _note.GetComponent<NoteObject>();
-            _noteObject.Initialise(this);
+            _noteObject.Initialise(this, controller);
         }
 
         private void FinishNote()
         {
             NewNote();
-            _noteObject.SetNote(KeyboardManager.keyboardTarget.CheckText(), "4:20, lmao", dominant.transform.position);
-            KeyboardManager.keyboardTarget.ClearText();
+            var position = controller.CameraTransform().position + controller.CameraForwardVector();
+            _noteObject.SetNote(KeyboardManager.KeyboardTarget.CheckText(), DateTime.Now.ToString(CultureInfo.InvariantCulture), position);
+            KeyboardManager.KeyboardTarget.ClearText();
+            _note.name = "Note_" + _index;
             _note = null;
             _noteObject = null;
+            _index++;
         }
     }
 }
