@@ -30,6 +30,12 @@ namespace VR_Prototyping.Scripts
             transform.localRotation = Quaternion.identity;
         }
         
+        public static void LookAtVertical(Transform a, Transform b)
+        {
+            a.LookAwayFrom(b, Vector3.up);
+            a.eulerAngles = new Vector3(0, a.eulerAngles.y,0);
+        }
+        
         public static void AddForceRotation(Rigidbody rb, Transform a, Transform b, float force)
         {
             if (a == null || b == null || rb == null) return;
