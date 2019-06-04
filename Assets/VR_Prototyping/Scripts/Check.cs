@@ -8,7 +8,7 @@ namespace VR_Prototyping.Scripts
 {
     public static class Check
     {
-        public static void Manipulation(Object focusObject, Object oppFocusObject, SelectableObject selectableObject, SelectableObject previous, bool grip, bool pGrip, Transform con, bool touch, bool oppTouch)
+        public static void Manipulation(this Object focusObject, Object oppFocusObject, SelectableObject selectableObject, SelectableObject previous, bool grip, bool pGrip, Transform con, bool touch, bool oppTouch)
         {
             if (focusObject == null || selectableObject == null || touch) return;
          
@@ -28,7 +28,7 @@ namespace VR_Prototyping.Scripts
             }
         }
         
-        public static void Selection(Object focusObject, SelectableObject button, bool select, bool pSelect)
+        public static void Selection(this Object focusObject, SelectableObject button, bool select, bool pSelect)
         {
             if (focusObject == null || button == null) return;
             if (select && !pSelect)
@@ -45,7 +45,7 @@ namespace VR_Prototyping.Scripts
             }
         }
 
-        public static void Hover(SelectableObject current, SelectableObject previous)
+        public static void Hover(this SelectableObject current, SelectableObject previous)
         {
             if (current != previous && current != null)
             {
@@ -61,26 +61,26 @@ namespace VR_Prototyping.Scripts
             }
         }
 
-        public static void JoystickTracking(List<Vector2> list, Vector2 current, float sensitivity)
+        public static void JoystickTracking(this List<Vector2> list, Vector2 current, float sensitivity)
         {
             list.Add(current);
             CullList(list, sensitivity);
         }
         
-        public static void PositionTracking(List<Vector3> list, Vector3 current, float sensitivity)
+        public static void PositionTracking(this List<Vector3> list, Vector3 current, float sensitivity)
         {
             list.Add(current);
             CullList(list, sensitivity);
         }
         
-        public static void RotationTracking(List<Vector3> list, Vector3 current, float sensitivity)
+        public static void RotationTracking(this List<Vector3> list, Vector3 current, float sensitivity)
         {
             list.Add(current);
             CullList(list, sensitivity);
         }
 
         
-        private static void CullList(IList list, float sensitivity)
+        private static void CullList(this IList list, float sensitivity)
         {
             if (list.Count > sensitivity)
             {
@@ -88,7 +88,7 @@ namespace VR_Prototyping.Scripts
             }
         }
         
-        public static void GestureDetection(Locomotion l, Vector2 current, Vector2 previous, float rot, float speed, float triggerValue, float toleranceValue, GameObject visual, LineRenderer lr, bool currentTouch, bool previousTouch, bool disabled, bool locomotionActive)
+        public static void GestureDetection(this Locomotion l, Vector2 current, Vector2 previous, float rot, float speed, float triggerValue, float toleranceValue, GameObject visual, LineRenderer lr, bool currentTouch, bool previousTouch, bool disabled, bool locomotionActive)
         {
             if (disabled) return;
             
@@ -125,25 +125,25 @@ namespace VR_Prototyping.Scripts
             }
         }
         
-        public static void Target(GameObject visual, GameObject parent, Transform normal, Vector2 pos, GameObject target, bool advanced)
+        public static void Target(this GameObject visual, GameObject parent, Transform normal, Vector2 pos, GameObject target, bool advanced)
         {
             visual.transform.LookAt(RotationTarget(pos, target, advanced));
             
             parent.transform.forward = normal.forward;
         }
         
-        private static Transform RotationTarget(Vector2 pos, GameObject target, bool advanced)
+        private static Transform RotationTarget(this Vector2 pos, GameObject target, bool advanced)
         {
             target.transform.localPosition = advanced? Vector3.Lerp(target.transform.localPosition, new Vector3(pos.x, 0, pos.y), .1f) : Vector3.forward;
             return target.transform;
         }
         
-        public static float ControllerAngle(GameObject follow, GameObject proxy, GameObject normal, Transform controller, Transform head, bool debug)
+        public static float ControllerAngle(this GameObject follow, GameObject proxy, GameObject normal, Transform controller, Transform head, bool debug)
         {
-            Set.Position(proxy.transform, controller);
-            Set.ForwardVector(proxy.transform, controller);
-            Set.SplitRotation(proxy.transform, normal.transform, true);
-            Set.SplitPosition(head, controller, follow.transform);
+            proxy.transform.Position(controller);
+            proxy.transform.ForwardVector(controller);
+            proxy.transform.SplitRotation(normal.transform, true);
+            head.SplitPosition(controller, follow.transform);
             follow.transform.LookAt(proxy.transform);
             
             var normalDown = -normal.transform.up;
@@ -159,20 +159,18 @@ namespace VR_Prototyping.Scripts
             return Vector3.Angle(normalDown, proxyForward);
         }
         
-        public static float CalculateDepth(float angle, float maxAngle, float minAngle, float max, float min, Transform proxy)
+        public static float CalculateDepth(this float angle, float maxAngle, float minAngle, float max, float min, Transform proxy)
         {
             var a = angle;
 
             a = a > maxAngle ? maxAngle : a;
             a = a < minAngle ? minAngle : a;
-
-            // a = proxy.eulerAngles.x < 180 ? minAngle : a;
             
             var proportion = Mathf.InverseLerp(maxAngle, minAngle, a);
             return Mathf.SmoothStep(max, min, proportion);
         }
         
-        public static void TargetLocation(GameObject target, GameObject hitPoint, Transform current)
+        public static void TargetLocation(this GameObject target, GameObject hitPoint, Transform current)
         {
             var t = target.transform;
             var position = t.position;
@@ -181,7 +179,7 @@ namespace VR_Prototyping.Scripts
             hitPoint.transform.up = Physics.Raycast(position, -up, out var h) ? h.normal : current.transform.up;
         }
         
-        public static GameObject RayCastFindFocusObject(List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
+        public static GameObject RayCastFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
         {
             if (disable) return current == null ? null : current;
             
@@ -191,24 +189,24 @@ namespace VR_Prototyping.Scripts
             if (Physics.Raycast(position, forward, out var hit, distance) && objects.Contains(hit.transform.gameObject))
             {
                 target.transform.SetParent(hit.transform);
-                Set.VectorLerpPosition(target.transform, hit.point, .15f);
+                target.transform.VectorLerpPosition(hit.point, .15f);
                 return hit.transform.gameObject;
             }
 
             target.transform.SetParent(null);
-            Set.TransformLerpPosition(target.transform, inactive.transform, .1f);
+            target.transform.TransformLerpPosition(inactive.transform, .1f);
             return null;
         }
         
-        public static GameObject FuzzyFindFocusObject(List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, bool disable)
+        public static GameObject FuzzyFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, bool disable)
         {
             if (disable) return current == null ? null : current;
             
-            Set.TransformLerpPosition(target.transform, objects.Count > 0 ? objects[0].gameObject.transform: inactive.transform, .1f);
+            target.transform.TransformLerpPosition(objects.Count > 0 ? objects[0].gameObject.transform: inactive.transform, .1f);
             return objects.Count > 0 ? objects[0].gameObject : null;
         }
         
-        public static GameObject FusionFindFocusObject(List<GameObject> objects, GameObject current, GameObject target,GameObject inactive, Transform controller, float distance, bool disable)
+        public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target,GameObject inactive, Transform controller, float distance, bool disable)
         {
             if (disable) return current == null ? null : current;
             
@@ -218,23 +216,23 @@ namespace VR_Prototyping.Scripts
             if (Physics.Raycast(position, forward, out var hit, distance) && objects.Contains(hit.transform.gameObject))
             {
                 target.transform.SetParent(hit.transform);
-                Set.VectorLerpPosition(target.transform, hit.point, .25f);
+                target.transform.VectorLerpPosition(hit.point, .25f);
                 return hit.transform.gameObject;
             }
 
             if (objects.Count > 0)
             {
                 target.transform.SetParent(objects[0].gameObject.transform);
-                Set.TransformLerpPosition(target.transform, objects[0].gameObject.transform, .25f);
+                target.transform.TransformLerpPosition(objects[0].gameObject.transform, .25f);
                 return objects[0].gameObject;
             }
             
             target.transform.SetParent(null);
-            Set.TransformLerpPosition(target.transform, inactive.transform, .2f);
+            target.transform.TransformLerpPosition(inactive.transform, .2f);
             return null;
         }
 
-        public static SelectableObject FindSelectableObject(GameObject focusObject, SelectableObject current, bool disable)
+        public static SelectableObject FindSelectableObject(this GameObject focusObject, SelectableObject current, bool disable)
         {
             if (disable) return current == null ? null : current;
             
@@ -242,10 +240,10 @@ namespace VR_Prototyping.Scripts
             return focusObject.GetComponent<SelectableObject>() != null ? focusObject.GetComponent<SelectableObject>() : null;
         }
         
-        public static void DrawLineRenderer(LineRenderer lr, GameObject focus, GameObject midpoint, Transform controller, GameObject target, int quality, bool grab)
+        public static void DrawLineRenderer(this LineRenderer lr, GameObject focus, GameObject midpoint, Transform controller, GameObject target, int quality, bool grab)
         {
-            midpoint.transform.localPosition = new Vector3(0, 0, Set.Midpoint(controller, target.transform));
-            Set.LineRenderWidth(lr, .001f, focus != null ? .01f : 0f);
+            midpoint.transform.localPosition = new Vector3(0, 0, controller.Midpoint(target.transform));
+            lr.LineRenderWidth(.001f, focus != null ? .01f : 0f);
             
             Draw.BezierLineRenderer(lr, 
                 controller.position,
@@ -254,7 +252,7 @@ namespace VR_Prototyping.Scripts
                 quality);
         }
         
-        public static void GrabStart(GameObject f, GameObject p, GameObject target, GameObject o, Transform con)
+        public static void GrabStart(this GameObject f, GameObject p, GameObject target, GameObject o, Transform con)
         {
             f.transform.LookAt(con);
             p.transform.position = con.position;
@@ -263,20 +261,61 @@ namespace VR_Prototyping.Scripts
             o.transform.position = con.position;
         }
         
-        public static void FocusObjectFollow(Transform focus, Transform con, Transform tar, Transform tarS, Transform objO, Transform conO, Transform objP, bool d)
+        public static void FocusObjectFollow(this Transform focus, Transform con, Transform tar, Transform tarS, Transform objO, Transform conO, Transform objP, bool d)
         {
             if (focus.transform.gameObject == null || d) return;
 			
-            Set.Transforms(tar, focus);
-            Set.Transforms(tarS, focus);
-            Set.Transforms(objO, focus);
-            Set.Position(conO, con);
-            Set.Position(objP, con);
+            tar.Transforms(focus);
+            tarS.Transforms(focus);
+            objO.Transforms(focus);
+            conO.Position(con);
+            objP.Position(con);
         }
 
-        public static bool IsCollinear(Vector3 a, Vector3 b, Vector3 x, float tolerance)
+        public static bool IsCollinear(this Vector3 a, Vector3 b, Vector3 x, float tolerance)
         {
             return Math.Abs(Vector3.Distance(a, x) + Vector3.Distance(b, x) - Vector3.Distance(a, b)) < tolerance;
+        }
+        
+        public static void CheckGaze(this GameObject o, float a, float c, ICollection<GameObject> g, ICollection<GameObject> l, ICollection<GameObject> r, ICollection<GameObject> global)
+        {
+            if (!global.Contains(o))
+            {
+                g.Remove(o);
+                l.Remove(o);
+                r.Remove(o);
+            }
+				
+            if (a < c/2 && !g.Contains(o))
+            {
+                g.Add(o);
+            }
+			
+            else if (a > c/2)
+            {
+                g.Remove(o);
+                l.Remove(o);
+                r.Remove(o);
+            }
+        }
+        public static bool CheckHand(this GameObject g, ICollection<GameObject> gaze, float m, float c, bool b, bool button)
+        {
+            if (b && !button) return false;
+            if (!gaze.Contains(g)) return false;
+            return m > c / 2;
+        }
+        public static void ManageList(this GameObject g, ICollection<GameObject> l, bool b, bool d, bool r)
+        {
+            if (d || !r) return;
+			
+            if (b && !l.Contains(g))
+            {
+                l.Add(g);
+            }
+            else if (!b && l.Contains(g))
+            {
+                l.Remove(g);
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ namespace VR_Prototyping.Scripts.Tools
         public MeasureVisual MeasureVisual { get; set; }
         
         public bool Insertion { get; set; }
+        public bool Grabbing { get; set; }
+        public bool Placing { get; set; }
         
         private int _tapeCount;
         
@@ -49,19 +51,21 @@ namespace VR_Prototyping.Scripts.Tools
         protected override void ToolStart()
         {
             if (Insertion) return;
+            Placing = true;
             InsertNode(MeasureTape, dominant.transform.position, MeasureTape.measureNodes.Count);
         }
 
         protected override void ToolStay()
         {
             if (Insertion) return;
-            Set.Position(_node.transform, dominant.transform);
+            _node.transform.Position(dominant.transform);
             MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
             MeasureTape.AdjustTape(); 
         }
 
         protected override void ToolEnd()
         {
+            Placing = false;
             if (Insertion) return;
             ReleaseNode();
         }
@@ -77,13 +81,13 @@ namespace VR_Prototyping.Scripts.Tools
             var color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true);
             
             _tapeObject = new GameObject("Tape_" + _tapeCount);
-            Set.Transforms(_tapeObject.transform, dominant.transform);
+            _tapeObject.transform.Transforms(dominant.transform);
             MeasureTape = _tapeObject.AddComponent<MeasureTape>();
             MeasureTape.Controller = controller;
             MeasureTape.MeasureTool = this;
 
             MeasureTape.TapeLr = _tapeObject.AddComponent<LineRenderer>();
-            Setup.LineRender(MeasureTape.TapeLr, tapeMaterial, tapeWidth, true);
+            MeasureTape.TapeLr.SetupLineRender(tapeMaterial, tapeWidth, true);
             MeasureTape.SetColor(color);
             if (_tapeCount > 1)
             {
@@ -111,6 +115,8 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void ReleaseNode()
         {
+            return;
+            
             _node = null;
             MeasureNode = null;
         }

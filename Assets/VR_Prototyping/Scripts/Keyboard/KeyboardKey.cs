@@ -18,19 +18,18 @@ namespace VR_Prototyping.Scripts.Keyboard
 
         protected override void InitialiseOverride()
         {
-            SetupKey();
+            
         }
 
-        private void SetupKey()
+        public void SetupKey(KeyboardManager manager, GameObject p)
         {
-            //keyboardManager = GetComponentInParent<KeyboardManager>();
-            //player = keyboardManager.controllerTransforms.Player();
+            keyboardManager = manager;
+            player = p;
             name = "Key_" + (char)keyValue;
             buttonText.SetText(""+(char)keyValue);
             buttonBack.shadowCastingMode = ShadowCastingMode.Off;
             toolTip = true;
             toolTipText = keyValue.ToString();
-            Debug.Log(keyboardManager.controllerTransforms.name);
         }
         
         private void KeyStroke()

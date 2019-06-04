@@ -17,7 +17,7 @@ namespace VR_Prototyping.Scripts.Tools
             meshRenderer.material = sketchTool.sketchMaterial;
             
             trail = gameObject.AddComponent<TrailRenderer>();
-            Setup.TrailRender(trail, sketchTool.sketchMaterial, .2f, sketchTool.trailWidth, true);
+            Setup.SetupTrailRender(trail, sketchTool.sketchMaterial, .2f, sketchTool.trailWidth, true);
         }
 
         public void SetVisual(Color c, float w)

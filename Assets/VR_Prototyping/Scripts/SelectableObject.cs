@@ -143,8 +143,8 @@ namespace VR_Prototyping.Scripts
 		private void SetupScaling()
 		{
 			defaultLocalScale = transform.localScale;
-			scaleMin = Set.ScaledScale(defaultLocalScale, minScaleFactor);
-			scaleMax = Set.ScaledScale(defaultLocalScale, maxScaleFactor);
+			scaleMin = defaultLocalScale.ScaledScale(minScaleFactor);
+			scaleMax = defaultLocalScale.ScaledScale(maxScaleFactor);
 		}
 		
 		private void OnEnable()
@@ -189,7 +189,7 @@ namespace VR_Prototyping.Scripts
 		}
 		private void SetupRigidBody()
 		{
-			rb = Setup.AddOrGetRigidbody(transform);
+			rb = transform.AddOrGetRigidbody();
 			rb.freezeRotation = true;
 			rb.useGravity = !button && gravity;
 		}
@@ -203,7 +203,7 @@ namespace VR_Prototyping.Scripts
 
 		private void SetupOutline()
 		{
-			outline = Setup.AddOrGetOutline(transform);
+			outline = transform.AddOrGetOutline();
 			outline.enabled = false;
 			outline.precomputeOutline = true;
 		}
@@ -227,9 +227,9 @@ namespace VR_Prototyping.Scripts
 			ReactiveMaterial();
 
 			var o = gameObject;
-			CheckGaze(o, gazeAngle, c.gaze, c.gazeList, c.lHandList, c.rHandList, c.globalList);
-			ManageList(o, c.lHandList, CheckHand(o, c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftTransform(), c.selectionRange));
-			ManageList(o, c.rHandList, CheckHand(o, c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightTransform(), c.selectionRange));
+			o.CheckGaze(gazeAngle, c.gaze, c.gazeList, c.lHandList, c.rHandList, c.globalList);
+			o.ManageList(c.lHandList, o.CheckHand(c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftTransform(), c.selectionRange));
+			o.ManageList(c.rHandList, o.CheckHand(c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightTransform(), c.selectionRange));
 		}
 
 		private void OnTriggerEnter(Collider col)
@@ -253,7 +253,7 @@ namespace VR_Prototyping.Scripts
 			}
 			
 			if (!touchOutline) return;
-			Set.Outline(outline, touchOutlineMode, touchOutlineWidth, touchOutlineColor);
+			outline.Outline(touchOutlineMode, touchOutlineWidth, touchOutlineColor);
 			outline.enabled = true;
 		}
 		
@@ -280,8 +280,8 @@ namespace VR_Prototyping.Scripts
 					c.lFocusObject = null;
 					break;
 				default:
-					Check.PositionTracking(positions, transform.position, Sensitivity);
-					Check.RotationTracking(rotations, transform.forward, Sensitivity);
+					positions.PositionTracking(transform.position, Sensitivity);
+					rotations.RotationTracking(transform.forward, Sensitivity);
 					break;
 			}
 
@@ -317,7 +317,7 @@ namespace VR_Prototyping.Scripts
 			if (!reactiveMat) return;
 			
 			Renderer.material.SetFloat(Threshold, clippingDistance);
-			Set.ReactiveMaterial(Renderer, c.Controller.LeftTransform(), c.Controller.RightTransform());
+			Renderer.ReactiveMaterial(c.Controller.LeftTransform(), c.Controller.RightTransform());
 		}
 		private void GetAngles()
 		{
@@ -326,52 +326,10 @@ namespace VR_Prototyping.Scripts
 			AngleL = Vector3.Angle(position - c.Controller.LeftTransform().position, c.Controller.LeftForwardVector());
 			AngleR = Vector3.Angle(position - c.Controller.RightTransform().position, c.Controller.RightForwardVector());
 		}
-		private static void CheckGaze(GameObject o, float a, float c, ICollection<GameObject> g, ICollection<GameObject> l, ICollection<GameObject> r, ICollection<GameObject> global)
-		{
-			if (!global.Contains(o))
-			{
-				g.Remove(o);
-				l.Remove(o);
-				r.Remove(o);
-			}
-				
-			if (a < c/2 && !g.Contains(o))
-			{
-				g.Add(o);
-			}
-			
-			else if (a > c/2)
-			{
-				g.Remove(o);
-				l.Remove(o);
-				r.Remove(o);
-			}
-		}
-		private static bool CheckHand(GameObject g, ICollection<GameObject> gaze, float m, float c, bool b, bool button)
-		{
-			if (b && !button) return false;
-			if (!gaze.Contains(g)) return false;
-			return m > c / 2;
-		}
-
 		private static bool WithinRange(bool enabled, Transform self, Transform user, float range)
 		{
 			if (!enabled) return true;
 			return Vector3.Distance(self.position, user.position) <= range;
-		}
-
-		private static void ManageList(GameObject g, ICollection<GameObject> l, bool b, bool d, bool r)
-		{
-			if (d || !r) return;
-			
-			if (b && !l.Contains(g))
-			{
-				l.Add(g);
-			}
-			else if (!b && l.Contains(g))
-			{
-				l.Remove(g);
-			}
 		}
 		public void SetState(bool a)
 		{
@@ -380,10 +338,10 @@ namespace VR_Prototyping.Scripts
 			switch (a)
 			{
 				case true:
-					Set.VisualState(transform, this, Set.LocalScale(defaultLocalScale, selectScale), Set.LocalPosition(defaultLocalPosition, selectOffset), activeFont, activeColor);
+					transform.VisualState(this, defaultLocalScale.LocalScale(selectScale), defaultLocalPosition.LocalPosition(selectOffset), activeFont, activeColor);
 					break;
 				case false:
-					Set.VisualState(transform, this, defaultLocalScale, defaultLocalPosition, inactiveFont, inactiveColor);
+					transform.VisualState(this, defaultLocalScale, defaultLocalPosition, inactiveFont, inactiveColor);
 					break;
 				default:
 					throw new ArgumentException();
@@ -392,11 +350,11 @@ namespace VR_Prototyping.Scripts
 		public void GrabStart(Transform con)
 		{
 			if (!grab) return;
-			Set.RigidBody(rb, moveForce, latency,false, gravity);
+			rb.RigidBody(moveForce, latency,false, gravity);
 			f.OnStart(con);
 			
 			if(!grabOutline) return;
-			Set.Outline(outline, grabOutlineMode, grabOutlineWidth, grabOutlineColor);
+			outline.Outline(grabOutlineMode, grabOutlineWidth, grabOutlineColor);
 			outline.enabled = true;
 		}	
 		public void GrabStay(Transform con)
@@ -410,17 +368,17 @@ namespace VR_Prototyping.Scripts
 				case Manipulation.ManipulationType.Lerp:
 					if (DualGrab())
 					{
-						Set.TransformLerpPosition(transform, f.mP.transform, .1f);
+						transform.TransformLerpPosition(f.mP.transform, .1f);
 						break;
 					}
 					if (c.Controller.RightGrab() && c.rSelectableObject == this)
 					{
-						Set.TransformLerpPosition(transform, f.tSr.transform, .1f);
+						transform.TransformLerpPosition(f.tSr.transform, .1f);
 						break;
 					}
 					if (c.Controller.LeftGrab() && c.lSelectableObject == this)
 					{
-						Set.TransformLerpPosition(transform, f.tSl.transform, .1f);
+						transform.TransformLerpPosition(f.tSl.transform, .1f);
 					}
 					break;
 				case Manipulation.ManipulationType.Physics:
@@ -430,7 +388,7 @@ namespace VR_Prototyping.Scripts
 					}
 					if (DualGrab() && pDualGrab)
 					{
-						Set.AddForcePosition(rb, transform, f.mP.transform, c.Controller.debugActive);
+						rb.AddForcePosition(transform, f.mP.transform, c.Controller.debugActive);
 						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMin, scaleMax);
 						break;
 					}
@@ -441,12 +399,12 @@ namespace VR_Prototyping.Scripts
 					}
 					if (c.Controller.RightGrab() && c.rSelectableObject == this)
 					{
-						Set.AddForcePosition(rb, transform, f.tSr.transform, c.Controller.debugActive);
+						rb.AddForcePosition(transform, f.tSr.transform, c.Controller.debugActive);
 						break;
 					}
 					if (c.Controller.LeftGrab() && c.lSelectableObject == this)
 					{
-						Set.AddForcePosition(rb, transform, f.tSl.transform, c.Controller.debugActive);
+						rb.AddForcePosition(transform, f.tSl.transform, c.Controller.debugActive);
 					}
 					break;
 				default:
@@ -463,7 +421,7 @@ namespace VR_Prototyping.Scripts
 		{
 			c.gazeList.Clear();
 			
-			Set.RigidBody(rb, moveForce, latency,false, gravity);
+			rb.RigidBody(moveForce, latency,false, gravity);
 			outline.enabled = false;
 			
 			f.OnEnd(con);
@@ -476,7 +434,7 @@ namespace VR_Prototyping.Scripts
 
 			if (hoverOutline)
 			{
-				Set.Outline(outline, hoverOutlineMode, hoverOutlineWidth, hoverOutlineColor);
+				outline.Outline(hoverOutlineMode, hoverOutlineWidth, hoverOutlineColor);
 				outline.enabled = true;
 			}
 			
@@ -484,10 +442,10 @@ namespace VR_Prototyping.Scripts
 			defaultLocalScale = t.localScale;
 			defaultLocalPosition = t.localPosition;
 
-			t.DOScale(Set.LocalScale(defaultLocalScale, hoverScale), hoverEffectDuration);
+			t.DOScale(defaultLocalScale.LocalScale(hoverScale), hoverEffectDuration);
 			
 			if (rb.velocity != Vector3.zero || hoverOffset <= 0) return;
-			t.DOLocalMove(Set.LocalPosition(defaultLocalPosition, hoverOffset), hoverEffectDuration);
+			t.DOLocalMove(defaultLocalPosition.LocalPosition(hoverOffset), hoverEffectDuration);
 		}
 		public void HoverStay()
 		{

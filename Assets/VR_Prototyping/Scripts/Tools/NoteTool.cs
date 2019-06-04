@@ -7,21 +7,27 @@ namespace VR_Prototyping.Scripts.Tools
     public class NoteTool : BaseTool
     {
         [BoxGroup("Note Tool Settings")] [Required] public GameObject notePrefab;
-        
-        public KeyboardManager KeyboardManager;
+
+        public KeyboardManager KeyboardManager { get; set; }
 
         private GameObject _note;
         private NoteObject _noteObject;
-
-        protected override void Initialise()
+        
+        protected override void OnStart()
         {
             KeyboardManager = toolMenu.keyboardManager;
-            KeyboardManager.Enter.AddListener(FinishNote);
         }
         
-        private void OnEnable()
+        protected override void ToolActivate()
         {
             KeyboardManager.ToggleKeyboard(true);
+            KeyboardManager.enter.AddListener(FinishNote);
+        }
+        
+        protected override void ToolDeactivate()
+        {
+            KeyboardManager.ToggleKeyboard(false);
+            KeyboardManager.enter.RemoveListener(FinishNote);
         }
 
         private void NewNote()
@@ -30,10 +36,11 @@ namespace VR_Prototyping.Scripts.Tools
             _noteObject = _note.GetComponent<NoteObject>();
             _noteObject.Initialise(this);
         }
-        
-        public void FinishNote()
+
+        private void FinishNote()
         {
-            _noteObject.SetNote(KeyboardManager.keyboardTarget.CheckText(), Time.time.ToString(), dominant.transform.position);
+            NewNote();
+            _noteObject.SetNote(KeyboardManager.keyboardTarget.CheckText(), "4:20, lmao", dominant.transform.position);
             KeyboardManager.keyboardTarget.ClearText();
             _note = null;
             _noteObject = null;

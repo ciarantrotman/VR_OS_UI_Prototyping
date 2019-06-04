@@ -31,7 +31,7 @@ namespace VR_Prototyping.Scripts.Tools
             sketchObject = new GameObject("Sketch_" + sketchCount);
             Set.Transforms(sketchObject.transform, dominant.transform);
             sketchLr = sketchObject.AddComponent<LineRenderer>();
-            Setup.LineRender(sketchLr, sketchMaterial, brushWidth, true);
+            Setup.SetupLineRender(sketchLr, sketchMaterial, brushWidth, true);
             sketchLr.material.color = brushColor;
             sketches.Add(sketchLr);
             position = 0;

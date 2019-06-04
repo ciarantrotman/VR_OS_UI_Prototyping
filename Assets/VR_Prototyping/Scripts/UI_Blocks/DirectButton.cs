@@ -30,9 +30,9 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         public enum ButtonState
         {
-            Inactive,
-            Hover,
-            Active
+            INACTIVE,
+            HOVER,
+            ACTIVE
         }
 
         public ButtonState buttonState { get; private set; }
@@ -96,16 +96,16 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             toggleTarget.transform.SetParent(parent.transform);
             
             targetLr = LineRender(target.transform, targetLineRenderWidth);
-            Draw.CircleLineRenderer(targetLr, targetRadius, Draw.Orientation.Forward, circleQuality);
+            targetLr.CircleLineRenderer(targetRadius, Draw.Orientation.Forward, circleQuality);
             
-            rb = Setup.AddOrGetRigidbody(button.transform);
-            Set.RigidBody(rb, .1f, 10f, true, false);
+            rb = button.transform.AddOrGetRigidbody();
+            rb.RigidBody(.1f, 10f, true, false);
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             
             buttonSurface = visual.AddComponent<MeshFilter>();
             buttonVisual = visual.AddComponent<MeshRenderer>();
             buttonVisual.material = buttonMaterial;
-            buttonSurface.mesh = Draw.GenerateCircleMesh(buttonRadius, Draw.Orientation.Forward);
+            buttonSurface.mesh = buttonRadius.GenerateCircleMesh(Draw.Orientation.Forward);
             buttonCollider = visual.AddComponent<MeshCollider>();
             buttonCollider.convex = true;
             
@@ -117,7 +117,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             hoverTarget.transform.localPosition = Offset(target.transform, hoverDepth);
             toggleTarget.transform.localPosition = Offset(target.transform, -toggleDepth);
 
-            buttonState = toggle && startsActive ? ButtonState.Active : ButtonState.Inactive;
+            buttonState = toggle && startsActive ? ButtonState.ACTIVE : ButtonState.INACTIVE;
 
             if (toggle && startsActive)
             {
@@ -132,7 +132,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private LineRenderer LineRender(Component a, float width)
         {
             var lr = a.gameObject.AddComponent<LineRenderer>();
-            Setup.LineRender(lr, targetMaterial, width, true);
+            lr.SetupLineRender(targetMaterial, width, true);
             return lr;
         }
 
@@ -144,13 +144,13 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             var buttonPos = button.transform.position;
             switch (buttonState)
             {
-                case ButtonState.Inactive:
+                case ButtonState.INACTIVE:
                     rb.AddForce(Force(restTarget, buttonPos, springiness), ForceMode.Force);
                     break;
-                case ButtonState.Hover:
+                case ButtonState.HOVER:
                     rb.AddForce(Force(hoverTarget, buttonPos, springiness), ForceMode.Force);
                     break;
-                case ButtonState.Active:
+                case ButtonState.ACTIVE:
                     rb.AddForce(Force(target, buttonPos, springiness), ForceMode.Force);
                     break;
                 default:
@@ -173,28 +173,28 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private void SetState()
         {
-            if (DirectCheck() && buttonState != ButtonState.Active)
+            if (DirectCheck() && buttonState != ButtonState.ACTIVE)
             {
-                buttonState = ButtonState.Hover;
+                buttonState = ButtonState.HOVER;
                 hover.Invoke();
             }
-            else if (!DirectCheck() && buttonState != ButtonState.Active)
+            else if (!DirectCheck() && buttonState != ButtonState.ACTIVE)
             {
-                buttonState = ButtonState.Inactive;
+                buttonState = ButtonState.INACTIVE;
                 state = false;
                 return;
             }
             
             if (/*buttonState == ButtonState.Hover && */ActiveDistance())// && state != statePrevious)
             {
-                buttonState = toggle ? ButtonState.Active : ButtonState.Inactive;
+                buttonState = toggle ? ButtonState.ACTIVE : ButtonState.INACTIVE;
                 activate.Invoke();
                 state = true;
             }
 
-            if (buttonState == ButtonState.Active && ToggleDistance() && toggle)
+            if (buttonState == ButtonState.ACTIVE && ToggleDistance() && toggle)
             {
-                buttonState = ButtonState.Inactive;
+                buttonState = ButtonState.INACTIVE;
                 deactivate.Invoke();
             }
         }
