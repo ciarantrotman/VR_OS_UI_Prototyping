@@ -70,7 +70,7 @@ namespace VR_Prototyping.Scripts.Tools
                     throw new ArgumentOutOfRangeException();
             }
 
-            keyboard.transform.localPosition = new Vector3(-.05f, -.02f, 0f);
+            keyboard.transform.localPosition = new Vector3(.06f, -.02f, -.05f);
             keyboard.transform.localScale = new Vector3(.2f, .2f, .2f);
         }
 

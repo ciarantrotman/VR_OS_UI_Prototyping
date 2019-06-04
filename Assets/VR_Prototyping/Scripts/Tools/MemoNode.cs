@@ -8,15 +8,11 @@ namespace VR_Prototyping.Scripts.Tools
     {
         private MemoTool MemoTool { get; set; }
         public AudioSource AudioSource { get; private set; }
-        public ControllerTransforms Controller { private get; set; }
+        public ControllerTransforms Controller { get; set; }
         private Color _nodeColor;
+        private float _memoLength;
         
         private int _nodeIndex;
-        
-        private float _memoLength;
-
-        private bool _rGrabP;
-        private bool _lGrabP;
         
         [Button]
         public void PlayAudioDebug()
@@ -64,36 +60,16 @@ namespace VR_Prototyping.Scripts.Tools
             GetComponentInChildren<TextMeshPro>().SetText(_nodeIndex + " - {0:1} ", length);
         }
 
+        public void PlayMemo()
+        {
+            MemoTool.PlayAudio(_nodeIndex);
+        }
         
         private void FixedUpdate()
         {
-            transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
-            
-            DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), _rGrabP);
-            DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), _lGrabP);
-
-            _rGrabP = Controller.RightGrab();
-            _lGrabP = Controller.LeftGrab();
-        }
-        
-        private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
-        {
-            
-            if (!(Vector3.Distance(transform.position, controller.position) < MemoTool.triggerDistance)) return;
-
-            if (grab && !pGrab)
-            {
-                MemoTool.PlayAudio(_nodeIndex);
-                return;
-            }
-
-            if (grab)
-            {
-                // on hold goes here
-                return;
-            }
-            
-            // on release goes here
+            var x = transform;
+            x.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
+            x.eulerAngles = new Vector3(0, x.eulerAngles.y, 0);
         }
     }
 }

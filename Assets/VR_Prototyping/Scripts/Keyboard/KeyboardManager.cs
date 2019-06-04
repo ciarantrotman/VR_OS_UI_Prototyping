@@ -74,8 +74,7 @@ namespace VR_Prototyping.Scripts.Keyboard
 
             keyboardTarget = GetComponentInChildren<KeyboardTarget>();
         }
-
-        //public void 
+ 
 
         public void Keystroke(int index, KeyboardKeyValues key)
         {
