@@ -85,7 +85,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private LineRenderer LineRender(Component a, float width)
         {
             var lr = a.gameObject.AddComponent<LineRenderer>();
-            Setup.LineRender(lr, dialMaterial, width, true);
+            Setup.SetupLineRender(lr, dialMaterial, width, true);
             return lr;
         }
         

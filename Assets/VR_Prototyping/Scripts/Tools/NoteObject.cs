@@ -1,5 +1,4 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void FixedUpdate()
         {
-            Set.LookAtVertical(transform, Controller.CameraTransform());
+            transform.LookAtVertical(Controller.CameraTransform());
         }
 
         public void SetNote(string text, string title, Vector3 position)

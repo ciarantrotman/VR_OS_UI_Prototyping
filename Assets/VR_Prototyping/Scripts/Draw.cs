@@ -6,7 +6,7 @@ namespace VR_Prototyping.Scripts
 {
 	public static class Draw
 	{
-		public static void BezierLineRenderer(LineRenderer lr, Vector3 p0, Vector3 p1, Vector3 p2, int segments)
+		public static void BezierLineRenderer(this LineRenderer lr, Vector3 p0, Vector3 p1, Vector3 p2, int segments)
 		{
 			lr.positionCount = segments;
 			lr.SetPosition(0, p0);
@@ -31,7 +31,7 @@ namespace VR_Prototyping.Scripts
 			Up
 		}
 		
-		public static void CircleLineRenderer(LineRenderer lr, float radius, Orientation orientation, int quality)
+		public static void CircleLineRenderer(this LineRenderer lr, float radius, Orientation orientation, int quality)
 		{
 			lr.positionCount = quality;
 			lr.useWorldSpace = false;
@@ -63,13 +63,13 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 		
-		public static void LineRender(LineRenderer lr, Transform start, Transform end)
+		public static void LineRender(this LineRenderer lr, Transform start, Transform end)
 		{
 			lr.SetPosition(0, start.position);
 			lr.SetPosition(1, end.position);
 		}
 
-		public static void ArcLineRenderer(LineRenderer lr, float radius, float startAngle, float endAngle,
+		public static void ArcLineRenderer(this LineRenderer lr, float radius, float startAngle, float endAngle,
 			Orientation orientation, int quality)
 		{
 			lr.positionCount = quality;
@@ -104,7 +104,7 @@ namespace VR_Prototyping.Scripts
 		private const int CircleSegmentCount = 64;
 		private const int CircleVertexCount = CircleSegmentCount + 2;
 		private const int CircleIndexCount = CircleSegmentCount * 3;
-		public static Mesh GenerateCircleMesh(float radius, Orientation orientation)
+		public static Mesh GenerateCircleMesh(this float radius, Orientation orientation)
 		{
 			var circle = new Mesh();
 			var vertices = new List<Vector3>(CircleVertexCount);

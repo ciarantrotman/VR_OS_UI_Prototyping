@@ -70,11 +70,13 @@ namespace VR_Prototyping.Scripts.Tools
             if (grab)
             {
                 if (LockNode) return;
+                MeasureTool.Grabbing = true;
                 MeasureTape.AdjustTape();
-                Set.TransformLerpPosition(transform, controller, .85f);
+                transform.TransformLerpPosition(controller, .85f);
                 return;
             }
 
+            MeasureTool.Grabbing = false;
             MeasureTool.MeasureNode = null;
         }
 

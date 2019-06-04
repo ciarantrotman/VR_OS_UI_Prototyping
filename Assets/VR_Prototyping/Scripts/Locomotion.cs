@@ -145,38 +145,38 @@ namespace VR_Prototyping.Scripts
             lRt.transform.SetParent(lHp.transform);
             
             rLr = rCp.AddComponent<LineRenderer>();
-            Setup.LineRender(rLr, lineRenderMat, .005f, false);
+            rLr.SetupLineRender(lineRenderMat, .005f, false);
             
             lLr = lCp.AddComponent<LineRenderer>();
-            Setup.LineRender(lLr, lineRenderMat, .005f, false);
+            lLr.SetupLineRender(lineRenderMat, .005f, false);
         }
 
         private void Update()
         {
-            Set.LocalDepth(rTs.transform, Check.CalculateDepth(Check.ControllerAngle(rCf, rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
-            Set.LocalDepth(lTs.transform, Check.CalculateDepth(Check.ControllerAngle(lCf, lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive), MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
+            rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
+            lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
-            Check.TargetLocation(rTs, rHp, transform);
-            Check.TargetLocation(lTs, lHp, transform);
+            rTs.TargetLocation(rHp, transform);
+            lTs.TargetLocation(lHp, transform);
 
-            Set.LocalDepth(rMp.transform, Set.Midpoint(rCp.transform, rTs.transform), false, 0f);
-            Set.LocalDepth(lMp.transform, Set.Midpoint(lCp.transform, lTs.transform), false, 0f);
+            rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
+            lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);
             
-            Check.Target(rVo, rHp, rCn.transform, c.RightJoystick(), rRt, advancedLocomotion);
-            Check.Target(lVo, lHp, lCn.transform, c.LeftJoystick(), lRt, advancedLocomotion);
+            rVo.Target(rHp, rCn.transform, c.RightJoystick(), rRt, advancedLocomotion);
+            lVo.Target(lHp, lCn.transform, c.LeftJoystick(), lRt, advancedLocomotion);
             
-            Draw.BezierLineRenderer(rLr,c.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
-            Draw.BezierLineRenderer(lLr, c.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
+            rLr.BezierLineRenderer(c.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
+            lLr.BezierLineRenderer(c.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
 
         }
 
         private void LateUpdate()
         {
-            Check.JoystickTracking(rJoystickValues, c.RightJoystick(), Sensitivity);
-            Check.JoystickTracking(lJoystickValues, c.LeftJoystick(), Sensitivity);
+            rJoystickValues.JoystickTracking(c.RightJoystick(), Sensitivity);
+            lJoystickValues.JoystickTracking(c.LeftJoystick(), Sensitivity);
             
-            Check.GestureDetection(this, c.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, c.RightJoystickPress(), pTouchR, disableRightHand, active);
-            Check.GestureDetection(this, c.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, c.LeftJoystickPress(), pTouchL, disableLeftHand, active);
+            this.GestureDetection(c.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, c.RightJoystickPress(), pTouchR, disableRightHand, active);
+            this.GestureDetection(c.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, c.LeftJoystickPress(), pTouchL, disableLeftHand, active);
             
             pTouchR = c.RightJoystickPress();
             pTouchL = c.LeftJoystickPress();
@@ -193,8 +193,8 @@ namespace VR_Prototyping.Scripts
             if(transform.parent == cN.transform || !rotation) return;
             active = true;
             
-            Set.SplitRotation(c.CameraTransform(), cN.transform, false);
-            Set.SplitPosition(c.CameraTransform(), transform, cN.transform);
+            c.CameraTransform().SplitRotation(cN.transform, false);
+            c.CameraTransform().SplitPosition(transform, cN.transform);
             
             transform.SetParent(cN.transform);
             cN.transform.DORotate(RotationAngle(cN.transform, a), time);
@@ -212,8 +212,8 @@ namespace VR_Prototyping.Scripts
         {
             if (transform.parent == cN.transform) return;
 
-            Set.SplitRotation(c.CameraTransform(), cN.transform, false);
-            Set.SplitPosition(c.CameraTransform(), transform, cN.transform);
+            c.CameraTransform().SplitRotation(cN.transform, false);
+            c.CameraTransform().SplitPosition(transform, cN.transform);
             
             transform.SetParent(cN.transform);
             switch (locomotionMethod)

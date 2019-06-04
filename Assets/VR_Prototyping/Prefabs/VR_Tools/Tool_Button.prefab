@@ -25,6 +25,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af82c2c0e403f224c82b1f918d913030, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instantiated: 1
   player: {fileID: 0}
   grab: 0
   button: 1
@@ -146,6 +147,10 @@ PrefabInstance:
     - target: {fileID: 1609468477, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609468477, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1609468478, guid: 77e441e7f2fcec44eafa10e2f8de497e, type: 3}
       propertyPath: m_LocalPosition.x

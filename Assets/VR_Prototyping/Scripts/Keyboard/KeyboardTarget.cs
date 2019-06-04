@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Keyboard
@@ -22,7 +21,7 @@ namespace VR_Prototyping.Scripts.Keyboard
 
         public string CheckText()
         {
-            return textField.text;
+            return text;
         }
 
     public void DeleteText()
@@ -33,7 +32,7 @@ namespace VR_Prototyping.Scripts.Keyboard
     
     public void ClearText()
         {
-            text = String.Empty;
+            text = "";
             textField.SetText(text);
         }
     }

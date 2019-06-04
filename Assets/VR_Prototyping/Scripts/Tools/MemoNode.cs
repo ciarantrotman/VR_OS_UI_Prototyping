@@ -41,7 +41,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             _nodeColor = color;
             GetComponentInChildren<MeshRenderer>().material.color = color;
-            Set.ReverseNormals(GetComponentInChildren<MeshFilter>());
+            GetComponentInChildren<MeshFilter>().ReverseNormals();
         }
 
         private void SetIndex(int index)

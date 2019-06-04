@@ -54,6 +54,7 @@ MonoBehaviour:
     - {fileID: 1548152124150935786}
     - {fileID: 996178410202326001}
     - {fileID: 8033839298211828535}
+    - {fileID: 496836517179795589}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -72,7 +73,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 7
       Data: 
@@ -106,6 +107,18 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 1
+      Data: Note
+    - Name: 
+      Entry: 10
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -238,4 +251,6 @@ MonoBehaviour:
   dominant: {fileID: 0}
   dominantSpeed: 1
   nonDominantSpeed: 1
-  notePrefab: {fileID: 0}
+  notePrefab: {fileID: 5820125354782596746, guid: 257b819d1bb0e7b4587f8ac24639cffa,
+    type: 3}
+  KeyboardManager: {fileID: 0}

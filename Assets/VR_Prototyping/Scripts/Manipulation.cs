@@ -143,8 +143,8 @@ namespace VR_Prototyping.Scripts
 			if(!directGrab) return;
 			sCr = cR.AddComponent<SphereCollider>();
 			sCl = cL.AddComponent<SphereCollider>();
-			Setup.SphereCollider(sCr, true, directGrabDistance);
-			Setup.SphereCollider(sCl, true, directGrabDistance);
+			sCr.SetupSphereCollider(true, directGrabDistance);
+			sCl.SetupSphereCollider(true, directGrabDistance);
 		}
 
 		private void SetupLineRender()
@@ -155,11 +155,11 @@ namespace VR_Prototyping.Scripts
 		
 		private void Update()
 		{				
-			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.LeftTransform(), cFl.transform);
-			Set.SplitPosition(c.Controller.CameraTransform(), c.Controller.RightTransform(), cFr.transform);
-			Set.MidpointPosition(mP.transform, tSl.transform, tSr.transform, true);
-			Set.Transforms(cR.transform, c.Controller.RightTransform());
-			Set.Transforms(cL.transform, c.Controller.LeftTransform());
+			c.Controller.CameraTransform().SplitPosition(c.Controller.LeftTransform(), cFl.transform);
+			c.Controller.CameraTransform().SplitPosition(c.Controller.RightTransform(), cFr.transform);
+			mP.transform.MidpointPosition(tSl.transform, tSr.transform, true);
+			cR.transform.Transforms(c.Controller.RightTransform());
+			cL.transform.Transforms(c.Controller.LeftTransform());
 			
 			FollowFocusObjects();
 		}
@@ -168,12 +168,12 @@ namespace VR_Prototyping.Scripts
 		{
 			if (c.lFocusObject != null)
 			{
-				Check.FocusObjectFollow(c.lFocusObject.transform, c.Controller.LeftTransform(), tl.transform, tSl.transform, oOl.transform, cOl.transform, oPl.transform, c.Controller.LeftGrab());
+				c.lFocusObject.transform.FocusObjectFollow(c.Controller.LeftTransform(), tl.transform, tSl.transform, oOl.transform, cOl.transform, oPl.transform, c.Controller.LeftGrab());
 			}
 
 			if (c.rFocusObject != null)
 			{
-				Check.FocusObjectFollow(c.rFocusObject.transform, c.Controller.RightTransform(), tr.transform, tSr.transform, oOr.transform, cOr.transform, oPr.transform, c.Controller.RightGrab());
+				c.rFocusObject.transform.FocusObjectFollow(c.Controller.RightTransform(), tr.transform, tSr.transform, oOr.transform, cOr.transform, oPr.transform, c.Controller.RightGrab());
 			}
 		}
 		public void OnStart(Transform con)
@@ -181,18 +181,18 @@ namespace VR_Prototyping.Scripts
 			switch (con == c.Controller.LeftTransform())
 			{
 				case true:
-					Check.GrabStart(cFl, cPl, tl, cOl, con);
-					Set.Transforms(tl.transform, c.lFocusObject.transform);
-					Set.Transforms(tSl.transform, tl.transform);
-					Set.Position(oPl.transform, c.lFocusObject.transform);
-					Set.Position(oOl.transform, c.lFocusObject.transform);
+					cFl.GrabStart(cPl, tl, cOl, con);
+					tl.transform.Transforms(c.lFocusObject.transform);
+					tSl.transform.Transforms(tl.transform);
+					oPl.transform.Position(c.lFocusObject.transform);
+					oOl.transform.Position(c.lFocusObject.transform);
 					break;
 				case false:
-					Check.GrabStart(cFr, cPr, tr, cOr, con);
-					Set.Transforms(tr.transform, c.rFocusObject.transform);
-					Set.Transforms(tSr.transform, tr.transform);
-					Set.Position(oPr.transform, c.rFocusObject.transform);
-					Set.Position(oOr.transform, c.rFocusObject.transform);
+					cFr.GrabStart(cPr, tr, cOr, con);
+					tr.transform.Transforms(c.rFocusObject.transform);
+					tSr.transform.Transforms(tr.transform);
+					oPr.transform.Position(c.rFocusObject.transform);
+					oOr.transform.Position(c.rFocusObject.transform);
 					break;
 				default:
 					throw new ArgumentException();
@@ -205,11 +205,11 @@ namespace VR_Prototyping.Scripts
 			{
 				case true:
 					ControllerFollowing(con, cFl, cPl, tl);
-					tSl.transform.localPosition = new Vector3(0, 0, Set.MagnifiedDepth(cPl, cOl, oOl, tSl, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
+					tSl.transform.localPosition = new Vector3(0, 0, cPl.MagnifiedDepth(cOl, oOl, tSl, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
 					break;
 				case false:
 					ControllerFollowing(con, cFr, cPr, tr);
-					tSr.transform.localPosition = new Vector3(0, 0, Set.MagnifiedDepth(cPr, cOr, oOr, tSr, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
+					tSr.transform.localPosition = new Vector3(0, 0, cPr.MagnifiedDepth(cOr, oOr, tSr, snapDistance, c.selectionRange - c.selectionRange * .25f, maximumDistance));
 					break;
 				default:
 					throw new ArgumentException();
@@ -220,7 +220,7 @@ namespace VR_Prototyping.Scripts
 		{
 			if (rot)
 			{
-				Set.MidpointPosition(mRp.transform, c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
+				mRp.transform.MidpointPosition(c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
 				pRot = mRp.transform.rotation;
 				mRc.transform.rotation = target.rotation;
 				mRc.transform.position = mRp.transform.position;
@@ -251,7 +251,7 @@ namespace VR_Prototyping.Scripts
 		{
 			if (rot && enableRotation)
 			{
-				Set.MidpointPosition(mRp.transform, c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
+				mRp.transform.MidpointPosition(c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
 			
 				var rotation = mRp.transform.rotation;
 			
@@ -296,8 +296,8 @@ namespace VR_Prototyping.Scripts
 		{
 			rigid.useGravity = g;
 			target.SetParent(null);
-			rigid.AddForce(Set.Velocity(pos) * (f + f), ForceMode.VelocityChange);
-			rigid.AddTorque(Set.AngularVelocity(rot) * (f + f), ForceMode.VelocityChange);
+			rigid.AddForce(pos.Velocity() * (f + f), ForceMode.VelocityChange);
+			rigid.AddTorque(rot.AngularVelocity() * (f + f), ForceMode.VelocityChange);
 			lr.enabled = true;
 		}
 		

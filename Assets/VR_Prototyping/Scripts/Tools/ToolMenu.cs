@@ -16,7 +16,7 @@ namespace VR_Prototyping.Scripts.Tools
         
         private bool trigger;
         
-        private ControllerTransforms c;
+        private ControllerTransforms controller;
         private ToolController toolController;
         
         [BoxGroup("Script Setup")] [Required] [SerializeField] private GameObject menuPrefab;
@@ -37,7 +37,7 @@ namespace VR_Prototyping.Scripts.Tools
         
         private void Awake()
         {
-            c = GetComponent<ControllerTransforms>();
+            controller = GetComponent<ControllerTransforms>();
             SetupMenu();
             SetupKeyboard();
         }
@@ -47,24 +47,24 @@ namespace VR_Prototyping.Scripts.Tools
             menuPrefab = Instantiate(menuPrefab);
             menuPrefab.name = "Tools/Menu";
             toolController = menuPrefab.GetComponent<ToolController>();
-            toolController.Initialise(gameObject, active, c, dominantHand, this);
+            toolController.Initialise(gameObject, active, controller, dominantHand, this);
             toolController.ToggleButtonState(false);
         }
 
         private void SetupKeyboard()
         {
             var keyboard = Instantiate(keyboardPrefab);
+            keyboard.name = "Indirect_Keyboard";
+            
             keyboardManager = keyboard.GetComponent<KeyboardManager>();
-            keyboardManager.controllerTransforms = c;
-            keyboardManager.toolMenu = this;
 
             switch (dominantHand)
             {
                 case Handedness.Right:
-                    keyboard.transform.parent = c.LeftTransform();
+                    keyboardManager.InitialiseKeyboard(controller, this, controller.LeftTransform());
                     break;
                 case Handedness.Left:
-                    keyboard.transform.parent = c.RightTransform();
+                    keyboardManager.InitialiseKeyboard(controller, this, controller.RightTransform());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -79,15 +79,15 @@ namespace VR_Prototyping.Scripts.Tools
             switch (dominantHand)
             {
                 case Handedness.Right:
-                    cMenu = c.RightMenu();
-                    CheckState(cMenu, pMenu, c.RightTransform());
-                    RubberBanded(c.RightTransform());
+                    cMenu = controller.RightMenu();
+                    CheckState(cMenu, pMenu, controller.RightTransform());
+                    RubberBanded(controller.RightTransform());
                     pMenu = cMenu;
                     return;
                 case Handedness.Left:
-                    cMenu = c.LeftMenu();
-                    CheckState(cMenu, pMenu, c.LeftTransform());
-                    RubberBanded(c.LeftTransform());
+                    cMenu = controller.LeftMenu();
+                    CheckState(cMenu, pMenu, controller.LeftTransform());
+                    RubberBanded(controller.LeftTransform());
                     pMenu = cMenu;
                     return;
                 default:
@@ -95,23 +95,23 @@ namespace VR_Prototyping.Scripts.Tools
             }
         }
 
-        private void CheckState(bool current, bool previous, Transform controller)
+        private void CheckState(bool current, bool previous, Transform c)
         {
             if (current || !previous) return;
             
             active = !active;
-            SetState(active, controller);
+            SetState(active, c);
         }
 
-        public void SetState(bool state, Transform controller)
+        public void SetState(bool state, Transform c)
         {
             toolController.ToggleButtonState(state);
             active = state;
             rubberBanded = state;
             
             if(!state) return;
-            menuPrefab.transform.position = controller.position;
-            Set.SplitRotation(controller, menuPrefab.transform, false);
+            menuPrefab.transform.position = c.position;
+            Set.SplitRotation(c, menuPrefab.transform, false);
             toolController.SetAllToolState(false);
         }
 

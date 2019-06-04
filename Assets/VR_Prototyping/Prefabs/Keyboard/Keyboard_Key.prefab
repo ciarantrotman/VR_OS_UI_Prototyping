@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 8491623801270053785}
   - component: {fileID: 6702010162402042064}
   - component: {fileID: 5854448841577481754}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Keyboard_Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4092368121157638870}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22ee7eecff3324646a96d1b5dc812e9b, type: 3}
   m_Name: 

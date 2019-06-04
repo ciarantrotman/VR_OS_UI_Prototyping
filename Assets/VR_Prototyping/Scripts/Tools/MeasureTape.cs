@@ -60,7 +60,7 @@ namespace VR_Prototyping.Scripts.Tools
             int index = 0;
             int intersectionCount = 0;
             
-            for (int i = 0; i < measureNodes.Count - 1; i++)
+            for (var i = 0; i < measureNodes.Count - 1; i++)
             {
                 var currNodePos = measureNodes[i].transform.position;
                 var nextNodePos = measureNodes[i + 1].transform.position;
@@ -76,13 +76,13 @@ namespace VR_Prototyping.Scripts.Tools
                             MeasureTool.tolerance);
                         if (_xP != Vector3.zero)
                         {
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance))
+                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance))
                             {
                                 _x = _xP;
                                 intersectionCount++;
                             }
                             
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance) && !Controller.LeftSelect() && _lSelectP)
+                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance) && !Controller.LeftSelect() && _lSelectP)
                             {
                                 index = i + 1;
                             }
@@ -95,16 +95,15 @@ namespace VR_Prototyping.Scripts.Tools
                             currNodePos,
                             line,
                             MeasureTool.tolerance);
-                        
                         if (_xP != Vector3.zero)
                         {
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance))
+                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance))
                             {
                                 _x = _xP;
                                 intersectionCount++;
                             }
                             
-                            if (Check.IsCollinear(currNodePos, nextNodePos, _xP, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
+                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
                             {
                                 index = i + 1;
                             }
@@ -115,7 +114,7 @@ namespace VR_Prototyping.Scripts.Tools
                 }
             }
             
-            MeasureTool.Insertion = intersectionCount > 0;
+            MeasureTool.Insertion = intersectionCount > 0 && MeasureTool.Placing == false && MeasureTool.Grabbing == false;
 
             if (MeasureTool.Insertion)
             {

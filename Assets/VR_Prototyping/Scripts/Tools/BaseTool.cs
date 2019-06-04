@@ -17,6 +17,8 @@ namespace VR_Prototyping.Scripts.Tools
         private bool cTrigger { get; set; }
         private bool pTrigger { get; set; }
 
+        private bool initialised;
+
         private BaseDirectBlock[] directInterfaceBlocks;
         
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject buttonPrefab;
@@ -25,11 +27,33 @@ namespace VR_Prototyping.Scripts.Tools
         
         [FoldoutGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float dominantSpeed = 1;
         [FoldoutGroup("Generic Tool Settings")]  [SerializeField] [Range(.01f, 1f)] protected float nonDominantSpeed = 1;
-        
-        private void Awake()
+
+
+        public void SetupMenuItems()
         {
-            SetupMenuItems();
+            buttonPrefab = Instantiate(buttonPrefab);
+            
+            toolButton = buttonPrefab.GetComponent<SelectableObject>();
+            toolButton.enabled = false;
+            toolButton.selectEnd.AddListener(SelectTool);
+
+            if (dominant != null)
+            {
+                dominant = Instantiate(dominant);
+                dominant.SetActive(false);   
+            }
+
+            if (nonDominant != null)
+            {
+                nonDominant = Instantiate(nonDominant);
+                nonDominant.SetActive(false);   
+            }
+            
+            InitialiseDirectInterface();
+            
             Initialise();
+
+            initialised = true;
         }
         
         protected virtual void Initialise()
@@ -37,25 +61,20 @@ namespace VR_Prototyping.Scripts.Tools
             
         }
 
-        private void SetupMenuItems()
+        private void Start()
+        { 
+            OnStart();   
+        }
+        
+        protected virtual void OnStart()
         {
-            buttonPrefab = Instantiate(buttonPrefab);
             
-            toolButton = buttonPrefab.GetComponent<SelectableObject>();
-            toolButton.enabled = false;
-            toolButton.selectEnd.AddListener(SelectTool);
-            
-            dominant = Instantiate(dominant);
-            dominant.SetActive(false);
-            
-            nonDominant = Instantiate(nonDominant);
-            nonDominant.SetActive(false);
-            
-            InitialiseDirectInterface();
         }
 
         private void InitialiseDirectInterface()
         {
+            if (nonDominant == null) return;
+            
             directInterfaceBlocks = nonDominant.GetComponentsInChildren<BaseDirectBlock>();
 
             foreach (var block in directInterfaceBlocks)
@@ -67,18 +86,51 @@ namespace VR_Prototyping.Scripts.Tools
         public void SetToolState(bool state)
         {
             active = state;
-            dominant.SetActive(state);
-            nonDominant.SetActive(state);
-            
+
+            if (dominant != null)
+            {
+                dominant.SetActive(state);
+            }
+
+            if (nonDominant != null)
+            {
+                nonDominant.SetActive(state);
+            }
+
             if (controller.debugActive)
             {
                 Debug.Log(dominant.name + " has been set to " + state);
             }
+            /*
+            switch (state)
+            {
+                case true:
+                    ToolActivate();
+                    break;
+                case false:
+                    ToolDeactivate();
+                    break;
+            }*/
             
             if(!state) return;
             toolMenu.SetState(false, transform);
         }
 
+        protected virtual void ToolActivate()
+        {
+            
+        }
+        
+        protected virtual void ToolDeactivate()
+        {
+            
+        }
+        
+        protected virtual void ToolUpdate()
+        {
+            
+        }
+        
         protected virtual void ToolStart()
         {
             
@@ -107,22 +159,24 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void Update()
         {
+            if (!initialised) return;
+            
             ToolUpdate();
             
             switch (handedness)
             {
-                case ToolMenu.Handedness.Right:
+                case ToolMenu.Handedness.Right when dominant != null && nonDominant != null:
                     cTrigger = controller.RightSelect();
-                    Set.LerpTransforms(dominant.transform, controller.RightTransform(), dominantSpeed);
-                    Set.LerpTransforms(nonDominant.transform, controller.LeftTransform(), nonDominantSpeed);
+                    dominant.transform.LerpTransform(controller.RightTransform(), dominantSpeed);
+                    nonDominant.transform.LerpTransform(controller.LeftTransform(), nonDominantSpeed);
                     break;
-                case ToolMenu.Handedness.Left:
+                case ToolMenu.Handedness.Left when dominant != null && nonDominant != null:
                     cTrigger = controller.LeftSelect();
-                    Set.LerpTransforms(dominant.transform, controller.LeftTransform(), dominantSpeed);
-                    Set.LerpTransforms(nonDominant.transform, controller.RightTransform(), nonDominantSpeed);
+                    dominant.transform.LerpTransform(controller.LeftTransform(), dominantSpeed);
+                    nonDominant.transform.LerpTransform(controller.RightTransform(), nonDominantSpeed);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return;
             }
             
             if(!active) return;
@@ -148,11 +202,6 @@ namespace VR_Prototyping.Scripts.Tools
             }
 
             pTrigger = cTrigger;
-        }
-
-        protected virtual void ToolUpdate()
-        {
-            
         }
     }
 }
