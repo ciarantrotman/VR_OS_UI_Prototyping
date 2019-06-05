@@ -170,12 +170,12 @@ namespace VR_Prototyping.Scripts
             return Mathf.SmoothStep(max, min, proportion);
         }
         
-        public static void TargetLocation(this GameObject target, GameObject hitPoint, Vector3 lastValidPosition)
+        public static void TargetLocation(this GameObject target, GameObject hitPoint, Vector3 lastValidPosition, int layerIndex)
         {
             var t = target.transform;
             var position = t.position;
             var up = t.up;
-            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out var hit) ? hit.point : lastValidPosition, .25f);
+            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out var hit) && hit.transform.gameObject.layer == layerIndex ? hit.point : lastValidPosition, .25f);
             hitPoint.transform.up = Physics.Raycast(position, -up, out var h) ? h.normal : Vector3.up;
         }
 

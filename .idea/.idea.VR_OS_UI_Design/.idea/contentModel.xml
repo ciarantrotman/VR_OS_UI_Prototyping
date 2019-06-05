@@ -1018,6 +1018,7 @@
               <e p="KeyboardTarget.cs" t="Include" />
             </e>
             <e p="Locomotion.cs" t="Include" />
+            <e p="LocomotionPositionPreview.cs" t="Include" />
             <e p="Manipulation.cs" t="Include" />
             <e p="ObjectSelection.cs" t="Include" />
             <e p="RubberbandedObject.cs" t="Include" />

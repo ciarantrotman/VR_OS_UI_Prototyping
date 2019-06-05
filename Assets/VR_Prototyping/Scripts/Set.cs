@@ -44,7 +44,14 @@ namespace VR_Prototyping.Scripts
             rb.AddTorque(r.eulerAngles * force, ForceMode.Force);
         }
         
-        public static void SplitPosition(this Transform xz, Transform y, Transform c)
+        public static void SplitPosition(this Transform xz, Transform y, Transform c) // messed up the thing here
+        {
+            if (xz == null || y == null || c == null) return;
+            var position = xz.position;
+            c.transform.position = new Vector3(position.x, y.position.y, position.z);
+        }
+        
+        public static void PositionSplit(this Transform c, Transform xz, Transform y)
         {
             if (xz == null || y == null || c == null) return;
             var position = xz.position;

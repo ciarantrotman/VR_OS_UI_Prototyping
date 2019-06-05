@@ -37,6 +37,8 @@ namespace VR_Prototyping.Scripts
         private Vector3 _lLastValidPosition;
 
         private Vignette vignetteLayer;
+
+        private LocomotionPositionPreview _ghost;
         
         [HideInInspector] public LineRenderer lLr;
         [HideInInspector] public LineRenderer rLr;
@@ -71,6 +73,8 @@ namespace VR_Prototyping.Scripts
         [BoxGroup("Distance Settings")] [Range(.1f, 1f)] [SerializeField] private float min = .5f;
         [BoxGroup("Distance Settings")] [Range(1f, 100f)] [SerializeField] private float max = 15f;
         
+        [BoxGroup("References")] [Range(1, 15)] [SerializeField] private int layerIndex = 10;
+        
         [ValidateInput("TypeCheck", "Dash is the recommended locomotion type, but should be disabled for motion sickness prone users.", InfoMessageType.Info)]
         [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private Method locomotionMethod = Method.Dash;
         [TabGroup("Locomotion Settings")] [Tooltip("This controls the ability to control the direction you face when moving, it is recommended, but should be disabled for the Vive.")] [Space(5)] [SerializeField] private bool advancedLocomotion = true;
@@ -80,6 +84,7 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool disableLeftHand;
         [TabGroup("Locomotion Settings")] [SerializeField] private bool disableRightHand;
 
+        [TabGroup("Aesthetic Settings")] [Required] [SerializeField] private GameObject ghost;
         [TabGroup("Aesthetic Settings")] [Required] [SerializeField] private PostProcessVolume volume;
         [TabGroup("Aesthetic Settings")] [SerializeField] private bool motionSicknessVignette;
         [TabGroup("Aesthetic Settings")] [ShowIf("motionSicknessVignette")] [Indent] [Range(0f, 1f)] [SerializeField] private float vignetteStrength = .35f;
@@ -130,6 +135,11 @@ namespace VR_Prototyping.Scripts
             lVo.name = "Locomotion/Visual/Left";
             lVo.SetActive(false);
             
+            ghost = Instantiate(ghost);
+            ghost.name = "Locomotion/Ghost";
+            _ghost = ghost.GetComponent<LocomotionPositionPreview>();
+            _ghost.ControllerTransforms = c;
+
             rCf.transform.SetParent(p);
             rCp.transform.SetParent(rCf.transform);
             rCn.transform.SetParent(rCf.transform);
@@ -158,8 +168,8 @@ namespace VR_Prototyping.Scripts
             rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
             lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
-            rTs.TargetLocation(rHp, _rLastValidPosition = rTs.LastValidPosition(_rLastValidPosition));
-            lTs.TargetLocation(lHp, _lLastValidPosition = lTs.LastValidPosition(_lLastValidPosition));
+            rTs.TargetLocation(rHp, _rLastValidPosition = rTs.LastValidPosition(_rLastValidPosition), layerIndex);
+            lTs.TargetLocation(lHp, _lLastValidPosition = lTs.LastValidPosition(_lLastValidPosition), layerIndex);
 
             rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
             lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);
@@ -205,6 +215,7 @@ namespace VR_Prototyping.Scripts
         public void LocomotionStart(GameObject visual, LineRenderer lr)
         {
             visual.SetActive(true);
+            _ghost.GhostToggle(visual.transform, true);
             lr.enabled = true;
             active = true;
         }
@@ -212,7 +223,7 @@ namespace VR_Prototyping.Scripts
         public void LocomotionEnd(GameObject visual, Vector3 posTarget, Vector3 rotTarget, LineRenderer lr)
         {
             if (transform.parent == cN.transform) return;
-
+            
             c.CameraTransform().SplitRotation(cN.transform, false);
             c.CameraTransform().SplitPosition(transform, cN.transform);
             
@@ -235,6 +246,7 @@ namespace VR_Prototyping.Scripts
             }
             
             visual.SetActive(false);
+            _ghost.GhostToggle(null, false);
             lr.enabled = false;
         }
         

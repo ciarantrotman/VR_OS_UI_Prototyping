@@ -70,6 +70,16 @@ namespace VR_Prototyping.Scripts
             return rightController.position;
         }
         
+        public Vector3 LeftLocalPosition()
+        {
+            return leftController.localPosition;
+        }
+    
+        public Vector3 RightLocalPosition()
+        {
+            return rightController.localPosition;
+        }
+        
         public Transform LeftTransform()
         {
             return leftController;
@@ -93,6 +103,11 @@ namespace VR_Prototyping.Scripts
         public Vector3 CameraPosition()
         {
             return hmdCamera.position;
+        }
+        
+        public Vector3 CameraLocalPosition()
+        {
+            return hmdCamera.localPosition;
         }
 
         public bool LeftGrab()
