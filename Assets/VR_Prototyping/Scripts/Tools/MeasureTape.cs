@@ -55,6 +55,19 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void Update()
         {
+            foreach (var node in measureNodes)
+            {
+                switch (node.NodeIndex == 0)
+                {
+                    case true:
+                        node.transform.rotation = Quaternion.identity;
+                        break;
+                    default:
+                        OrientNodes(node.transform, measureNodes[node.NodeIndex - 1].transform);
+                        break;
+                }
+            }
+
             if (measureNodes.Count < 2 || MeasureTool.MeasureTape != this) return;
             
             int index = 0;
@@ -113,7 +126,7 @@ namespace VR_Prototyping.Scripts.Tools
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            
+
             MeasureTool.Insertion = intersectionCount > 0 && MeasureTool.Placing == false && MeasureTool.Grabbing == false;
             
             if (MeasureTool.Insertion)
@@ -139,6 +152,21 @@ namespace VR_Prototyping.Scripts.Tools
 
             _rSelectP = Controller.RightSelect();
             _lSelectP = Controller.LeftSelect();
+        }
+
+        private void OrientNodes(Transform currentNode, Transform previousNode)
+        {
+            switch (MeasureTool.nodeLockingType)
+            {
+                case MeasureTool.NodeLockingType.RELATIVE:
+                    currentNode.LookAt(previousNode);
+                    break;
+                case MeasureTool.NodeLockingType.GLOBAL:
+                    currentNode.LookAtVertical(previousNode);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         public void SetTapeState(bool state)

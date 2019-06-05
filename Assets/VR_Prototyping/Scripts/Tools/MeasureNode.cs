@@ -33,7 +33,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void FixedUpdate()
         {
-            transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
+            Text.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
             
             DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), rGrabP);
             DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);

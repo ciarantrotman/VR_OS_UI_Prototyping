@@ -5,7 +5,13 @@ using Random = System.Random;
 namespace VR_Prototyping.Scripts.Tools
 {
     public class MeasureTool : BaseTool
-    {        
+    {
+        public enum NodeLockingType
+        {
+            RELATIVE,
+            GLOBAL
+        }
+        [BoxGroup("Tape Tool Settings")] public NodeLockingType nodeLockingType;
         [BoxGroup("Tape Tool Settings")] [Required] public GameObject tapeNodePrefab;
         [BoxGroup("Tape Tool Settings")] [Required] public GameObject intersectionPointPrefab;
         [BoxGroup("Tape Tool Settings")] [Range(.00001f, .1f)] public float tolerance = .01f;
