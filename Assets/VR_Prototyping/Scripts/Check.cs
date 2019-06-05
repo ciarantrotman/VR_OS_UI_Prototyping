@@ -170,15 +170,15 @@ namespace VR_Prototyping.Scripts
             return Mathf.SmoothStep(max, min, proportion);
         }
         
-        public static void TargetLocation(this GameObject target, GameObject hitPoint, Transform current)
+        public static void TargetLocation(this GameObject target, GameObject hitPoint, Vector3 lastValidPosition)
         {
             var t = target.transform;
             var position = t.position;
             var up = t.up;
-            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out var hit) ? hit.point : current.position, .25f);
-            hitPoint.transform.up = Physics.Raycast(position, -up, out var h) ? h.normal : current.transform.up;
+            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out var hit) ? hit.point : lastValidPosition, .25f);
+            hitPoint.transform.up = Physics.Raycast(position, -up, out var h) ? h.normal : Vector3.up;
         }
-        
+
         public static GameObject RayCastFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
         {
             if (disable) return current == null ? null : current;

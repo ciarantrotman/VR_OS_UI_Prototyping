@@ -304,5 +304,13 @@ namespace VR_Prototyping.Scripts
                 mesh.SetTriangles(triangles, m);
             }
         }
+        public static Vector3 LastValidPosition(this GameObject target, Vector3 lastValidPosition)
+        {
+            var t = target.transform;
+            var position = t.position;
+            var up = t.up;
+            lastValidPosition = Physics.Raycast(position, -up, out var hit) ? hit.point : lastValidPosition;
+            return lastValidPosition;
+        }
     }
 }

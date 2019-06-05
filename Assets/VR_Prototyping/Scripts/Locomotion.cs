@@ -12,7 +12,6 @@ namespace VR_Prototyping.Scripts
     [RequireComponent(typeof(ControllerTransforms))]
     public class Locomotion : MonoBehaviour
     {
-
         private GameObject parent;
         private GameObject cN;  // camera normalised
         
@@ -33,6 +32,9 @@ namespace VR_Prototyping.Scripts
         private GameObject lHp; // hit
         private GameObject lVo; // visual
         private GameObject lRt; // rotation
+        
+        private Vector3 _rLastValidPosition;
+        private Vector3 _lLastValidPosition;
 
         private Vignette vignetteLayer;
         
@@ -156,8 +158,8 @@ namespace VR_Prototyping.Scripts
             rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
             lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
-            rTs.TargetLocation(rHp, transform);
-            lTs.TargetLocation(lHp, transform);
+            rTs.TargetLocation(rHp, _rLastValidPosition = rTs.LastValidPosition(_rLastValidPosition));
+            lTs.TargetLocation(lHp, _lLastValidPosition = lTs.LastValidPosition(_lLastValidPosition));
 
             rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
             lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);
@@ -167,7 +169,6 @@ namespace VR_Prototyping.Scripts
             
             rLr.BezierLineRenderer(c.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
             lLr.BezierLineRenderer(c.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
-
         }
 
         private void LateUpdate()
@@ -239,7 +240,6 @@ namespace VR_Prototyping.Scripts
         
         private IEnumerator Uncouple(Transform a, float time)
         {
-
             SetVignette(vignetteStrength);
             yield return new WaitForSeconds(time);
             a.SetParent(null);
