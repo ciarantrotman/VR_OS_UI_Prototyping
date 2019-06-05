@@ -14,8 +14,8 @@ namespace VR_Prototyping.Scripts.Tools
         public SelectableObject toolButton { get; private set; }
         public ToolMenu.Handedness handedness { private get; set; }
         private bool active { get; set; }
-        private bool cTrigger { get; set; }
-        private bool pTrigger { get; set; }
+        protected bool cTrigger { get; set; }
+        protected  bool pTrigger { get; set; }
 
         private bool initialised;
 
