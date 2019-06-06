@@ -6,23 +6,20 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class CloseButton : DirectButton
     {
-        private BaseTool tool;
-        [BoxGroup("Close Button Settings")] [SerializeField] private Color buttonColor = new Color(0,0,0, 255);
+        private BaseTool _tool;
 
         private void Start()
         {
-            tool = transform.parent.transform.GetComponentInParent<BaseTool>();
-            c = tool.controller;
+            _tool = transform.parent.transform.GetComponentInParent<BaseTool>();
+            c = _tool.controller;
             activate.AddListener(DeactivateTool);
             
             SetupButton();
-            
-            buttonVisual.material.color = buttonColor;
         }
 
         private void DeactivateTool()
         {
-            tool.SetToolState(false);
+            _tool.SetToolState(false);
         }
     }
 }

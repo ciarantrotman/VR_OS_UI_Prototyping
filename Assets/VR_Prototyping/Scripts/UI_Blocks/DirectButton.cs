@@ -61,6 +61,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Space(10)] private Color buttonColor = new Color(255f,255f,255f, 255f);
         
         [BoxGroup("Button Events")] public UnityEvent activate;
         [BoxGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
@@ -98,13 +99,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             targetLr = LineRender(target.transform, targetLineRenderWidth);
             targetLr.CircleLineRenderer(targetRadius, Draw.Orientation.Forward, circleQuality);
             
-            rb = button.transform.AddOrGetRigidbody();
-            rb.RigidBody(.1f, 10f, true, false);
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            Rb = button.transform.AddOrGetRigidbody();
+            Rb.RigidBody(.1f, 10f, true, false);
+            Rb.constraints = RigidbodyConstraints.FreezeRotation;
             
             buttonSurface = visual.AddComponent<MeshFilter>();
             buttonVisual = visual.AddComponent<MeshRenderer>();
             buttonVisual.material = buttonMaterial;
+            buttonVisual.material.SetColor("_Color", buttonColor);
+            buttonVisual.material.SetColor("_EmissionColor", buttonColor);
             buttonSurface.mesh = buttonRadius.GenerateCircleMesh(Draw.Orientation.Forward);
             buttonCollider = visual.AddComponent<MeshCollider>();
             buttonCollider.convex = true;
@@ -145,13 +148,13 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             switch (buttonState)
             {
                 case ButtonState.INACTIVE:
-                    rb.AddForce(Force(restTarget, buttonPos, springiness), ForceMode.Force);
+                    Rb.AddForce(Force(restTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 case ButtonState.HOVER:
-                    rb.AddForce(Force(hoverTarget, buttonPos, springiness), ForceMode.Force);
+                    Rb.AddForce(Force(hoverTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 case ButtonState.ACTIVE:
-                    rb.AddForce(Force(target, buttonPos, springiness), ForceMode.Force);
+                    Rb.AddForce(Force(target, buttonPos, springiness), ForceMode.Force);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

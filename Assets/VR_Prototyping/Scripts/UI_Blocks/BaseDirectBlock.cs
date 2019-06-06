@@ -8,6 +8,6 @@ namespace VR_Prototyping.Scripts.UI_Blocks
     {
         [BoxGroup("Script Setup")] [SerializeField] private bool instantiatedElement;
         [BoxGroup("Script Setup")] [HideIf("instantiatedElement")] [Required] public ControllerTransforms c;
-        protected Rigidbody rb;
+        protected Rigidbody Rb;
     }
 }

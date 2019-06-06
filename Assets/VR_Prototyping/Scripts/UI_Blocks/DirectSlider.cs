@@ -78,8 +78,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             ActiveLr = LineRender(min.transform, activeWidth);
             InactiveLr = LineRender(max.transform, inactiveWidth);
 
-            rb = Setup.AddOrGetRigidbody(handle.transform);
-            Set.RigidBody(rb, .1f, 4.5f, true, false);
+            Rb = Setup.AddOrGetRigidbody(handle.transform);
+            Set.RigidBody(Rb, .1f, 4.5f, true, false);
             
             min.transform.localPosition = new Vector3(-sliderMin, 0, 0);
             max.transform.localPosition = new Vector3(sliderMax, 0, 0);

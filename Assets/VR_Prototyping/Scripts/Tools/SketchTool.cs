@@ -103,6 +103,11 @@ namespace VR_Prototyping.Scripts.Tools
             brushColor = color;
         }
 
+        public void EraseToggle(bool state)
+        {
+            Erasing = state;
+        }
+        
         public void SetWidth(float widthPercentage)
         {
             brushWidth = Mathf.Lerp(minWidth, maxWidth, widthPercentage);
