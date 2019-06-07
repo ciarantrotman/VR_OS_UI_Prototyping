@@ -26,14 +26,14 @@ namespace VR_Prototyping.Scripts.Tools
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField][Range(0,1)] private float moveSpeed = .5f;
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [Space(10)] [SerializeField] private float angleThreshold = 45f;
         [BoxGroup("RubberBanding Settings")] [ShowIf("rubberBanded")] [SerializeField] private float distanceThreshold = .1f;
-        public enum Handedness
+        [SerializeField] public enum Handedness
         {
-            Right,
-            Left
+            RIGHT,
+            LEFT
         }
         [BoxGroup("Tool Settings")] public Handedness dominantHand;
 
-        public KeyboardManager keyboardManager { get; private set; }
+        public KeyboardManager KeyboardManager { get; private set; }
         
         private void Awake()
         {
@@ -53,18 +53,18 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SetupKeyboard()
         {
-            var keyboard = Instantiate(keyboardPrefab);
+            GameObject keyboard = Instantiate(keyboardPrefab);
             keyboard.name = "Indirect_Keyboard";
             
-            keyboardManager = keyboard.GetComponent<KeyboardManager>();
+            KeyboardManager = keyboard.GetComponent<KeyboardManager>();
 
             switch (dominantHand)
             {
-                case Handedness.Right:
-                    keyboardManager.InitialiseKeyboard(controller, this, controller.LeftTransform());
+                case Handedness.RIGHT:
+                    KeyboardManager.InitialiseKeyboard(controller, this, controller.LeftTransform());
                     break;
-                case Handedness.Left:
-                    keyboardManager.InitialiseKeyboard(controller, this, controller.RightTransform());
+                case Handedness.LEFT:
+                    KeyboardManager.InitialiseKeyboard(controller, this, controller.RightTransform());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -78,13 +78,13 @@ namespace VR_Prototyping.Scripts.Tools
         {
             switch (dominantHand)
             {
-                case Handedness.Right:
+                case Handedness.RIGHT:
                     cMenu = controller.RightMenu();
                     CheckState(cMenu, pMenu, controller.RightTransform());
                     RubberBanded(controller.RightTransform());
                     pMenu = cMenu;
                     return;
-                case Handedness.Left:
+                case Handedness.LEFT:
                     cMenu = controller.LeftMenu();
                     CheckState(cMenu, pMenu, controller.LeftTransform());
                     RubberBanded(controller.LeftTransform());
@@ -111,7 +111,7 @@ namespace VR_Prototyping.Scripts.Tools
             
             if(!state) return;
             menuPrefab.transform.position = c.position;
-            Set.SplitRotation(c, menuPrefab.transform, false);
+            c.SplitRotation(menuPrefab.transform, false);
             toolController.SetAllToolState(false);
         }
 
@@ -119,8 +119,8 @@ namespace VR_Prototyping.Scripts.Tools
         {
             if(!rubberBanded) return;
             
-            var d = Vector3.Distance(menuPrefab.transform.position, target.position);
-            var a = Set.Divergence(menuPrefab.transform, target);
+            float d = Vector3.Distance(menuPrefab.transform.position, target.position);
+            float a = menuPrefab.transform.Divergence(target);
 
             if (!(a >= angleThreshold) && !(d >= distanceThreshold)) return;
             

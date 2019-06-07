@@ -139,6 +139,7 @@ namespace VR_Prototyping.Scripts
             ghost.name = "Locomotion/Ghost";
             _ghost = ghost.GetComponent<LocomotionPositionPreview>();
             _ghost.ControllerTransforms = c;
+            _ghost.GhostToggle(null, false);;
 
             rCf.transform.SetParent(p);
             rCp.transform.SetParent(rCf.transform);

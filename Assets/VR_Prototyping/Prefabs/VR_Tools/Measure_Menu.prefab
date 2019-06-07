@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedElement: 1
-  c: {fileID: 0}
+  controller: {fileID: 0}
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -59,6 +59,7 @@ MonoBehaviour:
   targetLineRenderWidth: 0.0025
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
+  buttonColor: {r: 1, g: 0.2028302, b: 0.2028302, a: 0}
   targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
@@ -75,7 +76,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  buttonColor: {r: 1, g: 0.2028302, b: 0.2028302, a: 0}
 --- !u!1 &5291844733830231464
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedElement: 1
-  c: {fileID: 0}
+  controller: {fileID: 0}
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -135,6 +135,7 @@ MonoBehaviour:
   targetLineRenderWidth: 0.002
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
+  buttonColor: {r: 255, g: 255, b: 255, a: 255}
   targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
@@ -182,7 +183,6 @@ Transform:
   - {fileID: 4458832399516740339}
   - {fileID: 5934798719175067118}
   - {fileID: 5452844623154899926}
-  - {fileID: 184427754386165092}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedElement: 1
-  c: {fileID: 0}
+  controller: {fileID: 0}
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -245,6 +245,7 @@ MonoBehaviour:
   targetLineRenderWidth: 0.002
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
+  buttonColor: {r: 536.42535, g: 0, b: 556.05444, a: 255}
   targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
@@ -305,7 +306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedElement: 1
-  c: {fileID: 0}
+  controller: {fileID: 0}
   toggle: 0
   startsActive: 0
   toggleDepth: 0
@@ -320,6 +321,7 @@ MonoBehaviour:
   targetLineRenderWidth: 0.002
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
+  buttonColor: {r: 137.82005, g: 0, b: 340.44495, a: 255}
   targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
@@ -336,62 +338,3 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!1 &8743333508173170768
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 184427754386165092}
-  - component: {fileID: 111271324922542178}
-  m_Layer: 0
-  m_Name: TapeColor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &184427754386165092
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8743333508173170768}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1, y: 0, z: -0.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5856006291299973253}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &111271324922542178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8743333508173170768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5903996684932a4494324fae5dceaf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instantiatedElement: 1
-  c: {fileID: 0}
-  dialValue: 0
-  directGrabDistance: 0.01
-  startingValue: 0
-  dialRadius: 0.05
-  ignoreLeftHand: 1
-  ignoreRightHand: 0
-  activeCircleLineRendererWidth: 0.002
-  inactiveCircleLineRendererWidth: 0.001
-  spokeLineRendererWidth: 0.002
-  circleQuality: 360
-  dialMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
-  dialCap: {fileID: 5024416642937821125, guid: 203ddb5455f104648ae5cdf296ee923d, type: 3}
-  dialHandle: {fileID: 2758839382525824194, guid: c727b7b7628755b469eda845d64ba6ca,
-    type: 3}

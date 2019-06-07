@@ -10,7 +10,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             _memoNode = transform.parent.transform.GetComponentInParent<MemoNode>();
-            c = _memoNode.Controller;
+            controller = _memoNode.Controller;
             activate.AddListener(_memoNode.PlayMemo);
             SetupButton();
         }

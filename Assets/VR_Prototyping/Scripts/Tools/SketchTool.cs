@@ -12,12 +12,14 @@ namespace VR_Prototyping.Scripts.Tools
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public Material sketchMaterial;
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool sketchTrail;
         [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchTrail")] public AnimationCurve trailWidth;
+        [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool gradientCircle;
+        [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("gradientCircle")] [SerializeField] public Gradient colorGradient;
 
-        public bool Erasing;
+        public bool erasing;
         
         public SketchBrushVisual SketchVisual { private get; set; }
 
-        private List<LineRenderer> sketches = new List<LineRenderer>();
+        private readonly List<LineRenderer> sketches = new List<LineRenderer>();
 
         private Color brushColor;
         private float brushWidth;
@@ -30,10 +32,10 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolUpdate()
         {
-            if (!Erasing) return;
-            foreach (var line in sketches)
+            if (!erasing) return;
+            foreach (LineRenderer line in sketches)
             {
-                for (var i = 0; i < line.positionCount; i++)
+                for (int i = 0; i < line.positionCount; i++)
                 {
                     if (EraseDistance(line, i) && cTrigger)
                     {
@@ -50,13 +52,13 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolStart()
         {
-            if (Erasing) return;
+            if (erasing) return;
             NewTape();
         }
 
         protected override void ToolStay()
         {
-            if (Erasing) return;
+            if (erasing) return;
             sketchLr.positionCount = position + 1;
             sketchLr.SetPosition(position, dominant.transform.position);
             position++;
@@ -64,7 +66,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolEnd()
         {
-            if (Erasing) return;
+            if (erasing) return;
             sketchLr.BakeMesh(new Mesh(), true);
             sketchObject = null;
             sketchLr = null;
@@ -103,6 +105,11 @@ namespace VR_Prototyping.Scripts.Tools
             brushColor = color;
         }
 
+        public void EraseToggle(bool state)
+        {
+            erasing = state;
+        }
+        
         public void SetWidth(float widthPercentage)
         {
             brushWidth = Mathf.Lerp(minWidth, maxWidth, widthPercentage);

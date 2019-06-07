@@ -60,11 +60,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
+        [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] private Color buttonColor = new Color(255f,255f,255f, 255f);
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
-        
+
         [BoxGroup("Button Events")] public UnityEvent activate;
         [BoxGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
         [BoxGroup("Button Events")] public  UnityEvent hover;
+        static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
+        static readonly int MatColor = Shader.PropertyToID("_Diffusecolor");
+
         private void Start()
         {
             InitialiseSelectableObject();
@@ -80,8 +84,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             parent = gameObject;
             parent.name = "Button/Parent";
             target = new GameObject("Button/Target");
-            visual = new GameObject("Button/Visual") {layer = c.layerIndex};
-            button = new GameObject("Button/Button") {layer = c.layerIndex};
+            visual = new GameObject("Button/Visual") {layer = controller.layerIndex};
+            button = new GameObject("Button/Button") {layer = controller.layerIndex};
 
             restTarget = new GameObject("Button/RestTarget");
             hoverTarget = new GameObject("Button/HoverTarget");
@@ -106,6 +110,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             buttonVisual = visual.AddComponent<MeshRenderer>();
             buttonVisual.material = buttonMaterial;
             buttonSurface.mesh = buttonRadius.GenerateCircleMesh(Draw.Orientation.Forward);
+            buttonVisual.material.SetColor(MatColor, buttonColor);
+            buttonVisual.material.SetColor(EmissionColor, buttonColor);
             buttonCollider = visual.AddComponent<MeshCollider>();
             buttonCollider.convex = true;
             
@@ -159,7 +165,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             statePrevious = state;
 
-            if (!c.debugActive) return;
+            if (!controller.debugActive) return;
             Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
             Debug.DrawRay(buttonPos, Force(restTarget, buttonPos, springiness), Color.red);
             Debug.DrawRay(buttonPos, Force(target, buttonPos, springiness), Color.green);
@@ -185,7 +191,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                 return;
             }
             
-            if (/*buttonState == ButtonState.Hover && */ActiveDistance())// && state != statePrevious)
+            if (/*buttonState == ButtonState.HOVER && */ActiveDistance())// && state != statePrevious)
             {
                 buttonState = toggle ? ButtonState.ACTIVE : ButtonState.INACTIVE;
                 activate.Invoke();
@@ -215,16 +221,16 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             
             if (ignoreLeftHand)
             {
-                return Vector3.Distance(buttonPos, c.RightTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, controller.RightTransform().position) <= hoverDistance;
             }
 
             if (ignoreRightHand)
             {
-                return Vector3.Distance(buttonPos, c.LeftTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, controller.LeftTransform().position) <= hoverDistance;
             }
             
-            return Vector3.Distance(buttonPos, c.LeftTransform().position) <= hoverDistance ||
-                   Vector3.Distance(buttonPos, c.RightTransform().position) <= hoverDistance;
+            return Vector3.Distance(buttonPos, controller.LeftTransform().position) <= hoverDistance ||
+                   Vector3.Distance(buttonPos, controller.RightTransform().position) <= hoverDistance;
         }
 
         private static Vector3 Offset(Transform local, float offset)
@@ -245,15 +251,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
     {
         private void OnSceneGUI()
         {
-            var button = (DirectButton)target;
-            var transform = button.transform;
-            var forward = transform.forward;
-            var right = transform.right;
-            var position = transform.position;
-            var rest = new Vector3(position.x, position.y, position.z + button.restDepth);
-            var hover = new Vector3(position.x, position.y, position.z + button.hoverDepth);
-            var toggle = new Vector3(position.x, position.y, position.z - button.toggleDepth);
-            var size = HandleUtility.GetHandleSize(rest) * .1f;
+            DirectButton button = (DirectButton)target;
+            Transform transform = button.transform;
+            Vector3 forward = transform.forward;
+            Vector3 right = transform.right;
+            Vector3 position = transform.position;
+            Vector3 rest = new Vector3(position.x, position.y, position.z + button.restDepth);
+            Vector3 hover = new Vector3(position.x, position.y, position.z + button.hoverDepth);
+            Vector3 toggle = new Vector3(position.x, position.y, position.z - button.toggleDepth);
+            float size = HandleUtility.GetHandleSize(rest) * .1f;
             const float arc = 360f;
             
             Handles.DrawWireArc(position, forward, right, arc, button.buttonRadius);

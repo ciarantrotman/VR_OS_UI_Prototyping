@@ -5,14 +5,14 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class MeasureNewTape : DirectButton
     {
-        private MeasureTool _measureTool;
-        private MeshRenderer _meshRenderer;       
+        private MeasureTool measureTool;
+        private MeshRenderer meshRenderer;       
         
         private void Start()
         {
-            _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            c = _measureTool.controller;
-            activate.AddListener(_measureTool.NewTape);    
+            measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
+            controller = measureTool.controller;
+            activate.AddListener(measureTool.NewTape);    
             SetupButton();
         }
     }

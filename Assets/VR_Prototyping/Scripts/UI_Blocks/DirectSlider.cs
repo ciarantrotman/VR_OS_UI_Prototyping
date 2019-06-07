@@ -103,12 +103,12 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             if (!ignoreRightHand)
             {
-                DirectSliderCheck(c.RightTransform(), c.RightGrab());
+                DirectSliderCheck(controller.RightTransform(), controller.RightGrab());
             }
 
             if (!ignoreLeftHand)
             {
-                DirectSliderCheck(c.LeftTransform(), c.LeftGrab());
+                DirectSliderCheck(controller.LeftTransform(), controller.LeftGrab());
             }
 
             TriggerEvent(hoverStart, hoverStay, hoverEnd, cHover, pHover);
