@@ -20,17 +20,17 @@ namespace VR_Prototyping.Scripts.Tools
         public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller,
             ToolMenu.Handedness handedness, ToolMenu toolMenu)
         {
-            var x = 0f;
-            var y = 0f;
-            var toolNumber = 0;
+            float x = 0f;
+            float y = 0f;
+            int toolNumber = 0;
 
-            foreach (var item in tools)
+            foreach (KeyValuePair<string, BaseTool> item in tools)
             {
                 // set up indices for the tool
                 
                 toolNumber++;
-                var n = item.Key;
-                var tool = item.Value;
+                string n = item.Key;
+                BaseTool tool = item.Value;
                 
                 // assign all values for the instantiated tool in here
                 
@@ -68,10 +68,12 @@ namespace VR_Prototyping.Scripts.Tools
                     tool.nonDominant.name = n + "/Non-Dominant";
                 }
 
-                // tool grid spacing
+                // tool horizontal grid spacing
                 
                 x += spacing;
 
+                // tool vertical grid spacing
+                
                 if (toolNumber % gridSize != 0) continue;
                 x = 0f;
                 y -= spacing;
@@ -80,9 +82,9 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void ToggleTool(BaseTool activeTool)
         {
-            foreach (var item in tools)
+            foreach (KeyValuePair<string, BaseTool> item in tools)
             {
-                var tool = item.Value;
+                BaseTool tool = item.Value;
                 tool.SetToolState(activeTool == tool);
                 SetButtonVisualState(tool, activeTool == tool);
             }
@@ -90,9 +92,9 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void SetAllToolState(bool state)
         {
-            foreach (var item in tools)
+            foreach (KeyValuePair<string, BaseTool> item in tools)
             {
-                var tool = item.Value;
+                BaseTool tool = item.Value;
                 tool.SetToolState(state);
                 SetButtonVisualState(tool, state);
             }
@@ -100,9 +102,9 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void ToggleButtonState(bool state)
         {
-            foreach (var item in tools)
+            foreach (KeyValuePair<string, BaseTool> item in tools)
             {
-                var tool = item.Value;
+                BaseTool tool = item.Value;
                 tool.buttonPrefab.SetActive(state);
                 tool.toolButton.enabled = state;
             }

@@ -14,9 +14,15 @@ namespace VR_Prototyping.Scripts.Tools
         public float Distance { get; set; }
         public int NodeIndex { get; set; }
 
-        private MeshRenderer _renderer;
-        
+        private MeasureNode previousNode;
 
+        private MeshRenderer meshRenderer;
+
+        GameObject dominantFollow;
+        GameObject x;
+        GameObject y;
+        GameObject z;
+        
         private const float DirectDistance = .05f;
         
         private bool rGrabP;
@@ -28,7 +34,27 @@ namespace VR_Prototyping.Scripts.Tools
             Controller = c;
             MeasureTape = tape;
             Text = GetComponentInChildren<TextMeshPro>();
-            _renderer = GetComponent<MeshRenderer>();
+            meshRenderer = GetComponentInChildren<MeshRenderer>();
+            SetupAxis();
+        }
+
+        void SetupAxis()
+        {
+            dominantFollow = new GameObject("Dominant_Follow");
+            dominantFollow.transform.SetParent(transform);
+            dominantFollow.transform.localPosition = Vector3.zero;
+
+            x = Instantiate(MeasureTool.snapObject, transform, true);
+            x.name = "Axis_X";
+            x.transform.localPosition = Vector3.zero;
+            
+            y = Instantiate(MeasureTool.snapObject, transform, true);
+            y.name = "Axis_Y";
+            y.transform.localPosition = Vector3.zero;
+            
+            z = Instantiate(MeasureTool.snapObject, transform, true);
+            z.name = "Axis_Z";
+            z.transform.localPosition = Vector3.zero;
         }
 
         private void FixedUpdate()
@@ -41,15 +67,29 @@ namespace VR_Prototyping.Scripts.Tools
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
 
-            switch (MeasureTool.FocusMeasureNode == this)
+            if (!previousNode == this && CurrentNode())
             {
-                case true:
-                    NodeInFocus();
-                    break;
-                case false:
-                    NodeOutFocus();
-                    break;
+                NodeStart();
             }
+            else if (previousNode == this && CurrentNode())
+            {
+                NodeStay();
+            }
+            else if (previousNode && !CurrentNode())
+            {
+                NodeEnd();
+            }
+            else if (!previousNode && !CurrentNode())
+            {
+                NodeInactiveStay();
+            }
+
+            previousNode = MeasureTool.MeasureNode;
+        }
+
+        private bool CurrentNode()
+        {
+            return MeasureTool.FocusMeasureNode == this;
         }
         
         private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
@@ -86,19 +126,37 @@ namespace VR_Prototyping.Scripts.Tools
             Destroy(transform.gameObject);
         }
 
-        private void NodeInFocus()
+        private void NodeStart()
         {
             Text.fontSize = MeasureTool.nodeTextFocusHeight;
         }
+        private void NodeStay()
+        {
+            SnappingTransforms();
+        }
 
-        private void NodeOutFocus()
+        private void NodeEnd()
         {
             Text.fontSize = MeasureTool.nodeTextStandardHeight;
         }
 
+        private void NodeInactiveStay()
+        {
+            
+        }
+        
+        private void SnappingTransforms()
+        {
+            dominantFollow.transform.Transforms(MeasureTool.dominant.transform);
+            
+            x.transform.LockAxis(dominantFollow.transform, Set.Axis.X);
+            y.transform.LockAxis(dominantFollow.transform, Set.Axis.Y);
+            z.transform.LockAxis(dominantFollow.transform, Set.Axis.Z);
+        }
+
         public void SetColor(Color color)
         {
-            _renderer.material.color = color;
+            meshRenderer.material.color = color;
         }
     }
 }

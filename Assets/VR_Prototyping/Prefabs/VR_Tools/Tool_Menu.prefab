@@ -150,6 +150,7 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 0.5
   nonDominantSpeed: 1
+  erasingDistance: 0.001
   minWidth: 0.003
   maxWidth: 0.1
   sketchMaterial: {fileID: 2100000, guid: a96d560642c451749959d8e0518abc9c, type: 2}
@@ -178,6 +179,37 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  gradientCircle: 0
+  colorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0.55, b: 0, a: 1}
+    key2: {r: 0.91666675, g: 1, b: 0, a: 0}
+    key3: {r: 0.4177215, g: 1, b: 0, a: 0}
+    key4: {r: 0, g: 1, b: 0.9854369, a: 0}
+    key5: {r: 0, g: 0.046154022, b: 1, a: 0}
+    key6: {r: 1, g: 0, b: 0.8876405, a: 0}
+    key7: {r: 1, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 7710
+    ctime2: 17540
+    ctime3: 24672
+    ctime4: 34502
+    ctime5: 43754
+    ctime6: 55319
+    ctime7: 65535
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 8
+    m_NumAlphaKeys: 2
+  erasing: 0
 --- !u!114 &996178410202326001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +230,11 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 1
   nonDominantSpeed: 1
+  axisSnapping: 1
+  snapObject: {fileID: 443859414914003195, guid: cb38ac6545c74fb46ab63f5ce6a40544,
+    type: 3}
+  nodeLockingType: 0
+  snapTolerance: 0.025
   tapeNodePrefab: {fileID: 2758839382525824194, guid: bb196f17f0ff6e149891d484bbd0cfba,
     type: 3}
   intersectionPointPrefab: {fileID: 2758839382525824194, guid: b0e9f7e6c706e6a47b77e11b4059055f,
@@ -206,7 +243,7 @@ MonoBehaviour:
   tapeWidth: 0.005
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
-  tapeColor: {r: 0, g: 0.9612417, b: 1, a: 1}
+  tapeColor: {r: 0.46262014, g: 0.8520303, b: 0.8679245, a: 1}
   nodeTextFocusHeight: 0.2
   nodeTextStandardHeight: 0.15
 --- !u!114 &8033839298211828535
@@ -253,4 +290,3 @@ MonoBehaviour:
   nonDominantSpeed: 1
   notePrefab: {fileID: 5820125354782596746, guid: 257b819d1bb0e7b4587f8ac24639cffa,
     type: 3}
-  KeyboardManager: {fileID: 0}

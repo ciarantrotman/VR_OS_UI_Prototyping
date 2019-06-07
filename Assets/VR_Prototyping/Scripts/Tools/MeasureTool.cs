@@ -11,14 +11,17 @@ namespace VR_Prototyping.Scripts.Tools
             RELATIVE,
             GLOBAL
         }
-        [BoxGroup("Tape Tool Settings")] public NodeLockingType nodeLockingType;
-        [BoxGroup("Tape Tool Settings")] [Required] public GameObject tapeNodePrefab;
+        [BoxGroup("Tape Tool Settings")] public bool axisSnapping;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] [Required] public GameObject snapObject;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] public NodeLockingType nodeLockingType;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] [Range(.01f, .5f)] public float snapTolerance;
+        [BoxGroup("Tape Tool Settings")] [Space(5)] [Required] public GameObject tapeNodePrefab;
         [BoxGroup("Tape Tool Settings")] [Required] public GameObject intersectionPointPrefab;
-        [BoxGroup("Tape Tool Settings")] [Range(.00001f, .1f)] public float tolerance = .01f;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] [Range(.00001f, .1f)] public float tolerance = .01f;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
-        [BoxGroup("Tape Tool Settings")] [Space(5)] public Material tapeMaterial;
-        [BoxGroup("Tape Tool Settings")] [Space(5)] public Color tapeColor = new Color(0,0,0,255);
+        [BoxGroup("Tape Tool Settings")] [Space(10)] public Material tapeMaterial;
+        [BoxGroup("Tape Tool Settings")] [Indent] public Color tapeColor = new Color(0,0,0,255);
         [BoxGroup("Tape Tool Settings")] [Space(5)] public float nodeTextFocusHeight = .2f;
         [BoxGroup("Tape Tool Settings")] public float nodeTextStandardHeight = .15f;
 
@@ -34,24 +37,23 @@ namespace VR_Prototyping.Scripts.Tools
         public bool Grabbing { get; set; }
         public bool Placing { get; set; }
         
-        private int _tapeCount;
+        private int tapeCount;
         
-        private GameObject _tapeObject;
-        private GameObject _node;
+        private GameObject tapeObject;
+        private GameObject node;
 
         protected override void Initialise()
         {
             NewTape();
             intersectionPointPrefab = Instantiate(intersectionPointPrefab, transform);
+            intersectionPointPrefab.name = "Measure/Intersection";
         }
 
         protected override void ToolUpdate()
         {
             if (MeasureText == null) return;
             MeasureText.transform.LookAwayFrom(controller.CameraTransform(), Vector3.up);
-            
             MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
-
             intersectionPointPrefab.SetActive(Insertion);
         }
 
@@ -65,7 +67,7 @@ namespace VR_Prototyping.Scripts.Tools
         protected override void ToolStay()
         {
             if (Insertion) return;
-            _node.transform.Position(dominant.transform);
+            node.transform.Position(dominant.transform);
             MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
             MeasureTape.AdjustTape(); 
         }
@@ -84,31 +86,31 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void NewTape()
         {
-            _tapeCount++;
+            tapeCount++;
             var color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true);
             
-            _tapeObject = new GameObject("Tape_" + _tapeCount);
-            _tapeObject.transform.Transforms(dominant.transform);
-            MeasureTape = _tapeObject.AddComponent<MeasureTape>();
+            tapeObject = new GameObject("Tape_" + tapeCount);
+            tapeObject.transform.Transforms(dominant.transform);
+            MeasureTape = tapeObject.AddComponent<MeasureTape>();
             MeasureTape.Controller = controller;
             MeasureTape.MeasureTool = this;
 
-            MeasureTape.TapeLr = _tapeObject.AddComponent<LineRenderer>();
+            MeasureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
             MeasureTape.TapeLr.SetupLineRender(tapeMaterial, tapeWidth, true);
             MeasureTape.SetColor(color);
-            if (_tapeCount > 1)
+            if (tapeCount > 1)
             {
                 MeasureVisual.SetColor(color);
             }
             MeasureTape.TapeLr.positionCount = 0;
 
-            MeasureTape.TapeName = _tapeCount.ToString();
+            MeasureTape.TapeName = tapeCount.ToString();
         }
 
         public void InsertNode(MeasureTape tape, Vector3 position, int index)
         {
-            _node = Instantiate(tapeNodePrefab, position, Quaternion.identity, _tapeObject.transform);
-            MeasureNode = _node.GetComponent<MeasureNode>();
+            node = Instantiate(tapeNodePrefab, position, Quaternion.identity, tapeObject.transform);
+            MeasureNode = node.GetComponent<MeasureNode>();
             FocusMeasureTape = tape;
             FocusMeasureNode = MeasureNode;
             FocusMeasureTape.Controller = controller;

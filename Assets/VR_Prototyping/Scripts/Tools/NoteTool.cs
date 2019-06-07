@@ -19,7 +19,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void OnStart()
         {
-            KeyboardManager = toolMenu.keyboardManager;
+            KeyboardManager = toolMenu.KeyboardManager;
         }
 
         protected override void ToolActivate()

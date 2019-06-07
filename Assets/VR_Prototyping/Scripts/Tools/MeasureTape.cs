@@ -9,28 +9,28 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class MeasureTape : MonoBehaviour
     {
-        public MeasureTool MeasureTool { get; set; }
-        public ControllerTransforms Controller { get; set; }
+        public MeasureTool MeasureTool { private get; set; }
+        public ControllerTransforms Controller { private get; set; }
         public List<MeasureNode> measureNodes = new List<MeasureNode>();
         public LineRenderer TapeLr { get; set; }
         public string TapeName { get; set; }
 
-        private Vector3 _x;
-        private Vector3 _xP;
-        private bool _rSelectP;
-        private bool _lSelectP;
+        private Vector3 x;
+        private Vector3 xP;
+        private bool rSelectP;
+        private bool lSelectP;
 
         public Color tapeColor;
 
         public float TapeDistance()
         {
-            var count = 0;
-            var distance = 0f;
-            var previousNode = Vector3.zero;
+            int count = 0;
+            float distance = 0f;
+            Vector3 previousNode = Vector3.zero;
             
-            foreach (var node in measureNodes)
+            foreach (MeasureNode node in measureNodes)
             {
-                var position = node.transform.position;
+                Vector3 position = node.transform.position;
                 
                 TapeLr.SetPosition(count, position);
                 previousNode = previousNode == Vector3.zero ? position : previousNode;
@@ -55,68 +55,62 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void Update()
         {
-            foreach (var node in measureNodes)
-            {
-                switch (node.NodeIndex == 0)
-                {
-                    case true:
-                        node.transform.rotation = Quaternion.identity;
-                        break;
-                    default:
-                        OrientNodes(node.transform, measureNodes[node.NodeIndex - 1].transform);
-                        break;
-                }
-            }
-
+            NodeSnapping();
+            
             if (measureNodes.Count < 2 || MeasureTool.MeasureTape != this) return;
             
+            NodeInsertion();
+        }
+
+        private void NodeInsertion()
+        {
             int index = 0;
             int intersectionCount = 0;
             
-            for (var i = 0; i < measureNodes.Count - 1; i++)
+            for (int i = 0; i < measureNodes.Count - 1; i++)
             {
-                var currNodePos = measureNodes[i].transform.position;
-                var nextNodePos = measureNodes[i + 1].transform.position;
-                var line = measureNodes[i + 1].transform.position - measureNodes[i].transform.position;
+                Vector3 currNodePos = measureNodes[i].transform.position;
+                Vector3 nextNodePos = measureNodes[i + 1].transform.position;
+                Vector3 line = measureNodes[i + 1].transform.position - measureNodes[i].transform.position;
                 switch (MeasureTool.toolMenu.dominantHand)
                 {
-                    case ToolMenu.Handedness.Left:
-                        _x = Intersection.Line(
+                    case ToolMenu.Handedness.LEFT:
+                        x = Intersection.Line(
                             Controller.LeftPosition(),
                             Controller.LeftForwardVector(),
                             currNodePos,
                             line,
                             MeasureTool.tolerance);
-                        if (_xP != Vector3.zero)
+                        if (xP != Vector3.zero)
                         {
-                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance))
+                            if (currNodePos.IsCollinear(nextNodePos, xP, MeasureTool.tolerance))
                             {
-                                _x = _xP;
+                                x = xP;
                                 intersectionCount++;
                             }
                             
-                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance) && !Controller.LeftSelect() && _lSelectP)
+                            if (currNodePos.IsCollinear(nextNodePos, xP, MeasureTool.tolerance) && !Controller.LeftSelect() && lSelectP)
                             {
                                 index = i + 1;
                             }
                         }
                         break;
-                    case ToolMenu.Handedness.Right:
-                        _xP = Intersection.Line(
+                    case ToolMenu.Handedness.RIGHT:
+                        xP = Intersection.Line(
                             Controller.RightPosition(),
                             Controller.RightForwardVector(),
                             currNodePos,
                             line,
                             MeasureTool.tolerance);
-                        if (_xP != Vector3.zero)
+                        if (xP != Vector3.zero)
                         {
-                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance))
+                            if (currNodePos.IsCollinear(nextNodePos, xP, MeasureTool.tolerance))
                             {
-                                _x = _xP;
+                                x = xP;
                                 intersectionCount++;
                             }
                             
-                            if (currNodePos.IsCollinear(nextNodePos, _xP, MeasureTool.tolerance) && !Controller.RightSelect() && _rSelectP)
+                            if (currNodePos.IsCollinear(nextNodePos, xP, MeasureTool.tolerance) && !Controller.RightSelect() && rSelectP)
                             {
                                 index = i + 1;
                             }
@@ -132,16 +126,16 @@ namespace VR_Prototyping.Scripts.Tools
             if (MeasureTool.Insertion)
             {
                 
-                MeasureTool.intersectionPointPrefab.transform.position = _x;
+                MeasureTool.intersectionPointPrefab.transform.position = x;
                 MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform());
             
                 switch (MeasureTool.toolMenu.dominantHand)
                 {
-                    case ToolMenu.Handedness.Right when !Controller.RightSelect() && _rSelectP && index > 0 && Vector3.Distance(_x, Controller.RightPosition())  > .02f:
-                        MeasureTool.InsertNode(this, _x, index);
+                    case ToolMenu.Handedness.RIGHT when !Controller.RightSelect() && rSelectP && index > 0 && Vector3.Distance(x, Controller.RightPosition())  > .02f:
+                        MeasureTool.InsertNode(this, x, index);
                         break;
-                    case ToolMenu.Handedness.Left when !Controller.LeftSelect() && _lSelectP && index > 0 && Vector3.Distance(_x, Controller.LeftPosition()) > .02f:
-                        MeasureTool.InsertNode(this, _x, index);
+                    case ToolMenu.Handedness.LEFT when !Controller.LeftSelect() && lSelectP && index > 0 && Vector3.Distance(x, Controller.LeftPosition()) > .02f:
+                        MeasureTool.InsertNode(this, x, index);
                         break;
                 }
             }
@@ -150,10 +144,28 @@ namespace VR_Prototyping.Scripts.Tools
                 MeasureTool.intersectionPointPrefab.transform.position = Vector3.zero;
             }
 
-            _rSelectP = Controller.RightSelect();
-            _lSelectP = Controller.LeftSelect();
+            rSelectP = Controller.RightSelect();
+            lSelectP = Controller.LeftSelect();
         }
 
+        private void NodeSnapping()
+        {
+            if (!MeasureTool.axisSnapping) return;
+            
+            foreach (MeasureNode node in measureNodes)
+            {
+                switch (node.NodeIndex == 0)
+                {
+                    case true:
+                        node.transform.rotation = Quaternion.identity;
+                        break;
+                    default:
+                        OrientNodes(node.transform, measureNodes[node.NodeIndex - 1].transform);
+                        break;
+                }
+            }
+        }
+        
         private void OrientNodes(Transform currentNode, Transform previousNode)
         {
             switch (MeasureTool.nodeLockingType)
@@ -167,11 +179,20 @@ namespace VR_Prototyping.Scripts.Tools
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            if(!Controller.debugActive) return;
+            
+            Transform nodeTransform = currentNode.transform;
+            Vector3 nodePosition = nodeTransform.position;
+            
+            Debug.DrawRay(nodePosition, nodeTransform.up, Color.green);
+            Debug.DrawRay(nodePosition, nodeTransform.right, Color.red);
+            Debug.DrawRay(nodePosition, nodeTransform.forward, Color.blue);
         }
         
         public void SetTapeState(bool state)
         {
-            foreach (var node in measureNodes)
+            foreach (MeasureNode node in measureNodes)
             {
                 node.LockNode = state;
             }
@@ -180,7 +201,7 @@ namespace VR_Prototyping.Scripts.Tools
         public void RefactorNodes()
         {
             int index = 0;
-            foreach (var node in measureNodes)
+            foreach (MeasureNode node in measureNodes)
             {
                 node.NodeIndex = index;
                 node.name = "Node_" + index;
@@ -198,7 +219,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             tapeColor = color;
             TapeLr.material.color = color;
-            foreach (var node in measureNodes)
+            foreach (MeasureNode node in measureNodes)
             {
                 node.SetColor(color);
             }

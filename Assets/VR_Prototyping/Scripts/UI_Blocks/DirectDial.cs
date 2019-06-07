@@ -47,7 +47,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         public void SetupDial()
         {
-            var o = gameObject;
+            GameObject o = gameObject;
             dial = o;
             o.name = "Dial/Dial";
             center = new GameObject("Dial/Center");
@@ -55,7 +55,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             handle.name = "Dial/Handle";
             handleNormalised = new GameObject("Dial/Handle/Follow");
             anchor = new GameObject("Dial/Anchor");
-            var vis = Instantiate(dialCap, anchor.transform);
+            GameObject vis = Instantiate(dialCap, anchor.transform);
+            vis.name = "Dial/Cap";
             
             vis.transform.SetParent(anchor.transform);
             center.transform.SetParent(dial.transform);
@@ -69,8 +70,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             inactiveCircleLr.CircleLineRenderer(dialRadius, Draw.Orientation.Right, circleQuality);
             
-            Rb = handle.transform.AddOrGetRigidbody();
-            Rb.RigidBody(.1f, 4.5f, true, false);
+            rb = handle.transform.AddOrGetRigidbody();
+            rb.RigidBody(.1f, 4.5f, true, false);
             
             center.transform.localPosition = Vector3.zero;
             center.transform.localEulerAngles = new Vector3(0, Mathf.Lerp(0,360, startingValue), 0);
@@ -84,7 +85,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         protected LineRenderer LineRender(Component a, float width)
         {
-            var lr = a.gameObject.AddComponent<LineRenderer>();
+            LineRenderer lr = a.gameObject.AddComponent<LineRenderer>();
             lr.SetupLineRender(dialMaterial, width, true);
             return lr;
         }
@@ -96,25 +97,25 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             if (!ignoreRightHand)
             {
-                DirectDialCheck(c.RightTransform(), c.RightGrab());
+                DirectDialCheck(controller.RightTransform(), controller.RightGrab());
             }
 
             if (!ignoreLeftHand)
             {
-                DirectDialCheck(c.LeftTransform(), c.LeftGrab());
+                DirectDialCheck(controller.LeftTransform(), controller.LeftGrab());
             }
         }
 
-        private void DirectDialCheck(Transform controller, bool grab)
+        private void DirectDialCheck(Transform activeController, bool grab)
         {          
-            if (Vector3.Distance(anchor.transform.position, controller.position) < directGrabDistance && !grab)
+            if (Vector3.Distance(anchor.transform.position, activeController.position) < directGrabDistance && !grab)
             {
-                handle.transform.TransformLerpPosition(controller, .05f);
+                handle.transform.TransformLerpPosition(activeController, .05f);
             }
-            if (Vector3.Distance(handle.transform.position, controller.position) < DirectDistance && grab)
+            if (Vector3.Distance(handle.transform.position, activeController.position) < DirectDistance && grab)
             {
                 dialValue = DialValue(360, 0, HandleFollow());
-                handle.transform.TransformLerpPosition(controller, .5f);
+                handle.transform.TransformLerpPosition(activeController, .5f);
                 return;
             }
             handle.transform.TransformLerpPosition(anchor.transform, .05f);
@@ -127,11 +128,11 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private float HandleFollow()
         {
-            var value = handle.transform.localPosition;
-            var target = new Vector3(value.x, 0, value.z);
+            Vector3 value = handle.transform.localPosition;
+            Vector3 target = new Vector3(value.x, 0, value.z);
             handleNormalised.transform.VectorLerpLocalPosition(target, .2f);
             center.transform.LookAt(handleNormalised.transform);
-            var localEulerAngles = center.transform.localEulerAngles;
+            Vector3 localEulerAngles = center.transform.localEulerAngles;
             localEulerAngles = new Vector3(0, localEulerAngles.y, 0);
             center.transform.localEulerAngles = localEulerAngles;
             return localEulerAngles.y;
@@ -143,10 +144,10 @@ namespace VR_Prototyping.Scripts.UI_Blocks
     {
         private void OnSceneGUI()
         {
-            var dial = (DirectDial)target;
-            var transform = dial.transform;
-            var up = transform.up;
-            var position = transform.position;
+            DirectDial dial = (DirectDial)target;
+            Transform transform = dial.transform;
+            Vector3 up = transform.up;
+            Vector3 position = transform.position;
             const float arc = 360f;
 
             Handles.DrawWireArc(position, up, transform.forward, arc, dial.dialRadius);

@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            c = _measureTool.controller;
+            controller = _measureTool.controller;
             activate.AddListener(_measureTool.LockNode);
             SetupButton();
         }

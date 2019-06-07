@@ -9,7 +9,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             sketchTool = transform.parent.transform.GetComponentInParent<SketchTool>();
-            c = sketchTool.controller;
+            controller = sketchTool.controller;
             
             SetupSlider();
         }

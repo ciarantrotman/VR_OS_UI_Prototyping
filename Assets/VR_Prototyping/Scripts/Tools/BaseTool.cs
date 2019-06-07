@@ -79,7 +79,7 @@ namespace VR_Prototyping.Scripts.Tools
 
             foreach (var block in directInterfaceBlocks)
             {
-                block.c = controller;
+                block.controller = controller;
             }
         }
 
@@ -95,11 +95,6 @@ namespace VR_Prototyping.Scripts.Tools
             if (nonDominant != null)
             {
                 nonDominant.SetActive(state);
-            }
-
-            if (controller.debugActive)
-            {
-                Debug.Log(dominant.name + " has been set to " + state);
             }
 
             switch (state)
@@ -165,12 +160,12 @@ namespace VR_Prototyping.Scripts.Tools
             
             switch (handedness)
             {
-                case ToolMenu.Handedness.Right when dominant != null && nonDominant != null:
+                case ToolMenu.Handedness.RIGHT when dominant != null && nonDominant != null:
                     cTrigger = controller.RightSelect();
                     dominant.transform.LerpTransform(controller.RightTransform(), dominantSpeed);
                     nonDominant.transform.LerpTransform(controller.LeftTransform(), nonDominantSpeed);
                     break;
-                case ToolMenu.Handedness.Left when dominant != null && nonDominant != null:
+                case ToolMenu.Handedness.LEFT when dominant != null && nonDominant != null:
                     cTrigger = controller.LeftSelect();
                     dominant.transform.LerpTransform(controller.LeftTransform(), dominantSpeed);
                     nonDominant.transform.LerpTransform(controller.RightTransform(), nonDominantSpeed);

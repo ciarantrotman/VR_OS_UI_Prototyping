@@ -12,6 +12,13 @@ namespace VR_Prototyping.Scripts
         private static readonly int LeftHand = Shader.PropertyToID("_LeftHand");
         private static readonly int RightHand = Shader.PropertyToID("_RightHand"); 
         
+        public enum Axis
+        {
+            X,
+            Y,
+            Z
+        }
+        
         public static void Position(this Transform a, Transform b)
         {
             if (a == null || b == null) return;
@@ -40,28 +47,28 @@ namespace VR_Prototyping.Scripts
         {
             if (a == null || b == null || rb == null) return;
             
-            var r = Quaternion.FromToRotation(a.forward, b.forward);
+            Quaternion r = Quaternion.FromToRotation(a.forward, b.forward);
             rb.AddTorque(r.eulerAngles * force, ForceMode.Force);
         }
         
         public static void SplitPosition(this Transform xz, Transform y, Transform c) // messed up the thing here
         {
             if (xz == null || y == null || c == null) return;
-            var position = xz.position;
+            Vector3 position = xz.position;
             c.transform.position = new Vector3(position.x, y.position.y, position.z);
         }
         
         public static void PositionSplit(this Transform c, Transform xz, Transform y)
         {
             if (xz == null || y == null || c == null) return;
-            var position = xz.position;
+            Vector3 position = xz.position;
             c.transform.position = new Vector3(position.x, y.position.y, position.z);
         }
         
         public static void SplitRotation(this Transform controller, Transform target, bool follow)
         {
             if (controller == null || target == null) return;
-            var c = controller.eulerAngles;
+            Vector3 c = controller.eulerAngles;
             target.transform.eulerAngles = new Vector3(0, c.y, 0);
             
             if(!follow) return;
@@ -129,8 +136,8 @@ namespace VR_Prototyping.Scripts
         public static void MidpointPosition(this Transform target, Transform a, Transform b, bool lookAt)
         {
             if (a == null || b == null) return;
-            var posA = a.position;
-            var posB = b.position;
+            Vector3 posA = a.position;
+            Vector3 posB = b.position;
 
             target.position = Vector3.Lerp(posA, posB, .5f);
             
@@ -143,14 +150,14 @@ namespace VR_Prototyping.Scripts
         {
             if (a == null || b == null) return;
             
-            var aPos = a.position;
-            var bPos = b.position;
-            var x = bPos - aPos;
+            Vector3 aPos = a.position;
+            Vector3 bPos = b.position;
+            Vector3 x = bPos - aPos;
             
-            var d = Vector3.Distance(aPos, bPos);
+            float d = Vector3.Distance(aPos, bPos);
             
-            var p = Mathf.Pow(d, 1f);
-            var y = p;
+            float p = Mathf.Pow(d, 1f);
+            float y = p;
             
             if (debug)
             {
@@ -185,7 +192,7 @@ namespace VR_Prototyping.Scripts
 
         public static void ReactiveMaterial(this Renderer r,  Transform leftHand, Transform rightHand)
         {
-            var material = r.material;
+            Material material = r.material;
             material.SetVector(LeftHand, leftHand.position);
             material.SetVector(RightHand, rightHand.position);
         }
@@ -215,7 +222,7 @@ namespace VR_Prototyping.Scripts
         public static void LocalDepth(this Transform a, float z, bool lerp, float speed)
         {
             if (a == null) return;
-            var p = a.localPosition;
+            Vector3 p = a.localPosition;
 
             switch (lerp)
             {
@@ -245,10 +252,10 @@ namespace VR_Prototyping.Scripts
 
         public static Vector3 Offset(this Transform a, Transform b)
         {
-            var x = a.position;
-            var y = b.position;
-            var xN = new Vector3(x.x, 0, x.z);
-            var yN = new Vector3(y.x, 0, y.z);
+            Vector3 x = a.position;
+            Vector3 y = b.position;
+            Vector3 xN = new Vector3(x.x, 0, x.z);
+            Vector3 yN = new Vector3(y.x, 0, y.z);
             
             return yN - xN;
         }
@@ -260,8 +267,8 @@ namespace VR_Prototyping.Scripts
         
         public static float MagnifiedDepth(this GameObject conP, GameObject conO, GameObject objO, GameObject objP, float snapDistance, float max, bool limit)
         {
-            var depth = conP.transform.localPosition.z / conO.transform.localPosition.z;
-            var distance = Vector3.Distance(objO.transform.position, objP.transform.position);
+            float depth = conP.transform.localPosition.z / conO.transform.localPosition.z;
+            float distance = Vector3.Distance(objO.transform.position, objP.transform.position);
 				
             if (distance >= max && limit) return max;
             if (distance < snapDistance) return objO.transform.localPosition.z * Mathf.Pow(depth, 2);														
@@ -290,20 +297,20 @@ namespace VR_Prototyping.Scripts
 
         public static void ReverseNormals(this MeshFilter filter)
         {
-            var mesh = filter.mesh;
-            var normals = mesh.normals;
+            Mesh mesh = filter.mesh;
+            Vector3[] normals = mesh.normals;
             
-            for (var i = 0; i < normals.Length; i++)
+            for (int i = 0; i < normals.Length; i++)
                 normals[i] = -normals[i];
             mesh.normals = normals;
 
-            for (var m=0;m<mesh.subMeshCount;m++)
+            for (int m=0;m<mesh.subMeshCount;m++)
             {
-                var triangles = mesh.GetTriangles(m);
+                int[] triangles = mesh.GetTriangles(m);
                 
-                for (var i=0;i<triangles.Length;i+=3)
+                for (int i=0;i<triangles.Length;i+=3)
                 {
-                    var temp = triangles[i + 0];
+                    int temp = triangles[i + 0];
                     triangles[i + 0] = triangles[i + 1];
                     triangles[i + 1] = temp;
                 }
@@ -313,11 +320,30 @@ namespace VR_Prototyping.Scripts
         }
         public static Vector3 LastValidPosition(this GameObject target, Vector3 lastValidPosition)
         {
-            var t = target.transform;
-            var position = t.position;
-            var up = t.up;
-            lastValidPosition = Physics.Raycast(position, -up, out var hit) ? hit.point : lastValidPosition;
+            Transform t = target.transform;
+            Vector3 position = t.position;
+            Vector3 up = t.up;
+            lastValidPosition = Physics.Raycast(position, -up, out RaycastHit hit) ? hit.point : lastValidPosition;
             return lastValidPosition;
+        }
+
+        public static void LockAxis(this Transform transform, Transform target, Axis axis)
+        {
+            Vector3 targetLocalPosition = target.localPosition;
+            switch (axis)
+            {
+                case Axis.X:
+                    transform.localPosition = new Vector3(targetLocalPosition.x, 0, 0);
+                    break;
+                case Axis.Y:
+                    transform.localPosition = new Vector3(0, targetLocalPosition.y, 0);
+                    break;
+                case Axis.Z:
+                    transform.localPosition = new Vector3(0, 0, targetLocalPosition.z);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(axis), axis, null);
+            }
         }
     }
 }

@@ -9,13 +9,13 @@ namespace VR_Prototyping.Scripts
         [BoxGroup] [SerializeField] private Transform head;
         [BoxGroup] [SerializeField] private Transform lHand;
         [BoxGroup] [SerializeField] private Transform rHand;
-        private bool _active;
+        private bool active;
         
         public ControllerTransforms ControllerTransforms { private get; set; }
 
         private void Update()
         {
-            if (!_active) return;
+            if (!active) return;
 
             head.localPosition = new Vector3(0, ControllerTransforms.CameraLocalPosition().y, 0);
             head.forward = transform.parent.forward;
@@ -30,13 +30,13 @@ namespace VR_Prototyping.Scripts
 
         public void GhostToggle(Transform parent, bool state)
         {
-            var self = transform;
+            Transform self = transform;
             self.SetParent(parent);
             self.localPosition = Vector3.zero;
             head.gameObject.SetActive(state);
             lHand.gameObject.SetActive(state);
             rHand.gameObject.SetActive(state);
-            _active = state;
+            active = state;
         }
     }
 }
