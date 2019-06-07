@@ -1,8 +1,9 @@
-﻿using TMPro;
-using UnityEditor.Experimental.UIElements.GraphView;
+﻿using System.Runtime.CompilerServices;
+using LeapInternal;
+using TMPro;
 using UnityEngine;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureNode : MonoBehaviour
     {
@@ -18,10 +19,21 @@ namespace VR_Prototyping.Scripts.Tools
 
         private MeshRenderer meshRenderer;
 
-        GameObject dominantFollow;
-        GameObject x;
-        GameObject y;
-        GameObject z;
+        private GameObject dominantFollow;
+        
+        public GameObject X {get; private set;}
+        public GameObject Y {get; private set;}
+        public GameObject Z {get; private set;}
+        
+        private float xDistance;
+        private float yDistance;
+        private float zDistance;
+        
+        public bool XSnap { get; private set; }
+        public bool YSnap { get; private set; }
+        public bool ZSnap { get; private set; }
+        
+
         
         private const float DirectDistance = .05f;
         
@@ -38,23 +50,23 @@ namespace VR_Prototyping.Scripts.Tools
             SetupAxis();
         }
 
-        void SetupAxis()
+        private void SetupAxis()
         {
             dominantFollow = new GameObject("Dominant_Follow");
             dominantFollow.transform.SetParent(transform);
             dominantFollow.transform.localPosition = Vector3.zero;
 
-            x = Instantiate(MeasureTool.snapObject, transform, true);
-            x.name = "Axis_X";
-            x.transform.localPosition = Vector3.zero;
+            X = Instantiate(MeasureTool.snapObject, transform, true);
+            X.name = "Axis_X";
+            X.transform.localPosition = Vector3.zero;
             
-            y = Instantiate(MeasureTool.snapObject, transform, true);
-            y.name = "Axis_Y";
-            y.transform.localPosition = Vector3.zero;
+            Y = Instantiate(MeasureTool.snapObject, transform, true);
+            Y.name = "Axis_Y";
+            Y.transform.localPosition = Vector3.zero;
             
-            z = Instantiate(MeasureTool.snapObject, transform, true);
-            z.name = "Axis_Z";
-            z.transform.localPosition = Vector3.zero;
+            Z = Instantiate(MeasureTool.snapObject, transform, true);
+            Z.name = "Axis_Z";
+            Z.transform.localPosition = Vector3.zero;
         }
 
         private void FixedUpdate()
@@ -67,7 +79,16 @@ namespace VR_Prototyping.Scripts.Tools
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
 
-            if (!previousNode == this && CurrentNode())
+            if (previousNode != null)
+            {
+                NodeEvents();
+            }
+            previousNode = MeasureTool.FocusMeasureNode;
+        }
+
+        private void NodeEvents()
+        {
+            if (previousNode != this && CurrentNode())
             {
                 NodeStart();
             }
@@ -75,18 +96,15 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 NodeStay();
             }
-            else if (previousNode && !CurrentNode())
+            else if (previousNode == this  && !CurrentNode())
+            {
+                NodeStay();
+            }
+            else if (previousNode != this && !CurrentNode())
             {
                 NodeEnd();
             }
-            else if (!previousNode && !CurrentNode())
-            {
-                NodeInactiveStay();
-            }
-
-            previousNode = MeasureTool.MeasureNode;
         }
-
         private bool CurrentNode()
         {
             return MeasureTool.FocusMeasureNode == this;
@@ -128,15 +146,26 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void NodeStart()
         {
+            X.SetActive(true);
+            Y.SetActive(true);
+            Z.SetActive(true);
+            
             Text.fontSize = MeasureTool.nodeTextFocusHeight;
         }
         private void NodeStay()
         {
             SnappingTransforms();
+
+            XSnap = CheckSnap(xDistance, yDistance, zDistance, MeasureTool.snapTolerance);
+            YSnap = CheckSnap(yDistance, xDistance, zDistance, MeasureTool.snapTolerance);
+            ZSnap = CheckSnap(zDistance, xDistance, yDistance, MeasureTool.snapTolerance);
         }
 
         private void NodeEnd()
         {
+            X.SetActive(false);
+            Y.SetActive(false);
+            Z.SetActive(false);
             Text.fontSize = MeasureTool.nodeTextStandardHeight;
         }
 
@@ -149,9 +178,23 @@ namespace VR_Prototyping.Scripts.Tools
         {
             dominantFollow.transform.Transforms(MeasureTool.dominant.transform);
             
-            x.transform.LockAxis(dominantFollow.transform, Set.Axis.X);
-            y.transform.LockAxis(dominantFollow.transform, Set.Axis.Y);
-            z.transform.LockAxis(dominantFollow.transform, Set.Axis.Z);
+            X.transform.LockAxis(dominantFollow.transform, Set.Axis.X);
+            Y.transform.LockAxis(dominantFollow.transform, Set.Axis.Y);
+            Z.transform.LockAxis(dominantFollow.transform, Set.Axis.Z);
+
+            xDistance = SnapDistance(X);
+            yDistance = SnapDistance(Y);
+            zDistance = SnapDistance(Z);
+        }
+
+        private float SnapDistance(GameObject axis)
+        {
+            return Vector3.Distance(axis.transform.position, dominantFollow.transform.position);
+        }
+
+        private static bool CheckSnap(float a, float b, float c, float threshold)
+        {
+            return a < threshold && a < b && a < c;
         }
 
         public void SetColor(Color color)

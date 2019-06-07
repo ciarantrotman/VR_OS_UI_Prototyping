@@ -1,14 +1,14 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using Random = System.Random;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureTool : BaseTool
     {
         public enum NodeLockingType
         {
             RELATIVE,
+            RELATIVE_VERTICAL,
             GLOBAL
         }
         [BoxGroup("Tape Tool Settings")] public bool axisSnapping;
@@ -30,14 +30,17 @@ namespace VR_Prototyping.Scripts.Tools
         public MeasureTape FocusMeasureTape { get; set; }
         public MeasureNode MeasureNode  { get; set; }
         public MeasureNode FocusMeasureNode  { get; set; }
+        public MeasureNode PreviousMeasureNode  { get; set; }
         
         public MeasureVisual MeasureVisual { get; set; }
         
         public bool Insertion { get; set; }
         public bool Grabbing { get; set; }
-        public bool Placing { get; set; }
+        public bool Placing { get; private set; }
         
         private int tapeCount;
+
+        private bool validNode;
         
         private GameObject tapeObject;
         private GameObject node;
@@ -51,31 +54,31 @@ namespace VR_Prototyping.Scripts.Tools
 
         protected override void ToolUpdate()
         {
+            intersectionPointPrefab.SetActive(Insertion);
             if (MeasureText == null) return;
             MeasureText.transform.LookAwayFrom(controller.CameraTransform(), Vector3.up);
             MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
-            intersectionPointPrefab.SetActive(Insertion);
         }
 
         protected override void ToolStart()
         {
-            if (Insertion) return;
+            if (Insertion || !ValidNodePlacement()) return;
             Placing = true;
             InsertNode(MeasureTape, dominant.transform.position, MeasureTape.measureNodes.Count);
         }
 
         protected override void ToolStay()
         {
-            if (Insertion) return;
+            if (Insertion || (!validNode && !Placing)) return;
             node.transform.Position(dominant.transform);
-            MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, dominant.transform.position);
-            MeasureTape.AdjustTape(); 
+            NodeSnap();
         }
 
         protected override void ToolEnd()
         {
             Placing = false;
-            if (Insertion) return;
+            if (Insertion || (!validNode && !Placing)) return;
+            NodeSnap();
             ReleaseNode();
         }
 
@@ -84,16 +87,52 @@ namespace VR_Prototyping.Scripts.Tools
             
         }
 
+        private void NodeSnap()
+        {
+            if (!axisSnapping || PreviousMeasureNode == null)
+            {
+                SetNodePosition(dominant.transform);
+                return;
+            }
+
+            if (PreviousMeasureNode.XSnap)
+            {
+                SetNodePosition(PreviousMeasureNode.X.transform);
+                return;
+            }
+            if (PreviousMeasureNode.YSnap)
+            {
+                SetNodePosition(PreviousMeasureNode.Y.transform);
+                return;
+            }
+            if (PreviousMeasureNode.ZSnap)
+            {
+                SetNodePosition(PreviousMeasureNode.Z.transform);
+                return;
+            }
+            
+            SetNodePosition(dominant.transform);
+        }
+
+        private void SetNodePosition(Transform target)
+        {
+            node.transform.Position(target);
+            MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, target.position);
+            MeasureTape.AdjustTape(); 
+        }
+
         public void NewTape()
         {
             tapeCount++;
-            var color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1, true);
+            Color color = Color.HSVToRGB(Random.Range(0f, 1f), 1, 1, true);
             
             tapeObject = new GameObject("Tape_" + tapeCount);
             tapeObject.transform.Transforms(dominant.transform);
             MeasureTape = tapeObject.AddComponent<MeasureTape>();
             MeasureTape.Controller = controller;
             MeasureTape.MeasureTool = this;
+
+            PreviousMeasureNode = null;
 
             MeasureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
             MeasureTape.TapeLr.SetupLineRender(tapeMaterial, tapeWidth, true);
@@ -107,6 +146,22 @@ namespace VR_Prototyping.Scripts.Tools
             MeasureTape.TapeName = tapeCount.ToString();
         }
 
+        private bool ValidNodePlacement()
+        {
+            if (PreviousMeasureNode == null)
+            {
+                validNode = true;
+                return validNode;
+            }
+
+            bool valid = Vector3.Distance(dominant.transform.position, PreviousMeasureNode.transform.position) >= tolerance;
+
+            validNode = valid;
+            
+            Debug.Log(validNode);
+            
+            return validNode;
+        }
         public void InsertNode(MeasureTape tape, Vector3 position, int index)
         {
             node = Instantiate(tapeNodePrefab, position, Quaternion.identity, tapeObject.transform);
@@ -124,7 +179,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void ReleaseNode()
         {
-            return;
+            PreviousMeasureNode = FocusMeasureNode;
         }
 
         public void DeleteNode()
@@ -149,7 +204,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         private static void AddLineRenderNode(LineRenderer lr, Vector3 position)
         {
-            var positionCount = lr.positionCount;
+            int positionCount = lr.positionCount;
             positionCount++;
             lr.positionCount = positionCount;
             lr.SetPosition(positionCount - 1, position);
@@ -157,7 +212,7 @@ namespace VR_Prototyping.Scripts.Tools
         
         private static void RemoveLineRenderNode(LineRenderer lr)
         {
-            var positionCount = lr.positionCount;
+            int positionCount = lr.positionCount;
             positionCount--;
             lr.positionCount = positionCount;
         }

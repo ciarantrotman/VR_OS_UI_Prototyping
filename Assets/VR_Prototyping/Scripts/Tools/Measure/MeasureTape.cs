@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Leap.Unity;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureTape : MonoBehaviour
     {
@@ -33,6 +30,7 @@ namespace VR_Prototyping.Scripts.Tools
                 Vector3 position = node.transform.position;
                 
                 TapeLr.SetPosition(count, position);
+
                 previousNode = previousNode == Vector3.zero ? position : previousNode;
                 node.Distance = Vector3.Distance(position, previousNode);
                 switch (node.LockNode)
@@ -127,7 +125,7 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 
                 MeasureTool.intersectionPointPrefab.transform.position = x;
-                MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform());
+                MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
             
                 switch (MeasureTool.toolMenu.dominantHand)
                 {
@@ -173,8 +171,11 @@ namespace VR_Prototyping.Scripts.Tools
                 case MeasureTool.NodeLockingType.RELATIVE:
                     currentNode.LookAt(previousNode);
                     break;
-                case MeasureTool.NodeLockingType.GLOBAL:
+                case MeasureTool.NodeLockingType.RELATIVE_VERTICAL:
                     currentNode.LookAtVertical(previousNode);
+                    break;
+                case MeasureTool.NodeLockingType.GLOBAL:
+                    currentNode.rotation = Quaternion.identity;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -185,9 +186,9 @@ namespace VR_Prototyping.Scripts.Tools
             Transform nodeTransform = currentNode.transform;
             Vector3 nodePosition = nodeTransform.position;
             
-            Debug.DrawRay(nodePosition, nodeTransform.up, Color.green);
-            Debug.DrawRay(nodePosition, nodeTransform.right, Color.red);
-            Debug.DrawRay(nodePosition, nodeTransform.forward, Color.blue);
+            Debug.DrawRay(nodePosition, nodeTransform.up * .25f, Color.green);
+            Debug.DrawRay(nodePosition, nodeTransform.right * .25f, Color.red);
+            Debug.DrawRay(nodePosition, nodeTransform.forward * .25f, Color.blue);
         }
         
         public void SetTapeState(bool state)

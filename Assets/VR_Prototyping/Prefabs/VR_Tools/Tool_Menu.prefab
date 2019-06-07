@@ -233,8 +233,8 @@ MonoBehaviour:
   axisSnapping: 1
   snapObject: {fileID: 443859414914003195, guid: cb38ac6545c74fb46ab63f5ce6a40544,
     type: 3}
-  nodeLockingType: 0
-  snapTolerance: 0.025
+  nodeLockingType: 2
+  snapTolerance: 0.1
   tapeNodePrefab: {fileID: 2758839382525824194, guid: bb196f17f0ff6e149891d484bbd0cfba,
     type: 3}
   intersectionPointPrefab: {fileID: 2758839382525824194, guid: b0e9f7e6c706e6a47b77e11b4059055f,

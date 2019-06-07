@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using VR_Prototyping.Scripts.Tools.Measure;
 using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools
 {
-    public class MeasureLockNode : DirectButton
+    public class MeasureDeleteNode : DirectButton
     {
         private MeasureTool _measureTool;
         private MeshRenderer _meshRenderer;       
@@ -12,7 +13,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             controller = _measureTool.controller;
-            activate.AddListener(_measureTool.LockNode);
+            activate.AddListener(_measureTool.DeleteNode);
             SetupButton();
         }
     }
