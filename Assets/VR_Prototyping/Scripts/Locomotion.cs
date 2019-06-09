@@ -62,12 +62,12 @@ namespace VR_Prototyping.Scripts
 
         private enum Method
         {
-            Dash,
-            Blink
+            DASH,
+            BLINK
         }
         private static bool TypeCheck(Method type)
         {
-            return type != Method.Dash;
+            return type != Method.DASH;
         }
         
         [BoxGroup("Distance Settings")] [Range(.1f, 1f)] [SerializeField] private float min = .5f;
@@ -76,7 +76,7 @@ namespace VR_Prototyping.Scripts
         [BoxGroup("References")] [Range(1, 15)] [SerializeField] private int layerIndex = 10;
         
         [ValidateInput("TypeCheck", "Dash is the recommended locomotion type, but should be disabled for motion sickness prone users.", InfoMessageType.Info)]
-        [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private Method locomotionMethod = Method.Dash;
+        [TabGroup("Locomotion Settings")] [Space(5)] [SerializeField] private Method locomotionMethod = Method.DASH;
         [TabGroup("Locomotion Settings")] [Tooltip("This controls the ability to control the direction you face when moving, it is recommended, but should be disabled for the Vive.")] [Space(5)] [SerializeField] private bool advancedLocomotion = true;
         [TabGroup("Locomotion Settings")] [Space(10)][SerializeField] private bool rotation = true;
         [TabGroup("Locomotion Settings")] [ShowIf("rotation")] [Indent] [Range(15f, 90f)] [SerializeField] private float angle = 45f;
@@ -231,12 +231,12 @@ namespace VR_Prototyping.Scripts
             transform.SetParent(cN.transform);
             switch (locomotionMethod)
             {
-                case Method.Dash:
+                case Method.DASH:
                     cN.transform.DOMove(posTarget, moveSpeed);
                     cN.transform.DORotate(rotTarget, moveSpeed);
                     StartCoroutine(Uncouple(transform, moveSpeed));
                     break;
-                case Method.Blink:
+                case Method.BLINK:
                     cN.transform.position = posTarget;
                     cN.transform.eulerAngles = rotTarget;
                     transform.SetParent(null);
