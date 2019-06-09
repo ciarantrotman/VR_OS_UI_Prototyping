@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using LeapInternal;
 using TMPro;
+using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
@@ -83,37 +84,41 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         {
             Text.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
             
+            if (!MeasureTool.Active) return;
+            
             DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), rGrabP);
             DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);
 
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
-
-            if (previousNode != null)
-            {
-                NodeEvents();
-            }
-            previousNode = MeasureTool.FocusMeasureNode;
+            
+            NodeEvents();
         }
 
         private void NodeEvents()
         {
-            if (previousNode != this && CurrentNode())
+            switch (CurrentNode())
             {
-                NodeStart();
+                case true when !PreviousNode(): // spawned but not released
+                    NodeStay();
+                    break;
+                case true when PreviousNode(): // spawned and released
+                    NodeStay();
+                    break;
+                case false when PreviousNode(): // released and no new node
+                    NodeStay();
+                    break;
+                case false when !PreviousNode(): // new node and released
+                    NodeEnd();
+                    break;
+                default:
+                    return;
             }
-            else if (previousNode == this && CurrentNode())
-            {
-                NodeStay();
-            }
-            else if (previousNode == this  && !CurrentNode())
-            {
-                NodeStay();
-            }
-            else if (previousNode != this && !CurrentNode())
-            {
-                NodeEnd();
-            }
+        }
+
+        private bool PreviousNode()
+        {
+            return MeasureTool.PreviousMeasureNode == this;
         }
         private bool CurrentNode()
         {
@@ -127,25 +132,33 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
             if (grab && !pGrab)
             {
+                //NodeStart();
                 MeasureTool.MeasureNode = this;
                 MeasureTool.FocusMeasureNode = this;
                 MeasureTool.MeasureTape = MeasureTape;
                 MeasureTool.FocusMeasureTape = MeasureTape;
                 MeasureTool.MeasureVisual.SetColor(MeasureTape.tapeColor);
+                
+                if (NodeIndex == 0) return;
+                //MeasureTool.PreviousMeasureNode = MeasureTape.measureNodes[NodeIndex - 1];
+                
                 return;
             }
 
             if (grab)
             {
                 if (LockNode) return;
+                //NodeStay();
                 MeasureTool.Grabbing = true;
                 MeasureTape.AdjustTape();
                 transform.TransformLerpPosition(controller, .85f);
                 return;
             }
 
+            //NodeEnd();
             MeasureTool.Grabbing = false;
             MeasureTool.MeasureNode = null;
+            //MeasureTool.PreviousMeasureNode = MeasureTape.measureNodes[MeasureTape.measureNodes.Count - 1];
         }
 
         public void DeleteNode()
@@ -154,7 +167,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             Destroy(transform.gameObject);
         }
 
-        private void NodeStart()
+        public void NodeStart()
         {
             X.SetActive(true);
             Y.SetActive(true);
@@ -179,11 +192,12 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             zLr.LineRenderWidth(ZSnap ? .002f : .001f, ZSnap ? .002f : .001f);
         }
 
-        private void NodeEnd()
+        public void NodeEnd()
         {
             X.SetActive(false);
             Y.SetActive(false);
             Z.SetActive(false);
+            
             Text.fontSize = MeasureTool.nodeTextStandardHeight;
         }
 

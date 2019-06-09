@@ -58,7 +58,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         {
             NodeSnapping();
             
-            if (measureNodes.Count < 2 || MeasureTool.MeasureTape != this) return;
+            if (measureNodes.Count < 2 || MeasureTool.MeasureTape != this || !MeasureTool.Active) return;
             
             NodeInsertion();
         }

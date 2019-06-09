@@ -72,7 +72,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         protected override void ToolStay()
         {
             if (Insertion || !validNode) return;
-//            node.transform.Position(dominant.transform);
             NodeSnap();
         }
 
@@ -152,21 +151,13 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         private bool ValidNodePlacement()
         {
-            validNode = true;
-            return validNode;
-            
             if (PreviousMeasureNode == null)
             {
                 validNode = true;
                 return validNode;
             }
-
             bool valid = Vector3.Distance(dominant.transform.position, PreviousMeasureNode.transform.position) >= tolerance;
-
             validNode = valid;
-            
-            Debug.Log(validNode);
-            
             return validNode;
         }
         public void InsertNode(MeasureTape tape, Vector3 position, int index)
@@ -188,14 +179,14 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             
             AddLineRenderNode(tape.TapeLr, position);
             tape.AdjustTape();
-
-            if (index == 0) return;
-            PreviousMeasureNode = tape.measureNodes[index - 1];
+            
+            MeasureNode.NodeEnd();
         }
 
         private void ReleaseNode()
         {
-
+            FocusMeasureNode.NodeStart();
+            PreviousMeasureNode = FocusMeasureNode;
         }
 
         public void DeleteNode()

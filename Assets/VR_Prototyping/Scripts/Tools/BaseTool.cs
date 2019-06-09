@@ -13,7 +13,7 @@ namespace VR_Prototyping.Scripts.Tools
         public ToolMenu toolMenu { get; set; }
         public SelectableObject toolButton { get; private set; }
         public ToolMenu.Handedness handedness { private get; set; }
-        private bool active { get; set; }
+        public bool Active { get; set; }
         protected bool cTrigger { get; set; }
         protected  bool pTrigger { get; set; }
 
@@ -85,7 +85,7 @@ namespace VR_Prototyping.Scripts.Tools
 
         public void SetToolState(bool state)
         {
-            active = state;
+            Active = state;
 
             if (dominant != null)
             {
@@ -174,7 +174,7 @@ namespace VR_Prototyping.Scripts.Tools
                     return;
             }
             
-            if(!active) return;
+            if(!Active) return;
             
             if (cTrigger && !pTrigger)
             {
