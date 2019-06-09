@@ -18,6 +18,9 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         private bool lSelectP;
 
         public Color tapeColor;
+        private static readonly int LineRenderDiffuse = Shader.PropertyToID("_Diffusecolor");
+        private static readonly int LineRenderBase = Shader.PropertyToID("_BaseColor");
+        private static readonly int LineRenderEmission = Shader.PropertyToID("_EmissionColor");
 
         public float TapeDistance()
         {
@@ -119,14 +122,16 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 }
             }
 
-            MeasureTool.Insertion = intersectionCount > 0 && MeasureTool.Placing == false && MeasureTool.Grabbing == false;
+            MeasureTool.Insertion = MeasureTool.nodeInsertion && 
+                                    intersectionCount > 0 
+                                    && MeasureTool.Placing == false && 
+                                    MeasureTool.Grabbing == false && 
+                                    Vector3.Distance(x, MeasureTool.dominant.transform.position) <= MeasureTool.insertionThreshold;
             
             if (MeasureTool.Insertion)
             {
-                
                 MeasureTool.intersectionPointPrefab.transform.position = x;
                 MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
-            
                 switch (MeasureTool.toolMenu.dominantHand)
                 {
                     case ToolMenu.Handedness.RIGHT when !Controller.RightSelect() && rSelectP && index > 0 && Vector3.Distance(x, Controller.RightPosition())  > .02f:
@@ -219,7 +224,11 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public void SetColor(Color color)
         {
             tapeColor = color;
-            TapeLr.material.color = color;
+            
+            TapeLr.material.SetColor(LineRenderDiffuse, color);
+            TapeLr.material.SetColor(LineRenderBase, color);
+            TapeLr.material.SetColor(LineRenderEmission, color);
+            
             foreach (MeasureNode node in measureNodes)
             {
                 node.SetColor(color);

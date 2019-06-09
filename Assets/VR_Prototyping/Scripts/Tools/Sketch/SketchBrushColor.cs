@@ -1,8 +1,7 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchBrushColor : DirectDial
     {

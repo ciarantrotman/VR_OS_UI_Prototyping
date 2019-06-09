@@ -230,16 +230,18 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 1
   nonDominantSpeed: 1
+  tapeNodePrefab: {fileID: 2758839382525824194, guid: bb196f17f0ff6e149891d484bbd0cfba,
+    type: 3}
   axisSnapping: 1
   snapObject: {fileID: 443859414914003195, guid: cb38ac6545c74fb46ab63f5ce6a40544,
     type: 3}
-  nodeLockingType: 2
+  nodeLockingType: 1
   snapTolerance: 0.1
-  tapeNodePrefab: {fileID: 2758839382525824194, guid: bb196f17f0ff6e149891d484bbd0cfba,
-    type: 3}
+  nodeInsertion: 1
   intersectionPointPrefab: {fileID: 2758839382525824194, guid: b0e9f7e6c706e6a47b77e11b4059055f,
     type: 3}
   tolerance: 0.01
+  insertionThreshold: 0.1
   tapeWidth: 0.005
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}

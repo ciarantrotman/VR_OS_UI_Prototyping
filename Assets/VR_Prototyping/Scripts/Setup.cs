@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 using VR_Prototyping.Plugins.QuickOutline.Scripts;
 
 namespace VR_Prototyping.Scripts
@@ -9,16 +10,16 @@ namespace VR_Prototyping.Scripts
         {
             return !a.GetComponent<LineRenderer>() ? a.gameObject.AddComponent<LineRenderer>() : a.gameObject.GetComponent<LineRenderer>();
         }
-        public static void SetupLineRender(this LineRenderer lr, Material m, float w, bool e)
+        public static void SetupLineRender(this LineRenderer lr, Material material, float width, bool startEnabled)
         {
-            lr.material = m;
-            lr.castShadows = false;
+            lr.material = material;
+            lr.shadowCastingMode = ShadowCastingMode.Off;
             lr.receiveShadows = false;
-            lr.startWidth = w;
-            lr.endWidth = w;
+            lr.startWidth = width;
+            lr.endWidth = width;
             lr.numCapVertices = 32;
             lr.useWorldSpace = true;
-            lr.enabled = e;
+            lr.enabled = startEnabled;
         }
         
         public static void SetupTrailRender(this TrailRenderer tr, Material m, float time, AnimationCurve widthCurve, bool e)

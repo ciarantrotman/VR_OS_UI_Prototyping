@@ -24,6 +24,7 @@ namespace VR_Prototyping.Scripts
         [BoxGroup("Transforms")] [SerializeField] [Required] private GameObject vrPlayer;
 
         [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material lineRenderMat;
+        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material doubleSidedLineRenderMat;
         
         [FoldoutGroup("Button Events")] public SDK VR_SDK;
         [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;

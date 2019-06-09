@@ -29,6 +29,10 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         private float yDistance;
         private float zDistance;
         
+        private LineRenderer xLr;
+        private LineRenderer yLr;
+        private LineRenderer zLr;
+        
         public bool XSnap { get; private set; }
         public bool YSnap { get; private set; }
         public bool ZSnap { get; private set; }
@@ -59,14 +63,20 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             X = Instantiate(MeasureTool.snapObject, transform, true);
             X.name = "Axis_X";
             X.transform.localPosition = Vector3.zero;
+            xLr = X.transform.AddOrGetLineRenderer();
+            xLr.SetupLineRender(Controller.lineRenderMat, .001f, true);
             
             Y = Instantiate(MeasureTool.snapObject, transform, true);
             Y.name = "Axis_Y";
             Y.transform.localPosition = Vector3.zero;
+            yLr = Y.transform.AddOrGetLineRenderer();
+            yLr.SetupLineRender(Controller.lineRenderMat, .001f, true);
             
             Z = Instantiate(MeasureTool.snapObject, transform, true);
             Z.name = "Axis_Z";
             Z.transform.localPosition = Vector3.zero;
+            zLr = Z.transform.AddOrGetLineRenderer();
+            zLr.SetupLineRender(Controller.lineRenderMat, .001f, true);
         }
 
         private void FixedUpdate()
@@ -149,7 +159,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             X.SetActive(true);
             Y.SetActive(true);
             Z.SetActive(true);
-            
+
             Text.fontSize = MeasureTool.nodeTextFocusHeight;
         }
         private void NodeStay()
@@ -159,6 +169,14 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             XSnap = CheckSnap(xDistance, yDistance, zDistance, MeasureTool.snapTolerance);
             YSnap = CheckSnap(yDistance, xDistance, zDistance, MeasureTool.snapTolerance);
             ZSnap = CheckSnap(zDistance, xDistance, yDistance, MeasureTool.snapTolerance);
+            
+            xLr.LineRender(transform, X.transform);
+            yLr.LineRender(transform, Y.transform);
+            zLr.LineRender(transform, Z.transform);
+            
+            xLr.LineRenderWidth(XSnap ? .002f : .001f, XSnap ? .002f : .001f);
+            yLr.LineRenderWidth(YSnap ? .002f : .001f, YSnap ? .002f : .001f);
+            zLr.LineRenderWidth(ZSnap ? .002f : .001f, ZSnap ? .002f : .001f);
         }
 
         private void NodeEnd()

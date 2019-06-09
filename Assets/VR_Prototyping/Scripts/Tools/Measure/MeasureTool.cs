@@ -11,18 +11,20 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             RELATIVE_VERTICAL,
             GLOBAL
         }
-        [BoxGroup("Tape Tool Settings")] public bool axisSnapping;
+        [BoxGroup("Tape Tool Settings")] [Required] public GameObject tapeNodePrefab;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] public bool axisSnapping;
         [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] [Required] public GameObject snapObject;
         [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] public NodeLockingType nodeLockingType;
         [BoxGroup("Tape Tool Settings")] [ShowIf("axisSnapping")] [Indent] [Range(.01f, .5f)] public float snapTolerance;
-        [BoxGroup("Tape Tool Settings")] [Space(5)] [Required] public GameObject tapeNodePrefab;
-        [BoxGroup("Tape Tool Settings")] [Required] public GameObject intersectionPointPrefab;
-        [BoxGroup("Tape Tool Settings")] [Space(10)] [Range(.00001f, .1f)] public float tolerance = .01f;
-        [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] public bool nodeInsertion;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Required] public GameObject intersectionPointPrefab;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Range(.00001f, .1f)] public float tolerance = .01f;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Range(0f, .1f)] public float insertionThreshold = .1f;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] [Range(.001f, .05f)] public float tapeWidth;
         [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
         [BoxGroup("Tape Tool Settings")] [Space(10)] public Material tapeMaterial;
         [BoxGroup("Tape Tool Settings")] [Indent] public Color tapeColor = new Color(0,0,0,255);
-        [BoxGroup("Tape Tool Settings")] [Space(5)] public float nodeTextFocusHeight = .2f;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] public float nodeTextFocusHeight = .2f;
         [BoxGroup("Tape Tool Settings")] public float nodeTextStandardHeight = .15f;
 
         public MeasureText MeasureText { get; set; }
@@ -69,15 +71,15 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         protected override void ToolStay()
         {
-            if (Insertion || (!validNode && !Placing)) return;
-            node.transform.Position(dominant.transform);
+            if (Insertion || !validNode) return;
+//            node.transform.Position(dominant.transform);
             NodeSnap();
         }
 
         protected override void ToolEnd()
         {
             Placing = false;
-            if (Insertion || (!validNode && !Placing)) return;
+            if (Insertion || !validNode) return;
             NodeSnap();
             ReleaseNode();
         }
@@ -116,8 +118,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         private void SetNodePosition(Transform target)
         {
-            node.transform.Position(target);
-            MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, target.position);
+            node.transform.LerpTransform(target, .5f);
+            MeasureTape.TapeLr.SetPosition(MeasureTape.TapeLr.positionCount - 1, node.transform.position);
             MeasureTape.AdjustTape(); 
         }
 
@@ -135,19 +137,24 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             PreviousMeasureNode = null;
 
             MeasureTape.TapeLr = tapeObject.AddComponent<LineRenderer>();
-            MeasureTape.TapeLr.SetupLineRender(tapeMaterial, tapeWidth, true);
+            MeasureTape.TapeLr.SetupLineRender(controller.doubleSidedLineRenderMat, tapeWidth, true);
+            
             MeasureTape.SetColor(color);
+            
             if (tapeCount > 1)
             {
                 MeasureVisual.SetColor(color);
             }
+            
             MeasureTape.TapeLr.positionCount = 0;
-
             MeasureTape.TapeName = tapeCount.ToString();
         }
 
         private bool ValidNodePlacement()
         {
+            validNode = true;
+            return validNode;
+            
             if (PreviousMeasureNode == null)
             {
                 validNode = true;
@@ -165,21 +172,30 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public void InsertNode(MeasureTape tape, Vector3 position, int index)
         {
             node = Instantiate(tapeNodePrefab, position, Quaternion.identity, tapeObject.transform);
+            
             MeasureNode = node.GetComponent<MeasureNode>();
-            FocusMeasureTape = tape;
             FocusMeasureNode = MeasureNode;
+            
+            FocusMeasureTape = tape;
             FocusMeasureTape.Controller = controller;
+            
             MeasureNode.Initialise(this, controller, tape);
             MeasureNode.SetColor(FocusMeasureTape.tapeColor);
+            
             tape.measureNodes.Insert(index, MeasureNode);
+            
             tape.RefactorNodes();
+            
             AddLineRenderNode(tape.TapeLr, position);
             tape.AdjustTape();
+
+            if (index == 0) return;
+            PreviousMeasureNode = tape.measureNodes[index - 1];
         }
 
         private void ReleaseNode()
         {
-            PreviousMeasureNode = FocusMeasureNode;
+
         }
 
         public void DeleteNode()
