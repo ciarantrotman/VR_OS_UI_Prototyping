@@ -23,15 +23,14 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Required] public GameObject intersectionPointPrefab;
         [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Range(.00001f, .1f)] public float tolerance = .01f;
         [BoxGroup("Tape Tool Settings")] [ShowIf("nodeInsertion")] [Indent] [Range(0f, .1f)] public float insertionThreshold = .1f;
-        [BoxGroup("Tape Tool Settings")] [Space(10)] [Range(.001f, .05f)] public float tapeWidth;
-        [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
+        [BoxGroup("Tape Tool Settings")] [Space(10)] public bool grabNode;
+        [BoxGroup("Tape Tool Settings")] [ShowIf("grabNode")] [Indent] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
         [BoxGroup("Tape Tool Settings")] [Space(10)] public Material tapeMaterial;
-        [BoxGroup("Tape Tool Settings")] [Indent] public Color tapeColor = new Color(0,0,0,255);
         [BoxGroup("Tape Tool Settings")] [Space(10)] public float nodeTextFocusHeight = .2f;
         [BoxGroup("Tape Tool Settings")] public float nodeTextStandardHeight = .15f;
+        [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
 
-        private List<MeasureTape> measureTapes = new List<MeasureTape>();
-        
+        private readonly List<MeasureTape> measureTapes = new List<MeasureTape>();
         public MeasureText MeasureText { get; set; }
         public MeasureTape MeasureTape { get; set; }
         public MeasureTape FocusMeasureTape { get; set; }
@@ -86,41 +85,31 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             ReleaseNode();
         }
 
-        protected override void ToolInactive()
-        {
-            
-        }
-
         public void NodeSnap(Transform defaultTarget, MeasureNode currentNode, MeasureNode previousNode, MeasureTape currentTape)
         {
-            Debug.Log(currentNode.name + " is snapping");
-            
-            if (!axisSnapping || previousNode == null)
-            {     
+            if (previousNode == null)
+            {
                 SetNodePosition(currentNode, currentTape, defaultTarget);
                 return;
             }
-
-            if (previousNode.XSnap)
+            switch (axisSnapping)
             {
-                SetNodePosition(currentNode, currentTape, previousNode.X.transform);
-                return;
+                case true when previousNode.XSnap:
+                    SetNodePosition(currentNode, currentTape, previousNode.X.transform);
+                    return;
+                case true when previousNode.YSnap:
+                    SetNodePosition(currentNode, currentTape, previousNode.Y.transform);
+                    return;
+                case true when previousNode.ZSnap:
+                    SetNodePosition(currentNode, currentTape, previousNode.Z.transform);
+                    return;
+                default:
+                    SetNodePosition(currentNode, currentTape, defaultTarget);
+                    return;
             }
-            if (previousNode.YSnap)
-            {
-                SetNodePosition(currentNode, currentTape, previousNode.Y.transform);
-                return;
-            }
-            if (previousNode.ZSnap)
-            {
-                SetNodePosition(currentNode, currentTape, previousNode.Z.transform);
-                return;
-            }
-            
-            SetNodePosition(currentNode, currentTape, defaultTarget);
         }
 
-        private static void SetNodePosition(MeasureNode measureNode, MeasureTape tape, Transform target)
+        private static void SetNodePosition(Component measureNode, MeasureTape tape, Transform target)
         {
             Transform nodeTransform = measureNode.transform;
             nodeTransform.LerpTransform(target, .5f);
@@ -235,8 +224,27 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             if (FocusMeasureTape == null) return;
             FocusMeasureTape.SetColor(color);
         }
+
+        public void GrabNode(MeasureNode measureNode, MeasureTape measureTape)
+        {
+            MeasureNode = measureNode;
+            FocusMeasureNode = measureNode;
+            MeasureTape = measureTape;
+            FocusMeasureTape = measureTape;
+            MeasureVisual.SetColor(MeasureTape.tapeColor);
+        }
+
+        protected override void ToolActivate()
+        {
+            PreviousMeasureNode.NodeStart();
+        }
         
         protected override void ToolDeactivate()
+        {
+            DeactivateAllTapes();
+        }
+
+        public void DeactivateAllTapes()
         {
             foreach (MeasureTape tape in measureTapes)
             {

@@ -235,5 +235,13 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 node.SetColor(color);
             }
         }
+
+        public void DeactivateAllNodes()
+        {
+            foreach (MeasureNode node in measureNodes)
+            {
+                node.NodeEnd();
+            }
+        }
     }
 }

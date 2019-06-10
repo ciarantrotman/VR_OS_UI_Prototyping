@@ -129,7 +129,7 @@ MonoBehaviour:
       Entry: 8
       Data: 
   gridSize: 3
-  spacing: 0.1
+  spacing: 0.12
 --- !u!114 &1548152124150935786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,21 +235,21 @@ MonoBehaviour:
   axisSnapping: 1
   snapObject: {fileID: 443859414914003195, guid: cb38ac6545c74fb46ab63f5ce6a40544,
     type: 3}
-  nodeLockingType: 1
-  snapTolerance: 0.2
+  nodeLockingType: 0
+  snapTolerance: 0.15
   activeWidth: 0.002
   inactiveWidth: 0.0005
   nodeInsertion: 1
   intersectionPointPrefab: {fileID: 2758839382525824194, guid: b0e9f7e6c706e6a47b77e11b4059055f,
     type: 3}
-  tolerance: 0.01
-  insertionThreshold: 0.1
-  tapeWidth: 0.005
+  tolerance: 0.005
+  insertionThreshold: 0.075
+  grabNode: 1
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
-  tapeColor: {r: 0.46262014, g: 0.8520303, b: 0.8679245, a: 1}
   nodeTextFocusHeight: 0.2
   nodeTextStandardHeight: 0.15
+  tapeWidth: 0.0075
 --- !u!114 &8033839298211828535
 MonoBehaviour:
   m_ObjectHideFlags: 0

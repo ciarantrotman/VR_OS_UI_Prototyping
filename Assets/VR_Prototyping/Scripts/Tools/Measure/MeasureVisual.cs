@@ -12,7 +12,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             meshRenderer = transform.GetComponent<MeshRenderer>();
             meshRenderer.material = measureTool.tapeMaterial;
-            meshRenderer.material.color = measureTool.tapeColor;
             measureTool.MeasureVisual = this;
             SetColor(measureTool.MeasureTape.tapeColor);
         }
