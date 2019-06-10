@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             _tapeTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            controller = _tapeTool.controller;
+            controller = _tapeTool.Controller;
             
             SetupDial();
         }

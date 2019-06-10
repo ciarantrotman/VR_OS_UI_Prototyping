@@ -8,14 +8,14 @@ namespace VR_Prototyping.Scripts.Tools
     [Serializable]
     public abstract class BaseTool : MonoBehaviour
     {
-        public ControllerTransforms controller { get; set; }
-        public ToolController toolController { private get; set; }
-        public ToolMenu toolMenu { get; set; }
-        public SelectableObject toolButton { get; private set; }
-        public ToolMenu.Handedness handedness { private get; set; }
+        public ControllerTransforms Controller { get; set; }
+        public ToolController ToolController { private get; set; }
+        public ToolMenu ToolMenu { get; set; }
+        public SelectableObject ToolButton { get; private set; }
+        public ToolMenu.Handedness Handedness { private get; set; }
         public bool Active { get; set; }
-        protected bool cTrigger { get; set; }
-        protected  bool pTrigger { get; set; }
+        protected bool CTrigger { get; set; }
+        protected  bool PTrigger { get; set; }
 
         private bool initialised;
 
@@ -33,9 +33,9 @@ namespace VR_Prototyping.Scripts.Tools
         {
             buttonPrefab = Instantiate(buttonPrefab);
             
-            toolButton = buttonPrefab.GetComponent<SelectableObject>();
-            toolButton.enabled = false;
-            toolButton.selectEnd.AddListener(SelectTool);
+            ToolButton = buttonPrefab.GetComponent<SelectableObject>();
+            ToolButton.enabled = false;
+            ToolButton.selectEnd.AddListener(SelectTool);
 
             if (dominant != null)
             {
@@ -79,7 +79,7 @@ namespace VR_Prototyping.Scripts.Tools
 
             foreach (var block in directInterfaceBlocks)
             {
-                block.controller = controller;
+                block.controller = Controller;
             }
         }
 
@@ -108,7 +108,7 @@ namespace VR_Prototyping.Scripts.Tools
             }
 
             if(!state) return;
-            toolMenu.SetState(false, transform);
+            ToolMenu.SetState(false, transform);
         }
 
         protected virtual void ToolActivate()
@@ -148,8 +148,8 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SelectTool()
         {
-            handedness = toolMenu.dominantHand;
-            toolController.ToggleTool(this);
+            Handedness = ToolMenu.dominantHand;
+            ToolController.ToggleTool(this);
         }
 
         private void Update()
@@ -158,17 +158,17 @@ namespace VR_Prototyping.Scripts.Tools
             
             ToolUpdate();
             
-            switch (handedness)
+            switch (Handedness)
             {
                 case ToolMenu.Handedness.RIGHT when dominant != null && nonDominant != null:
-                    cTrigger = controller.RightSelect();
-                    dominant.transform.LerpTransform(controller.RightTransform(), dominantSpeed);
-                    nonDominant.transform.LerpTransform(controller.LeftTransform(), nonDominantSpeed);
+                    CTrigger = Controller.RightSelect();
+                    dominant.transform.LerpTransform(Controller.RightTransform(), dominantSpeed);
+                    nonDominant.transform.LerpTransform(Controller.LeftTransform(), nonDominantSpeed);
                     break;
                 case ToolMenu.Handedness.LEFT when dominant != null && nonDominant != null:
-                    cTrigger = controller.LeftSelect();
-                    dominant.transform.LerpTransform(controller.LeftTransform(), dominantSpeed);
-                    nonDominant.transform.LerpTransform(controller.RightTransform(), nonDominantSpeed);
+                    CTrigger = Controller.LeftSelect();
+                    dominant.transform.LerpTransform(Controller.LeftTransform(), dominantSpeed);
+                    nonDominant.transform.LerpTransform(Controller.RightTransform(), nonDominantSpeed);
                     break;
                 default:
                     return;
@@ -176,27 +176,27 @@ namespace VR_Prototyping.Scripts.Tools
             
             if(!Active) return;
             
-            if (cTrigger && !pTrigger)
+            if (CTrigger && !PTrigger)
             {
                 ToolStart();
             }
 
-            if (cTrigger && pTrigger)
+            if (CTrigger && PTrigger)
             {
                 ToolStay();
             }
 
-            if (!cTrigger && pTrigger)
+            if (!CTrigger && PTrigger)
             {
                 ToolEnd();
             }
             
-            if (!cTrigger && !pTrigger)
+            if (!CTrigger && !PTrigger)
             {
                 ToolInactive();
             }
 
-            pTrigger = cTrigger;
+            PTrigger = CTrigger;
         }
     }
 }

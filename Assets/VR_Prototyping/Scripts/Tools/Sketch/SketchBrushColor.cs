@@ -13,7 +13,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         private void Start()
         {
             sketchTool = transform.parent.transform.GetComponentInParent<SketchTool>();
-            controller = sketchTool.controller;
+            controller = sketchTool.Controller;
             
             SetupDial();
 

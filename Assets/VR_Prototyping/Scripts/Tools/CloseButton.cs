@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             _tool = transform.parent.transform.GetComponentInParent<BaseTool>();
-            controller = _tool.controller;
+            controller = _tool.Controller;
             activate.AddListener(DeactivateTool);
             
             SetupButton();

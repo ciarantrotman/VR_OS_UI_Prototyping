@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchColor : MonoBehaviour
     {

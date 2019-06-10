@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using VR_Prototyping.Scripts.UI_Blocks;
+﻿using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchErase : DirectButton
     {
@@ -10,7 +9,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             sketchTool = transform.parent.transform.GetComponentInParent<SketchTool>();
-            controller = sketchTool.controller;
+            controller = sketchTool.Controller;
             activate.AddListener(EraseDeactivate);
             deactivate.AddListener(EraseActivate);
             SetupButton();

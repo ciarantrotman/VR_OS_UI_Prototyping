@@ -4,22 +4,22 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using VR_Prototyping.Scripts.Keyboard;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Note
 {
     public class NoteTool : BaseTool
     {
         [BoxGroup("Note Tool Settings")] [Required]
         public GameObject notePrefab;
 
-        private float _index;
+        private float index;
         private KeyboardManager KeyboardManager { get; set; }
 
-        private GameObject _note;
-        private NoteObject _noteObject;
+        private GameObject note;
+        private NoteObject noteObject;
 
         protected override void OnStart()
         {
-            KeyboardManager = toolMenu.KeyboardManager;
+            KeyboardManager = ToolMenu.KeyboardManager;
         }
 
         protected override void ToolActivate()
@@ -37,22 +37,22 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void NewNote()
         {
-            _note = Instantiate(notePrefab);
-            _noteObject = _note.GetComponent<NoteObject>();
-            _noteObject.Initialise(this, controller);
+            note = Instantiate(notePrefab);
+            noteObject = note.GetComponent<NoteObject>();
+            noteObject.Initialise(this, Controller);
         }
 
         private void FinishNote()
         {
             NewNote();
-            var position = controller.CameraTransform().position + controller.CameraForwardVector();
-            _noteObject.SetNote(KeyboardManager.KeyboardTarget.CheckText(),
+            Vector3 position = Controller.CameraTransform().position + Controller.CameraForwardVector();
+            noteObject.SetNote(KeyboardManager.KeyboardTarget.CheckText(),
                 DateTime.Now.ToString(CultureInfo.InvariantCulture), position);
             KeyboardManager.KeyboardTarget.ClearText();
-            _note.name = "Note_" + _index;
-            _note = null;
-            _noteObject = null;
-            _index++;
+            note.name = "Note_" + index;
+            note = null;
+            noteObject = null;
+            index++;
         }
     }
 }

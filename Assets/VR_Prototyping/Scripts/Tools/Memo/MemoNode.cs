@@ -2,17 +2,17 @@
 using TMPro;
 using UnityEngine;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Memo
 {
     public class MemoNode : MonoBehaviour
     {
         private MemoTool MemoTool { get; set; }
         public AudioSource AudioSource { get; private set; }
-        public ControllerTransforms Controller { get; set; }
-        private Color _nodeColor;
-        private float _memoLength;
+        public ControllerTransforms Controller { get; private set; }
+        private Color nodeColor;
+        private float memoLength;
         
-        private int _nodeIndex;
+        private int nodeIndex;
         
         [Button]
         public void PlayAudioDebug()
@@ -24,7 +24,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             name = "Memo_" + index;
             MemoTool = memoTool;
-            Controller = MemoTool.controller;
+            Controller = MemoTool.Controller;
             SetColor(color);
             SetIndex(index);
             SetupAudio();
@@ -39,31 +39,31 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SetColor(Color color)
         {
-            _nodeColor = color;
+            nodeColor = color;
             GetComponentInChildren<MeshRenderer>().material.color = color;
             GetComponentInChildren<MeshFilter>().ReverseNormals();
         }
 
         private void SetIndex(int index)
         {
-            _nodeIndex = index;
+            nodeIndex = index;
         }
         
         private void SetLength(float length)
         {
-            _memoLength = length;
+            memoLength = length;
         }
 
         public void ReleaseMemo(float length)
         {
             SetLength(length);
-            GetComponentInChildren<TextMeshPro>().SetText(_nodeIndex + " - {0:1} ", length);
+            GetComponentInChildren<TextMeshPro>().SetText(nodeIndex + " - {0:1} ", length);
         }
 
         public void PlayMemo()
         {
             Debug.Log("PLAY");
-            MemoTool.PlayAudio(_nodeIndex);
+            MemoTool.PlayAudio(nodeIndex);
         }
         
         private void FixedUpdate()

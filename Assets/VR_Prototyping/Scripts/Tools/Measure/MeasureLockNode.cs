@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
-using VR_Prototyping.Scripts.Tools.Measure;
 using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureLockNode : DirectButton
     {
-        private MeasureTool _measureTool;
-        private MeshRenderer _meshRenderer;       
+        private MeasureTool measureTool;
+        private MeshRenderer meshRenderer;       
         
         private void Start()
         {
-            _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            controller = _measureTool.controller;
-            activate.AddListener(_measureTool.LockNode);
+            measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
+            controller = measureTool.Controller;
+            activate.AddListener(measureTool.LockNode);
             SetupButton();
         }
     }

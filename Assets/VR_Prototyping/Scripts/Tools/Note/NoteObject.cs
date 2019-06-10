@@ -1,9 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Note
 {
     public class NoteObject : MonoBehaviour
     {

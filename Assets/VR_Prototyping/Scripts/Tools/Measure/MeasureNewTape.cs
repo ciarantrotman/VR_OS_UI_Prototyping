@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using VR_Prototyping.Scripts.Tools.Measure;
 using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureNewTape : DirectButton
     {
@@ -12,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            controller = measureTool.controller;
+            controller = measureTool.Controller;
             activate.AddListener(measureTool.NewTape);    
             SetupButton();
         }

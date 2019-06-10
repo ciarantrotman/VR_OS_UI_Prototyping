@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchTool : BaseTool
     {        
@@ -37,7 +37,7 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 for (int i = 0; i < line.positionCount; i++)
                 {
-                    if (EraseDistance(line, i) && cTrigger)
+                    if (EraseDistance(line, i) && CTrigger)
                     {
                         DeleteTape(line);
                     }

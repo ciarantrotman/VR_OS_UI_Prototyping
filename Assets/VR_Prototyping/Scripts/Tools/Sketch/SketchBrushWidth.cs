@@ -1,6 +1,6 @@
 ﻿using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchBrushWidth : DirectSlider
     {
@@ -9,7 +9,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void Start()
         {
             sketchTool = transform.parent.transform.GetComponentInParent<SketchTool>();
-            controller = sketchTool.controller;
+            controller = sketchTool.Controller;
             
             SetupSlider();
         }

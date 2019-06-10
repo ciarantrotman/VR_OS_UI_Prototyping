@@ -1,26 +1,25 @@
 ﻿using UnityEngine;
-using VR_Prototyping.Scripts.Tools.Measure;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Measure
 {
     public class MeasureVisual : MonoBehaviour
     {
-        private MeasureTool _measureTool;
-        private MeshRenderer _meshRenderer;       
+        private MeasureTool measureTool;
+        private MeshRenderer meshRenderer;       
         
         private void Start()
         {
-            _measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            _meshRenderer = transform.GetComponent<MeshRenderer>();
-            _meshRenderer.material = _measureTool.tapeMaterial;
-            _meshRenderer.material.color = _measureTool.tapeColor;
-            _measureTool.MeasureVisual = this;
-            SetColor(_measureTool.MeasureTape.tapeColor);
+            measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
+            meshRenderer = transform.GetComponent<MeshRenderer>();
+            meshRenderer.material = measureTool.tapeMaterial;
+            meshRenderer.material.color = measureTool.tapeColor;
+            measureTool.MeasureVisual = this;
+            SetColor(measureTool.MeasureTape.tapeColor);
         }
 
         public void SetColor(Color color)
         {
-            _meshRenderer.material.color = color;
+            meshRenderer.material.color = color;
         }
     }
 }

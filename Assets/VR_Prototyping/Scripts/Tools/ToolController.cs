@@ -34,10 +34,10 @@ namespace VR_Prototyping.Scripts.Tools
                 
                 // assign all values for the instantiated tool in here
                 
-                tool.toolController = this;
-                tool.controller = controller;
-                tool.toolMenu = toolMenu;
-                tool.handedness = handedness;
+                tool.ToolController = this;
+                tool.Controller = controller;
+                tool.ToolMenu = toolMenu;
+                tool.Handedness = handedness;
                 
                 // initialise the tool here
                 
@@ -45,9 +45,9 @@ namespace VR_Prototyping.Scripts.Tools
                 
                 // reference those initialised components here
                 
-                tool.toolButton.player = player;
-                tool.toolButton.enabled = startsActive;
-                tool.toolButton.buttonText.SetText(item.Key + " Tool");
+                tool.ToolButton.player = player;
+                tool.ToolButton.enabled = startsActive;
+                tool.ToolButton.buttonText.SetText(item.Key + " Tool");
                 tool.buttonPrefab.name = n + "/Button";
                 tool.buttonPrefab.transform.SetParent(transform);
                 tool.buttonPrefab.transform.localPosition = new Vector3(x, y, .2f);
@@ -106,13 +106,13 @@ namespace VR_Prototyping.Scripts.Tools
             {
                 BaseTool tool = item.Value;
                 tool.buttonPrefab.SetActive(state);
-                tool.toolButton.enabled = state;
+                tool.ToolButton.enabled = state;
             }
         }
 
         private static void SetButtonVisualState(BaseTool tool, bool active)
         {
-            tool.toolButton.SetState(active);
+            tool.ToolButton.SetState(active);
         }
     }
 }

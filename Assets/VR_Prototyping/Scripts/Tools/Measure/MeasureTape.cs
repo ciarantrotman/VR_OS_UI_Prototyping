@@ -73,7 +73,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 Vector3 currNodePos = measureNodes[i].transform.position;
                 Vector3 nextNodePos = measureNodes[i + 1].transform.position;
                 Vector3 line = measureNodes[i + 1].transform.position - measureNodes[i].transform.position;
-                switch (MeasureTool.toolMenu.dominantHand)
+                switch (MeasureTool.ToolMenu.dominantHand)
                 {
                     case ToolMenu.Handedness.LEFT:
                         x = Intersection.Line(
@@ -122,7 +122,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 }
             }
 
-            MeasureTool.Insertion = MeasureTool.nodeInsertion && 
+            MeasureTool.Insertion = MeasureTool.Active && 
+                                    MeasureTool.nodeInsertion && 
                                     intersectionCount > 0 
                                     && MeasureTool.Placing == false && 
                                     MeasureTool.Grabbing == false && 
@@ -132,7 +133,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             {
                 MeasureTool.intersectionPointPrefab.transform.position = x;
                 MeasureTool.intersectionPointPrefab.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
-                switch (MeasureTool.toolMenu.dominantHand)
+                switch (MeasureTool.ToolMenu.dominantHand)
                 {
                     case ToolMenu.Handedness.RIGHT when !Controller.RightSelect() && rSelectP && index > 0 && Vector3.Distance(x, Controller.RightPosition())  > .02f:
                         MeasureTool.InsertNode(this, x, index);

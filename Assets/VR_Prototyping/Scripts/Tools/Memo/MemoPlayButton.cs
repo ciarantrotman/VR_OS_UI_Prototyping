@@ -1,17 +1,16 @@
-﻿using UnityEngine;
-using VR_Prototyping.Scripts.UI_Blocks;
+﻿using VR_Prototyping.Scripts.UI_Blocks;
 
-namespace VR_Prototyping.Scripts.Tools
+namespace VR_Prototyping.Scripts.Tools.Memo
 {
     public class MemoPlayButton : DirectButton
     {
-        private MemoNode _memoNode;
+        private MemoNode memoNode;
 
         private void Start()
         {
-            _memoNode = transform.parent.transform.GetComponentInParent<MemoNode>();
-            controller = _memoNode.Controller;
-            activate.AddListener(_memoNode.PlayMemo);
+            memoNode = transform.parent.transform.GetComponentInParent<MemoNode>();
+            controller = memoNode.Controller;
+            activate.AddListener(memoNode.PlayMemo);
             SetupButton();
         }
     }

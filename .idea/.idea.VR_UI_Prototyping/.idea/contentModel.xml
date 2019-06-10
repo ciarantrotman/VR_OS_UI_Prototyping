@@ -1029,26 +1029,34 @@
             <e p="Tools" t="Include">
               <e p="BaseTool.cs" t="Include" />
               <e p="CloseButton.cs" t="Include" />
-              <e p="MeasureDeleteNode.cs" t="Include" />
-              <e p="MeasureLockNode.cs" t="Include" />
-              <e p="MeasureNewTape.cs" t="Include" />
-              <e p="MeasureNode.cs" t="Include" />
-              <e p="MeasureTape.cs" t="Include" />
-              <e p="MeasureTapeColor.cs" t="Include" />
-              <e p="MeasureText.cs" t="Include" />
-              <e p="MeasureTool.cs" t="Include" />
-              <e p="MeasureVisual.cs" t="Include" />
-              <e p="MemoNode.cs" t="Include" />
-              <e p="MemoPlayButton.cs" t="Include" />
-              <e p="MemoTool.cs" t="Include" />
-              <e p="NoteObject.cs" t="Include" />
-              <e p="NoteTool.cs" t="Include" />
-              <e p="SketchBrushColor.cs" t="Include" />
-              <e p="SketchBrushVisual.cs" t="Include" />
-              <e p="SketchBrushWidth.cs" t="Include" />
-              <e p="SketchColor.cs" t="Include" />
-              <e p="SketchErase.cs" t="Include" />
-              <e p="SketchTool.cs" t="Include" />
+              <e p="Measure" t="Include">
+                <e p="MeasureDeleteNode.cs" t="Include" />
+                <e p="MeasureLockNode.cs" t="Include" />
+                <e p="MeasureNewTape.cs" t="Include" />
+                <e p="MeasureNode.cs" t="Include" />
+                <e p="MeasureTape.cs" t="Include" />
+                <e p="MeasureTapeColor.cs" t="Include" />
+                <e p="MeasureText.cs" t="Include" />
+                <e p="MeasureTool.cs" t="Include" />
+                <e p="MeasureVisual.cs" t="Include" />
+              </e>
+              <e p="Memo" t="Include">
+                <e p="MemoNode.cs" t="Include" />
+                <e p="MemoPlayButton.cs" t="Include" />
+                <e p="MemoTool.cs" t="Include" />
+              </e>
+              <e p="Note" t="Include">
+                <e p="NoteObject.cs" t="Include" />
+                <e p="NoteTool.cs" t="Include" />
+              </e>
+              <e p="Sketch" t="Include">
+                <e p="SketchBrushColor.cs" t="Include" />
+                <e p="SketchBrushVisual.cs" t="Include" />
+                <e p="SketchBrushWidth.cs" t="Include" />
+                <e p="SketchColor.cs" t="Include" />
+                <e p="SketchErase.cs" t="Include" />
+                <e p="SketchTool.cs" t="Include" />
+              </e>
               <e p="ToolController.cs" t="Include" />
               <e p="ToolMenu.cs" t="Include" />
             </e>
