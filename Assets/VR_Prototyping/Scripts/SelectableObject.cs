@@ -7,18 +7,19 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using VR_Prototyping.Interfaces;
 using VR_Prototyping.Plugins.QuickOutline.Scripts;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
 	[DisallowMultipleComponent]
-	public class SelectableObject : MonoBehaviour
+	public abstract class SelectableObject : MonoBehaviour, ISelectableObject
 	{
 		#region Inspector and Variables
 
-		private ObjectSelection c;
-		private Manipulation f;
+		private ObjectSelection objectSelection;
+		private Manipulation manipulation;
 		private Outline outline;
 		
 		private Vector3 defaultPosition;
@@ -47,26 +48,26 @@ namespace VR_Prototyping.Scripts
 		
 		public enum RotationLock
 		{
-			FreeRotation
+			FREE_ROTATION
 		}
 		private enum ButtonTrigger
 		{
-			OnButtonDown,
-			OnButtonUp				
+			ON_BUTTON_DOWN,
+			ON_BUTTON_UP				
 		}
 		
 		private readonly List<Vector3> positions = new List<Vector3>();
 		private readonly List<Vector3> rotations = new List<Vector3>();
 		private const float Sensitivity = 10f;
 	
-		[FoldoutGroup("Script Setup")] public bool instantiated;
-		[FoldoutGroup("Script Setup")] [Required] [HideIf("instantiated")] public GameObject player;
+		[BoxGroup("Script Setup")] public bool instantiated;
+		[BoxGroup("Script Setup")] [Required] [HideIf("instantiated")] public GameObject player;
 		[Header("Define Object Behaviour")]
-		[FoldoutGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
-		[FoldoutGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
-		[FoldoutGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
-		[FoldoutGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
-		[FoldoutGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
+		[BoxGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
+		[BoxGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
+		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
+		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
+		[BoxGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
 		
 		[Header("Grab Settings")]
 		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [Range(0, 1f)] public float moveForce = .15f;
@@ -100,7 +101,7 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
 		[Header("Visual Effects")]
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(10)] [SerializeField] private bool genericSelectState;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(5)] [SerializeField] private bool genericSelectState;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
@@ -136,55 +137,49 @@ namespace VR_Prototyping.Scripts
 		#endregion
 		private void Start ()
 		{
-			SetupScaling();
 			InitialiseSelectableObject();
+			Initialise();
 		}
-
-		private void SetupScaling()
+		protected virtual void Initialise()
 		{
-			defaultLocalScale = transform.localScale;
-			scaleMin = defaultLocalScale.ScaledScale(minScaleFactor);
-			scaleMax = defaultLocalScale.ScaledScale(maxScaleFactor);
+			
 		}
-		
-		private void OnEnable()
+		public void OnEnable()
 		{
 			InitialiseSelectableObject();
 		}
-		private void OnDisable()
+		public void OnDisable()
 		{
-			var g = gameObject;
-			ToggleList(g, c.globalList, false);
-			ToggleList(g, c.gazeList, false);
-			ToggleList(g, c.lHandList, false);
-			ToggleList(g, c.rHandList, false);
+			GameObject g = gameObject;
+			ToggleList(g, objectSelection.globalList, false);
+			ToggleList(g, objectSelection.gazeList, false);
+			ToggleList(g, objectSelection.lHandList, false);
+			ToggleList(g, objectSelection.rHandList, false);
 		}
 		private void InitialiseSelectableObject()
 		{
 			InitialiseOverride();
-			
+			SetupScaling();
 			AssignComponents();
 			SetupRigidBody();
 			SetupManipulation();
 			SetupOutline();
-			ToggleList(gameObject, c.globalList, true);
-			ToggleList(gameObject, c.gazeList, true);
+			ToggleList(gameObject, objectSelection.globalList, true);
+			ToggleList(gameObject, objectSelection.gazeList, true);
 			
 			if(!button) return;
 			SetState(startsActive);
 			active = startsActive;
 			ResetState = transform;
 		}
-
 		protected virtual void InitialiseOverride()
 		{
 			
 		}
-		
 		private void AssignComponents()
 		{
-			c = player.GetComponent<ObjectSelection>();
-			f = player.GetComponent<Manipulation>();
+			objectSelection = player.GetComponent<ObjectSelection>();
+			manipulation = player.GetComponent<Manipulation>();
 			Renderer = GetComponent<Renderer>();
 		}
 		private void SetupRigidBody()
@@ -197,15 +192,20 @@ namespace VR_Prototyping.Scripts
 		{
 			if (freeRotationEnabled)
 			{
-				rotationLock = RotationLock.FreeRotation;
+				rotationLock = RotationLock.FREE_ROTATION;
 			}
 		}
-
 		private void SetupOutline()
 		{
 			outline = transform.AddOrGetOutline();
 			outline.enabled = false;
 			outline.precomputeOutline = true;
+		}
+		private void SetupScaling()
+		{
+			defaultLocalScale = transform.localScale;
+			scaleMin = defaultLocalScale.ScaledScale(minScaleFactor);
+			scaleMax = defaultLocalScale.ScaledScale(maxScaleFactor);
 		}
 		private static void ToggleList(GameObject g, ICollection<GameObject> l, bool add)
 		{
@@ -227,26 +227,32 @@ namespace VR_Prototyping.Scripts
 			ReactiveMaterial();
 
 			var o = gameObject;
-			o.CheckGaze(gazeAngle, c.gaze, c.gazeList, c.lHandList, c.rHandList, c.globalList);
-			o.ManageList(c.lHandList, o.CheckHand(c.gazeList, c.manual, AngleL,f.disableRightGrab, button), c.disableLeftHand, WithinRange(c.setSelectionRange, transform, c.Controller.LeftTransform(), c.selectionRange));
-			o.ManageList(c.rHandList, o.CheckHand(c.gazeList, c.manual, AngleR,f.disableLeftGrab, button), c.disableRightHand, WithinRange(c.setSelectionRange, transform, c.Controller.RightTransform(), c.selectionRange));
+			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
+			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
+			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
 		}
-
+		private void ReactiveMaterial()
+		{
+			if (!reactiveMat) return;
+			
+			Renderer.material.SetFloat(Threshold, clippingDistance);
+			Renderer.ReactiveMaterial(objectSelection.Controller.LeftTransform(), objectSelection.Controller.RightTransform());
+		}
 		private void OnTriggerEnter(Collider col)
 		{
 			if(!directGrab) return;
 			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when !c.rTouch && !c.Controller.RightGrab():
-					c.rTouch = true;
-					c.rLr.enabled = false;
-					c.rFocusObject = gameObject;
+				case Manipulation.RTag when !objectSelection.rTouch && !objectSelection.Controller.RightGrab():
+					objectSelection.rTouch = true;
+					objectSelection.rLr.enabled = false;
+					objectSelection.rFocusObject = gameObject;
 					break;
-				case Manipulation.LTag when !c.lTouch && !c.Controller.LeftGrab():
-					c.lTouch = true;
-					c.lLr.enabled = false;
-					c.lFocusObject = gameObject;
+				case Manipulation.LTag when !objectSelection.lTouch && !objectSelection.Controller.LeftGrab():
+					objectSelection.lTouch = true;
+					objectSelection.lLr.enabled = false;
+					objectSelection.lFocusObject = gameObject;
 					break;
 				default:
 					return;
@@ -256,28 +262,27 @@ namespace VR_Prototyping.Scripts
 			outline.Outline(touchOutlineMode, touchOutlineWidth, touchOutlineColor);
 			outline.enabled = true;
 		}
-		
 		private void OnTriggerStay(Collider col)
 		{
 			if(!directGrab) return;
 			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when c.Controller.RightGrab() && !pGrabR && c.rFocusObject == gameObject:
-					Manipulation.DirectGrabStart(rb, transform, f.cR.transform);
+				case Manipulation.RTag when objectSelection.Controller.RightGrab() && !pGrabR && objectSelection.rFocusObject == gameObject:
+					Manipulation.DirectGrabStart(rb, transform, manipulation.cR.transform);
 					break;
-				case Manipulation.RTag when !c.Controller.RightGrab() && pGrabR && c.rFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, c.rLr);
+				case Manipulation.RTag when !objectSelection.Controller.RightGrab() && pGrabR && objectSelection.rFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.rLr);
 					break;
-				case Manipulation.LTag when c.Controller.LeftGrab() && !pGrabL && c.lFocusObject == gameObject:
-					Manipulation.DirectGrabStart(rb, transform, f.cL.transform);
-					c.rTouch = false;
-					c.rFocusObject = null;
+				case Manipulation.LTag when objectSelection.Controller.LeftGrab() && !pGrabL && objectSelection.lFocusObject == gameObject:
+					Manipulation.DirectGrabStart(rb, transform, manipulation.cL.transform);
+					objectSelection.rTouch = false;
+					objectSelection.rFocusObject = null;
 					break;
-				case Manipulation.LTag when !c.Controller.LeftGrab() && pGrabL && c.lFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, c.lLr);
-					c.lTouch = false;
-					c.lFocusObject = null;
+				case Manipulation.LTag when !objectSelection.Controller.LeftGrab() && pGrabL && objectSelection.lFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.lLr);
+					objectSelection.lTouch = false;
+					objectSelection.lFocusObject = null;
 					break;
 				default:
 					positions.PositionTracking(transform.position, Sensitivity);
@@ -285,10 +290,9 @@ namespace VR_Prototyping.Scripts
 					break;
 			}
 
-			pGrabR = c.Controller.RightGrab();
-			pGrabL = c.Controller.LeftGrab();
+			pGrabR = objectSelection.Controller.RightGrab();
+			pGrabL = objectSelection.Controller.LeftGrab();
 		}
-		
 		private void OnTriggerExit(Collider col)
 		{
 			if(!directGrab) return;
@@ -296,14 +300,14 @@ namespace VR_Prototyping.Scripts
 			switch (col.gameObject.name)
 			{
 				case Manipulation.RTag:
-					c.rLr.enabled = true;
-					c.rTouch = false;
-					c.rFocusObject = null;
+					objectSelection.rLr.enabled = true;
+					objectSelection.rTouch = false;
+					objectSelection.rFocusObject = null;
 					break;
 				case Manipulation.LTag:
-					c.lLr.enabled = true;
-					c.lTouch = false;
-					c.lFocusObject = null;
+					objectSelection.lLr.enabled = true;
+					objectSelection.lTouch = false;
+					objectSelection.lFocusObject = null;
 					break;
 				default:
 					return;
@@ -311,31 +315,23 @@ namespace VR_Prototyping.Scripts
 			
 			outline.enabled = false;
 		}
-
-		private void ReactiveMaterial()
-		{
-			if (!reactiveMat) return;
-			
-			Renderer.material.SetFloat(Threshold, clippingDistance);
-			Renderer.ReactiveMaterial(c.Controller.LeftTransform(), c.Controller.RightTransform());
-		}
 		private void GetAngles()
 		{
-			var position = transform.position;
-			gazeAngle = Vector3.Angle(position - c.Controller.CameraPosition(), c.Controller.CameraForwardVector());
-			AngleL = Vector3.Angle(position - c.Controller.LeftTransform().position, c.Controller.LeftForwardVector());
-			AngleR = Vector3.Angle(position - c.Controller.RightTransform().position, c.Controller.RightForwardVector());
+			Vector3 position = transform.position;
+			gazeAngle = Vector3.Angle(position - objectSelection.Controller.CameraPosition(), objectSelection.Controller.CameraForwardVector());
+			AngleL = Vector3.Angle(position - objectSelection.Controller.LeftTransform().position, objectSelection.Controller.LeftForwardVector());
+			AngleR = Vector3.Angle(position - objectSelection.Controller.RightTransform().position, objectSelection.Controller.RightForwardVector());
 		}
 		private static bool WithinRange(bool enabled, Transform self, Transform user, float range)
 		{
 			if (!enabled) return true;
 			return Vector3.Distance(self.position, user.position) <= range;
 		}
-		public void SetState(bool a)
+		public void SetState(bool state)
 		{
 			if (!genericSelectState) return;
 			
-			switch (a)
+			switch (state)
 			{
 				case true:
 					transform.VisualState(this, defaultLocalScale.LocalScale(selectScale), defaultLocalPosition.LocalPosition(selectOffset), activeFont, activeColor);
@@ -343,15 +339,13 @@ namespace VR_Prototyping.Scripts
 				case false:
 					transform.VisualState(this, defaultLocalScale, defaultLocalPosition, inactiveFont, inactiveColor);
 					break;
-				default:
-					throw new ArgumentException();
 			}
 		}	
 		public void GrabStart(Transform con)
 		{
 			if (!grab) return;
 			rb.RigidBody(moveForce, latency,false, gravity);
-			f.OnStart(con);
+			manipulation.OnStart(con);
 			
 			if(!grabOutline) return;
 			outline.Outline(grabOutlineMode, grabOutlineWidth, grabOutlineColor);
@@ -361,50 +355,50 @@ namespace VR_Prototyping.Scripts
 		{
 			if (!grab) return;
 			
-			f.OnStay(con);
+			manipulation.OnStay(con);
 			
-			switch (f.manipulationType)
+			switch (manipulation.manipulationType)
 			{
 				case Manipulation.ManipulationType.Lerp:
 					if (DualGrab())
 					{
-						transform.TransformLerpPosition(f.mP.transform, .1f);
+						transform.TransformLerpPosition(manipulation.mP.transform, .1f);
 						break;
 					}
-					if (c.Controller.RightGrab() && c.rSelectableObject == this)
+					if (objectSelection.Controller.RightGrab() && objectSelection.rSelectableObject == this)
 					{
-						transform.TransformLerpPosition(f.tSr.transform, .1f);
+						transform.TransformLerpPosition(manipulation.tSr.transform, .1f);
 						break;
 					}
-					if (c.Controller.LeftGrab() && c.lSelectableObject == this)
+					if (objectSelection.Controller.LeftGrab() && objectSelection.lSelectableObject == this)
 					{
-						transform.TransformLerpPosition(f.tSl.transform, .1f);
+						transform.TransformLerpPosition(manipulation.tSl.transform, .1f);
 					}
 					break;
 				case Manipulation.ManipulationType.Physics:
 					if (DualGrab() && !pDualGrab)
 					{
-						f.DualGrabStart(transform, freeRotationEnabled, scalingEnabled, maxScaleFactor, minScaleFactor, scaleMax, scaleMin);
+						manipulation.DualGrabStart(transform, freeRotationEnabled, scalingEnabled, maxScaleFactor, minScaleFactor, scaleMax, scaleMin);
 					}
 					if (DualGrab() && pDualGrab)
 					{
-						rb.AddForcePosition(transform, f.mP.transform, c.Controller.debugActive);
-						f.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMin, scaleMax);
+						rb.AddForcePosition(transform, manipulation.mP.transform, objectSelection.Controller.debugActive);
+						manipulation.DualGrabStay(rb, transform, freeRotationEnabled, scalingEnabled, scaleMin, scaleMax);
 						break;
 					}
 					if (!DualGrab() && pDualGrab)
 					{
 						defaultLocalScale = transform.localScale;
-						f.DualGrabEnd();
+						manipulation.DualGrabEnd();
 					}
-					if (c.Controller.RightGrab() && c.rSelectableObject == this)
+					if (objectSelection.Controller.RightGrab() && objectSelection.rSelectableObject == this)
 					{
-						rb.AddForcePosition(transform, f.tSr.transform, c.Controller.debugActive);
+						rb.AddForcePosition(transform, manipulation.tSr.transform, objectSelection.Controller.debugActive);
 						break;
 					}
-					if (c.Controller.LeftGrab() && c.lSelectableObject == this)
+					if (objectSelection.Controller.LeftGrab() && objectSelection.lSelectableObject == this)
 					{
-						rb.AddForcePosition(transform, f.tSl.transform, c.Controller.debugActive);
+						rb.AddForcePosition(transform, manipulation.tSl.transform, objectSelection.Controller.debugActive);
 					}
 					break;
 				default:
@@ -412,20 +406,33 @@ namespace VR_Prototyping.Scripts
 			}
 			pDualGrab = DualGrab();
 		}
-		
 		private bool DualGrab()
 		{
-			return c.Controller.LeftGrab() && c.Controller.RightGrab() && c.lSelectableObject == this && c.rSelectableObject == this;
+			return objectSelection.Controller.LeftGrab() && objectSelection.Controller.RightGrab() && objectSelection.lSelectableObject == this && objectSelection.rSelectableObject == this;
 		}
 		public void GrabEnd(Transform con)
 		{
-			c.gazeList.Clear();
+			objectSelection.gazeList.Clear();
 			
 			rb.RigidBody(moveForce, latency,false, gravity);
 			outline.enabled = false;
 			
-			f.OnEnd(con);
+			manipulation.OnEnd(con);
 		}
+
+		void ISelectableObject.GrabStart()
+		{
+			throw new NotImplementedException();
+		}
+		void ISelectableObject.GrabStay()
+		{
+			throw new NotImplementedException();
+		}
+		void ISelectableObject.GrabEnd()
+		{
+			throw new NotImplementedException();
+		}
+
 		public void HoverStart()
 		{
 			hoverStart.Invoke();
@@ -473,11 +480,11 @@ namespace VR_Prototyping.Scripts
 			if (!genericSelectState || !button) return;
 			switch (buttonTrigger)
 			{
-				case ButtonTrigger.OnButtonDown:
+				case ButtonTrigger.ON_BUTTON_DOWN:
 					active = !active;
 					SetState(active);
 					break;
-				case ButtonTrigger.OnButtonUp:
+				case ButtonTrigger.ON_BUTTON_UP:
 					break;
 				default:
 					throw new ArgumentException();
@@ -494,9 +501,9 @@ namespace VR_Prototyping.Scripts
 			if (!genericSelectState || !button) return;
 			switch (buttonTrigger)
 			{
-				case ButtonTrigger.OnButtonDown:
+				case ButtonTrigger.ON_BUTTON_DOWN:
 					break;
-				case ButtonTrigger.OnButtonUp:
+				case ButtonTrigger.ON_BUTTON_UP:
 					active = !active;
 					SetState(active);
 					break;

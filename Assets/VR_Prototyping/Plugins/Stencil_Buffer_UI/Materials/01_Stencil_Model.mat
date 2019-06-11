@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 01_Stencil_Model
-  m_Shader: {fileID: 4800000, guid: a956924bd6a8ae44ca741bc69e575fe3, type: 3}
+  m_Shader: {fileID: 4800000, guid: 85a8c7b0f3845fc4fa7cbdf41c6b138d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

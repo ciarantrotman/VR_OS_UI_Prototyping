@@ -129,7 +129,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
   gridSize: 3
-  spacing: 0.12
+  horizontalSpacing: 0.1
+  verticalSpacing: 0.11
 --- !u!114 &1548152124150935786
 MonoBehaviour:
   m_ObjectHideFlags: 0

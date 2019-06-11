@@ -8,14 +8,10 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class ToolController : SerializedMonoBehaviour
     {
-        [BoxGroup("Tool Controls")] [OdinSerialize]
-        public Dictionary<string, BaseTool> tools;
-
-        [BoxGroup("Tool Controls")] [Range(0, 5)]
-        public int gridSize = 3;
-
-        [BoxGroup("Tool Controls")] [Range(0f, 1f)]
-        public float spacing = .1f;
+        [BoxGroup("Tool Controls")] [OdinSerialize] public Dictionary<string, BaseTool> tools;
+        [BoxGroup("Tool Controls")] [Range(0, 5)] [SerializeField] private int gridSize = 3;
+        [BoxGroup("Tool Controls")] [Range(0f, 1f)] [SerializeField] private float horizontalSpacing = .1f;
+        [BoxGroup("Tool Controls")] [Range(0f, 1f)] [SerializeField] private float verticalSpacing = .1f;
 
         public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller,
             ToolMenu.Handedness handedness, ToolMenu toolMenu)
@@ -38,7 +34,7 @@ namespace VR_Prototyping.Scripts.Tools
                 tool.Controller = controller;
                 tool.ToolMenu = toolMenu;
                 tool.Handedness = handedness;
-                
+
                 // initialise the tool here
                 
                 tool.SetupMenuItems();
@@ -48,6 +44,8 @@ namespace VR_Prototyping.Scripts.Tools
                 tool.ToolButton.player = player;
                 tool.ToolButton.enabled = startsActive;
                 tool.ToolButton.buttonText.SetText(item.Key + " Tool");
+                tool.ToolButton.Index = toolNumber;
+                
                 tool.buttonPrefab.name = n + "/Button";
                 tool.buttonPrefab.transform.SetParent(transform);
                 tool.buttonPrefab.transform.localPosition = new Vector3(x, y, .2f);
@@ -70,13 +68,13 @@ namespace VR_Prototyping.Scripts.Tools
 
                 // tool horizontal grid spacing
                 
-                x += spacing;
+                x += horizontalSpacing;
 
                 // tool vertical grid spacing
                 
                 if (toolNumber % gridSize != 0) continue;
                 x = 0f;
-                y -= spacing;
+                y -= verticalSpacing;
             }
         }
 

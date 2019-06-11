@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools
         public ControllerTransforms Controller { get; set; }
         public ToolController ToolController { private get; set; }
         public ToolMenu ToolMenu { get; set; }
-        public SelectableObject ToolButton { get; private set; }
+        public ToolButton ToolButton { get; private set; }
         public ToolMenu.Handedness Handedness { private get; set; }
         public bool Active { get; set; }
         protected bool CTrigger { get; set; }
@@ -33,7 +33,7 @@ namespace VR_Prototyping.Scripts.Tools
         {
             buttonPrefab = Instantiate(buttonPrefab);
             
-            ToolButton = buttonPrefab.GetComponent<SelectableObject>();
+            ToolButton = buttonPrefab.GetComponent<ToolButton>();
             ToolButton.enabled = false;
             ToolButton.selectEnd.AddListener(SelectTool);
 
