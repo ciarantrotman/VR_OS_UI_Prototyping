@@ -8,8 +8,8 @@ namespace VR_Prototyping.Scripts.Tools.Note
     {
         private NoteTool NoteTool { get; set; }
         private ControllerTransforms Controller { get; set; }
-        [BoxGroup] public TextMeshPro noteText;
-        [BoxGroup] public TextMeshPro noteTitle;
+        [BoxGroup] [SerializeField] private TextMeshPro noteText;
+        [BoxGroup] [SerializeField] private TextMeshPro noteTitle;
 
         public void Initialise(NoteTool noteTool, ControllerTransforms controllerTransforms)
         {

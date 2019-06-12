@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VR_Prototyping.Scripts.Accessibility;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
@@ -45,19 +46,23 @@ namespace VR_Prototyping.Scripts
             }
         }
 
-        public static void Hover(this SelectableObject current, SelectableObject previous)
+        public static void Hover(this SelectableObject current, SelectableObject previous, Tooltip tooltip)
         {
             if (current != previous && current != null)
             {
-                current.HoverStart();
+                current.HoverStart(tooltip);
+                return;
             }
             if (current == previous && current != null)
             {
                 current.HoverStay();
+                return;
             }
             if (current != previous && previous != null)
             {
-                previous.HoverEnd();
+                previous.HoverEnd(tooltip);
+                Debug.Log(previous.name + " hover end!");
+                return;
             }
         }
 
@@ -92,12 +97,12 @@ namespace VR_Prototyping.Scripts
         {
             if (disabled) return;
             
-            var trigger = Mathf.Abs(current.x) > triggerValue || Mathf.Abs(current.y) > triggerValue;
-            var tolerance = Mathf.Abs(previous.x) - 0 <= toleranceValue && Mathf.Abs(previous.y) - 0 <= toleranceValue;
-            var triggerEnd = Mathf.Abs(current.x) - 0 <= toleranceValue && Mathf.Abs(current.y) - 0 <= toleranceValue;
-            var toleranceEnd = Mathf.Abs(previous.x) > triggerValue || Mathf.Abs(previous.y) > triggerValue;
+            bool trigger = Mathf.Abs(current.x) > triggerValue || Mathf.Abs(current.y) > triggerValue;
+            bool tolerance = Mathf.Abs(previous.x) - 0 <= toleranceValue && Mathf.Abs(previous.y) - 0 <= toleranceValue;
+            bool triggerEnd = Mathf.Abs(current.x) - 0 <= toleranceValue && Mathf.Abs(current.y) - 0 <= toleranceValue;
+            bool toleranceEnd = Mathf.Abs(previous.x) > triggerValue || Mathf.Abs(previous.y) > triggerValue;
 
-            var latch = trigger && toleranceEnd;
+            bool latch = trigger && toleranceEnd;
             
             if ((trigger && tolerance && !locomotionActive && !latch) || (currentTouch && !previousTouch && !locomotionActive))
             {
@@ -146,9 +151,9 @@ namespace VR_Prototyping.Scripts
             head.SplitPosition(controller, follow.transform);
             follow.transform.LookAt(proxy.transform);
             
-            var normalDown = -normal.transform.up;
-            var proxyForward = proxy.transform.forward;
-            var position = proxy.transform.position;
+            Vector3 normalDown = -normal.transform.up;
+            Vector3 proxyForward = proxy.transform.forward;
+            Vector3 position = proxy.transform.position;
             
             if (!debug) return Vector3.Angle(normalDown, proxyForward);
             
@@ -161,22 +166,22 @@ namespace VR_Prototyping.Scripts
         
         public static float CalculateDepth(this float angle, float maxAngle, float minAngle, float max, float min, Transform proxy)
         {
-            var a = angle;
+            float a = angle;
 
             a = a > maxAngle ? maxAngle : a;
             a = a < minAngle ? minAngle : a;
             
-            var proportion = Mathf.InverseLerp(maxAngle, minAngle, a);
+            float proportion = Mathf.InverseLerp(maxAngle, minAngle, a);
             return Mathf.SmoothStep(max, min, proportion);
         }
         
         public static void TargetLocation(this GameObject target, GameObject hitPoint, Vector3 lastValidPosition, int layerIndex)
         {
-            var t = target.transform;
-            var position = t.position;
-            var up = t.up;
-            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out var hit) && hit.transform.gameObject.layer == layerIndex ? hit.point : lastValidPosition, .25f);
-            hitPoint.transform.up = Physics.Raycast(position, -up, out var h) ? h.normal : Vector3.up;
+            Transform t = target.transform;
+            Vector3 position = t.position;
+            Vector3 up = t.up;
+            hitPoint.transform.position = Vector3.Lerp(hitPoint.transform.position, Physics.Raycast(position, -up, out RaycastHit hit) && hit.transform.gameObject.layer == layerIndex ? hit.point : lastValidPosition, .25f);
+            hitPoint.transform.up = Physics.Raycast(position, -up, out RaycastHit h) ? h.normal : Vector3.up;
         }
 
         public static GameObject RayCastFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
@@ -200,7 +205,11 @@ namespace VR_Prototyping.Scripts
         
         public static GameObject FuzzyFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, bool disable)
         {
-            if (disable) return current == null ? null : current;
+            if (disable)
+            {
+                target.transform.TransformLerpPosition(inactive.transform, .1f);
+                return current == null ? null : current;
+            }
             
             target.transform.TransformLerpPosition(objects.Count > 0 ? objects[0].gameObject.transform: inactive.transform, .1f);
             return objects.Count > 0 ? objects[0].gameObject : null;
@@ -240,13 +249,13 @@ namespace VR_Prototyping.Scripts
             return focusObject.GetComponent<SelectableObject>() != null ? focusObject.GetComponent<SelectableObject>() : null;
         }
         
-        public static void DrawLineRenderer(this LineRenderer lr, GameObject focus, GameObject midpoint, Transform controller, GameObject target, int quality, bool grab)
+        public static void DrawLineRenderer(this LineRenderer lr, GameObject focus, GameObject midpoint, Transform controller, GameObject target, int quality)
         {
             midpoint.transform.localPosition = new Vector3(0, 0, controller.Midpoint(target.transform));
+            
             lr.LineRenderWidth(.001f, focus != null ? .01f : 0f);
             
-            Draw.BezierLineRenderer(lr, 
-                controller.position,
+            lr.BezierLineRenderer(controller.position,
                 midpoint.transform.position, 
                 target.transform.position,
                 quality);

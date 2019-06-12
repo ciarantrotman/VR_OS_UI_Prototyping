@@ -214,7 +214,7 @@ MonoBehaviour:
   hoverScale: 0
   hoverEffectDuration: 0
   hoverOutline: 1
-  hoverOutlineWidth: 10
+  hoverOutlineWidth: 5
   hoverOutlineColor: {r: 1, g: 1, b: 1, a: 255}
   hoverOutlineMode: 0
   hoverStart:

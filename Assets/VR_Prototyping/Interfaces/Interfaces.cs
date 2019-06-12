@@ -7,6 +7,7 @@ namespace VR_Prototyping.Interfaces
         void OnEnable();
         void OnDisable();
         
+        /*
         void GrabStart();
         void GrabStay();
         void GrabEnd();
@@ -18,5 +19,6 @@ namespace VR_Prototyping.Interfaces
         void SelectStart();
         void SelectStay();
         void SelectEnd();
+        */
     }
 }

@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5033347195879915639
 Transform:
   m_ObjectHideFlags: 0
@@ -59,8 +59,8 @@ MonoBehaviour:
   targetLineRenderWidth: 0.002
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
-  targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   buttonColor: {r: 0.36470583, g: 0.8374692, b: 0.93333334, a: 255}
+  targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
       m_Calls: []
@@ -124,7 +124,7 @@ MonoBehaviour:
   sliderMaxPos: {x: 0, y: 0, z: 0}
   sliderMinPos: {x: 0, y: 0, z: 0}
   sliderValue: 0
-  directGrabDistance: 0.01
+  directGrabDistance: 0.02
   startingValue: 0
   sliderMax: 0.05
   sliderMin: 0.05
@@ -226,8 +226,8 @@ MonoBehaviour:
   targetLineRenderWidth: 0.0025
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
-  targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   buttonColor: {r: 1, g: 0.2784314, b: 0.3372549, a: 1}
+  targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
       m_Calls: []
@@ -323,7 +323,7 @@ MonoBehaviour:
   instantiatedElement: 1
   controller: {fileID: 0}
   dialValue: 0
-  directGrabDistance: 0.01
+  directGrabDistance: 0.02
   startingValue: 0.5
   dialRadius: 0.05
   ignoreLeftHand: 1

@@ -33,8 +33,8 @@ namespace VR_Prototyping.Scripts
         private GameObject lVo; // visual
         private GameObject lRt; // rotation
         
-        private Vector3 _rLastValidPosition;
-        private Vector3 _lLastValidPosition;
+        private Vector3 rLastValidPosition;
+        private Vector3 lLastValidPosition;
 
         private Vignette vignetteLayer;
 
@@ -169,8 +169,8 @@ namespace VR_Prototyping.Scripts
             rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
             lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
-            rTs.TargetLocation(rHp, _rLastValidPosition = rTs.LastValidPosition(_rLastValidPosition), layerIndex);
-            lTs.TargetLocation(lHp, _lLastValidPosition = lTs.LastValidPosition(_lLastValidPosition), layerIndex);
+            rTs.TargetLocation(rHp, rLastValidPosition = rTs.LastValidPosition(rLastValidPosition), layerIndex);
+            lTs.TargetLocation(lHp, lLastValidPosition = lTs.LastValidPosition(lLastValidPosition), layerIndex);
 
             rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
             lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);

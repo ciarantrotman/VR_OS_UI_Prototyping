@@ -236,6 +236,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         protected override void ToolActivate()
         {
+            if (PreviousMeasureNode == null) return;
             PreviousMeasureNode.NodeStart();
         }
         

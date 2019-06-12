@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using VR_Prototyping.Interfaces;
 using VR_Prototyping.Plugins.QuickOutline.Scripts;
+using VR_Prototyping.Scripts.Accessibility;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
@@ -156,6 +157,7 @@ namespace VR_Prototyping.Scripts
 			ToggleList(g, objectSelection.lHandList, false);
 			ToggleList(g, objectSelection.rHandList, false);
 		}
+
 		private void InitialiseSelectableObject()
 		{
 			InitialiseOverride();
@@ -226,7 +228,7 @@ namespace VR_Prototyping.Scripts
 			GetAngles();
 			ReactiveMaterial();
 
-			var o = gameObject;
+			GameObject o = gameObject;
 			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
 			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
 			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
@@ -244,15 +246,15 @@ namespace VR_Prototyping.Scripts
 			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when !objectSelection.rTouch && !objectSelection.Controller.RightGrab():
-					objectSelection.rTouch = true;
-					objectSelection.rLr.enabled = false;
-					objectSelection.rFocusObject = gameObject;
+				case Manipulation.RTag when !objectSelection.RTouch && !objectSelection.Controller.RightGrab():
+					objectSelection.RTouch = true;
+					objectSelection.RLr.enabled = false;
+					objectSelection.RFocusObject = gameObject;
 					break;
-				case Manipulation.LTag when !objectSelection.lTouch && !objectSelection.Controller.LeftGrab():
-					objectSelection.lTouch = true;
-					objectSelection.lLr.enabled = false;
-					objectSelection.lFocusObject = gameObject;
+				case Manipulation.LTag when !objectSelection.LTouch && !objectSelection.Controller.LeftGrab():
+					objectSelection.LTouch = true;
+					objectSelection.LLr.enabled = false;
+					objectSelection.LFocusObject = gameObject;
 					break;
 				default:
 					return;
@@ -268,21 +270,21 @@ namespace VR_Prototyping.Scripts
 			
 			switch (col.gameObject.name)
 			{
-				case Manipulation.RTag when objectSelection.Controller.RightGrab() && !pGrabR && objectSelection.rFocusObject == gameObject:
+				case Manipulation.RTag when objectSelection.Controller.RightGrab() && !pGrabR && objectSelection.RFocusObject == gameObject:
 					Manipulation.DirectGrabStart(rb, transform, manipulation.cR.transform);
 					break;
-				case Manipulation.RTag when !objectSelection.Controller.RightGrab() && pGrabR && objectSelection.rFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.rLr);
+				case Manipulation.RTag when !objectSelection.Controller.RightGrab() && pGrabR && objectSelection.RFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.RLr);
 					break;
-				case Manipulation.LTag when objectSelection.Controller.LeftGrab() && !pGrabL && objectSelection.lFocusObject == gameObject:
+				case Manipulation.LTag when objectSelection.Controller.LeftGrab() && !pGrabL && objectSelection.LFocusObject == gameObject:
 					Manipulation.DirectGrabStart(rb, transform, manipulation.cL.transform);
-					objectSelection.rTouch = false;
-					objectSelection.rFocusObject = null;
+					objectSelection.RTouch = false;
+					objectSelection.RFocusObject = null;
 					break;
-				case Manipulation.LTag when !objectSelection.Controller.LeftGrab() && pGrabL && objectSelection.lFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.lLr);
-					objectSelection.lTouch = false;
-					objectSelection.lFocusObject = null;
+				case Manipulation.LTag when !objectSelection.Controller.LeftGrab() && pGrabL && objectSelection.LFocusObject == gameObject:
+					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.LLr);
+					objectSelection.LTouch = false;
+					objectSelection.LFocusObject = null;
 					break;
 				default:
 					positions.PositionTracking(transform.position, Sensitivity);
@@ -300,14 +302,14 @@ namespace VR_Prototyping.Scripts
 			switch (col.gameObject.name)
 			{
 				case Manipulation.RTag:
-					objectSelection.rLr.enabled = true;
-					objectSelection.rTouch = false;
-					objectSelection.rFocusObject = null;
+					objectSelection.RLr.enabled = true;
+					objectSelection.RTouch = false;
+					objectSelection.RFocusObject = null;
 					break;
 				case Manipulation.LTag:
-					objectSelection.lLr.enabled = true;
-					objectSelection.lTouch = false;
-					objectSelection.lFocusObject = null;
+					objectSelection.LLr.enabled = true;
+					objectSelection.LTouch = false;
+					objectSelection.LFocusObject = null;
 					break;
 				default:
 					return;
@@ -365,12 +367,12 @@ namespace VR_Prototyping.Scripts
 						transform.TransformLerpPosition(manipulation.mP.transform, .1f);
 						break;
 					}
-					if (objectSelection.Controller.RightGrab() && objectSelection.rSelectableObject == this)
+					if (objectSelection.Controller.RightGrab() && objectSelection.RSelectableObject == this)
 					{
 						transform.TransformLerpPosition(manipulation.tSr.transform, .1f);
 						break;
 					}
-					if (objectSelection.Controller.LeftGrab() && objectSelection.lSelectableObject == this)
+					if (objectSelection.Controller.LeftGrab() && objectSelection.LSelectableObject == this)
 					{
 						transform.TransformLerpPosition(manipulation.tSl.transform, .1f);
 					}
@@ -391,12 +393,12 @@ namespace VR_Prototyping.Scripts
 						defaultLocalScale = transform.localScale;
 						manipulation.DualGrabEnd();
 					}
-					if (objectSelection.Controller.RightGrab() && objectSelection.rSelectableObject == this)
+					if (objectSelection.Controller.RightGrab() && objectSelection.RSelectableObject == this)
 					{
 						rb.AddForcePosition(transform, manipulation.tSr.transform, objectSelection.Controller.debugActive);
 						break;
 					}
-					if (objectSelection.Controller.LeftGrab() && objectSelection.lSelectableObject == this)
+					if (objectSelection.Controller.LeftGrab() && objectSelection.LSelectableObject == this)
 					{
 						rb.AddForcePosition(transform, manipulation.tSl.transform, objectSelection.Controller.debugActive);
 					}
@@ -408,7 +410,7 @@ namespace VR_Prototyping.Scripts
 		}
 		private bool DualGrab()
 		{
-			return objectSelection.Controller.LeftGrab() && objectSelection.Controller.RightGrab() && objectSelection.lSelectableObject == this && objectSelection.rSelectableObject == this;
+			return objectSelection.Controller.LeftGrab() && objectSelection.Controller.RightGrab() && objectSelection.LSelectableObject == this && objectSelection.RSelectableObject == this;
 		}
 		public void GrabEnd(Transform con)
 		{
@@ -420,53 +422,46 @@ namespace VR_Prototyping.Scripts
 			manipulation.OnEnd(con);
 		}
 
-		void ISelectableObject.GrabStart()
+		public void HoverStart(Tooltip tooltip)
 		{
-			throw new NotImplementedException();
-		}
-		void ISelectableObject.GrabStay()
-		{
-			throw new NotImplementedException();
-		}
-		void ISelectableObject.GrabEnd()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void HoverStart()
-		{
+			if(!hover) return;
 			hoverStart.Invoke();
-			
-			if (!genericHoverEffect || !hover) return;
-
+			if (toolTip)
+			{
+				tooltip.SetTooltipText(objectSelection.toolTips, toolTipText);
+			}
+			if (!genericHoverEffect) return;
 			if (hoverOutline)
 			{
 				outline.Outline(hoverOutlineMode, hoverOutlineWidth, hoverOutlineColor);
 				outline.enabled = true;
 			}
 			
-			var t = transform;
+			Transform t = transform;
 			defaultLocalScale = t.localScale;
 			defaultLocalPosition = t.localPosition;
-
 			t.DOScale(defaultLocalScale.LocalScale(hoverScale), hoverEffectDuration);
-			
 			if (rb.velocity != Vector3.zero || hoverOffset <= 0) return;
 			t.DOLocalMove(defaultLocalPosition.LocalPosition(hoverOffset), hoverEffectDuration);
 		}
 		public void HoverStay()
 		{
+			if(!hover) return;
 			hoverStay.Invoke();
 		}
-		public void HoverEnd()
+		public void HoverEnd(Tooltip tooltip)
 		{
+			if(!hover) return;
 			hoverEnd.Invoke();
+			if (toolTip)
+			{
+				tooltip.ClearTooltipText();
+			}
 			
 			outline.enabled = false;
+			if (!genericHoverEffect) return;
 			
-			if (!genericHoverEffect || !hover) return;
-			
-			var t = transform;
+			Transform t = transform;
 			
 			t.DOScale(defaultLocalScale, hoverEffectDuration);
 			

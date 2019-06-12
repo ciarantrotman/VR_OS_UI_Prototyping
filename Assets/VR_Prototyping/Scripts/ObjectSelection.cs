@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using VR_Prototyping.Scripts.Accessibility;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
@@ -16,54 +17,66 @@ namespace VR_Prototyping.Scripts
 		public ControllerTransforms Controller { get; private set; }
 		private enum SelectionType
 		{
-			Fusion,
-			Fuzzy,
-			RayCast
+			FUSION,
+			FUZZY,
+			RAY_CAST
 		}
 		private static bool TypeCheck(SelectionType type)
 		{
-			return type == SelectionType.Fusion;
+			return type == SelectionType.FUSION;
 		}
 		private GameObject lTarget;
 		private GameObject rTarget;
+		
 		private GameObject lDefault;
 		private GameObject rDefault;
+		
 		private SelectableObject pLSelectableObject;
 		private SelectableObject pRSelectableObject;
+		
+		private GameObject lTooltipObject;
+		private GameObject rTooltipObject;
+		
+		private Tooltip lTooltip;
+		private Tooltip rTooltip;
 
-		[HideInInspector] public bool rTouch;
-		[HideInInspector] public bool lTouch;
-		[HideInInspector] public GameObject lMidPoint;
-		[HideInInspector] public GameObject rMidPoint;
-		[HideInInspector] public GameObject lFocusObject;
-		[HideInInspector] public GameObject rFocusObject;
-		[HideInInspector] public SelectableObject rSelectableObject;
-		[HideInInspector] public SelectableObject lSelectableObject;
-		[HideInInspector] public LineRenderer lLr;
-		[HideInInspector] public LineRenderer rLr;
-		[HideInInspector] public bool disableSelection;
-		[HideInInspector] public bool lSelectPrevious;
-		[HideInInspector] public bool rSelectPrevious;
-		[HideInInspector] public bool lGrabPrevious;
-		[HideInInspector] public bool rGrabPrevious;
+		public bool RTouch { get; set; }
+		public bool LTouch { get; set; }
+		public GameObject LMidPoint { get; private set; }
+		public GameObject RMidPoint { get; private set; }
+		public GameObject LFocusObject { get; set; }
+		public GameObject RFocusObject { get; set; }
+		public SelectableObject RSelectableObject { get; set; }
+		public SelectableObject LSelectableObject { get; set; }
+		public LineRenderer LLr { get; private set; }
+		public LineRenderer RLr { get; private set; }
+		public bool DisableSelection { get; set; }
+		public bool LSelectPrevious { get; set; }
+		public bool RSelectPrevious { get; set; }
+		public bool LGrabPrevious { get; set; }
+		public bool RGrabPrevious { get; set; }
 		
 		[ValidateInput("TypeCheck", "Recommended Selection Type is Fusion", InfoMessageType.Warning)]
 		[BoxGroup("Selection Settings")] [SerializeField] private SelectionType selectionType;
-		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RayCast)] [Indent] [Range(0f, 180f)] public float gaze = 60f;
-		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RayCast)] [Indent] [Range(0f, 180f)] public float manual = 25f;
+		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RAY_CAST)] [Indent] [Range(0f, 180f)] public float gaze = 60f;
+		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RAY_CAST)] [Indent] [Range(0f, 180f)] public float manual = 25f;
 		[BoxGroup("Selection Settings")] [Space(10)]public bool setSelectionRange;		
 		[BoxGroup("Selection Settings")] [ShowIf("setSelectionRange")] [Indent] [Range(0f, 250f)] public float selectionRange = 25f;		
 		[BoxGroup("Selection Settings")] public bool disableLeftHand;
 		[BoxGroup("Selection Settings")] public bool disableRightHand;
 		
-		[TabGroup("Object Lists")] public List<GameObject> globalList;
-		[TabGroup("Object Lists")] public List<GameObject> gazeList;
-		[TabGroup("Object Lists")] public List<GameObject> rHandList;
-		[TabGroup("Object Lists")] public List<GameObject> lHandList;
-
-		[TabGroup("Aesthetics")] [Range(3f, 30f)] public int lineRenderQuality = 15;
-		[TabGroup("Aesthetics")] [Range(.1f, 2.5f)] public float defaultOffset = 1f;
+		[BoxGroup("Aesthetics")] [Range(3f, 30f)] public int lineRenderQuality = 15;
+		[BoxGroup("Aesthetics")] [Range(.1f, 2.5f)] public float inactiveLineRenderOffset = 1f;
 		
+		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> globalList;
+		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> gazeList;
+		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> rHandList;
+		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> lHandList;
+
+		[BoxGroup("Accessibility Settings")] public bool toolTips;
+		[BoxGroup("Accessibility Settings")] [ShowIf("toolTips")] [Indent] [SerializeField] [Required] private GameObject toolTipPrefab;
+		[BoxGroup("Accessibility Settings")] [ShowIf("toolTips")] [Indent] [SerializeField] [Range(.01f, .2f)] private float toolTipOffset;
+
 		#endregion
 		private void Start ()
 		{
@@ -71,29 +84,40 @@ namespace VR_Prototyping.Scripts
 			
 			SetupGameObjects();
 			
-			lLr = Controller.LeftTransform().gameObject.AddComponent<LineRenderer>();
-			rLr = Controller.RightTransform().gameObject.AddComponent<LineRenderer>();
+			LLr = Controller.LeftTransform().gameObject.AddComponent<LineRenderer>();
+			RLr = Controller.RightTransform().gameObject.AddComponent<LineRenderer>();
 			
-			lLr.SetupLineRender(Controller.lineRenderMat, .005f, true);
-			rLr.SetupLineRender(Controller.lineRenderMat, .005f, true);
+			LLr.SetupLineRender(Controller.lineRenderMat, .005f, true);
+			RLr.SetupLineRender(Controller.lineRenderMat, .005f, true);
 		}
 		private void SetupGameObjects()
 		{
-			lMidPoint = new GameObject("MidPoint/Left");
-			rMidPoint = new GameObject("MidPoint/Right");
+			LMidPoint = new GameObject("MidPoint/Left");
+			RMidPoint = new GameObject("MidPoint/Right");
+			
 			lTarget = new GameObject("TargetLineRender/Left");
 			rTarget = new GameObject("Target/LineRender/Right");
+			
 			lDefault = new GameObject("Target/LineRender/Left/Default");
 			rDefault = new GameObject("Target/LineRender/Right/Default");
+
+			lTooltipObject = Instantiate(toolTipPrefab);
+			rTooltipObject = Instantiate(toolTipPrefab);
 			
 			lTarget.transform.SetParent(transform);
 			rTarget.transform.SetParent(transform);
 						
-			lDefault.transform.SetupLineRenderObjects(Controller.LeftTransform(), defaultOffset);
-			rDefault.transform.SetupLineRenderObjects(Controller.RightTransform(), defaultOffset);
+			lDefault.transform.SetOffsetPosition(Controller.LeftTransform(), inactiveLineRenderOffset);
+			rDefault.transform.SetOffsetPosition(Controller.RightTransform(), inactiveLineRenderOffset);
 			
-			lMidPoint.transform.SetupLineRenderObjects(Controller.LeftTransform(), 0f);
-			rMidPoint.transform.SetupLineRenderObjects(Controller.RightTransform(), 0f);
+			LMidPoint.transform.SetOffsetPosition(Controller.LeftTransform(), 0f);
+			RMidPoint.transform.SetOffsetPosition(Controller.RightTransform(), 0f);
+			
+			lTooltipObject.transform.SetOffsetPosition(Controller.LeftTransform(), toolTipOffset);
+			rTooltipObject.transform.SetOffsetPosition(Controller.RightTransform(), toolTipOffset);
+
+			lTooltip = lTooltipObject.GetComponent<Tooltip>();
+			rTooltip = rTooltipObject.GetComponent<Tooltip>();
 		}
 
 		private void FixedUpdate()
@@ -102,50 +126,50 @@ namespace VR_Prototyping.Scripts
 
 			switch (selectionType)
 			{
-				case SelectionType.Fuzzy:
-					lFocusObject = lHandList.FuzzyFindFocusObject(lFocusObject, lTarget, lDefault, Controller.LeftGrab() || lTouch);
-					rFocusObject = rHandList.FuzzyFindFocusObject(rFocusObject, rTarget, rDefault, Controller.RightGrab() || rTouch);
+				case SelectionType.FUZZY:
+					LFocusObject = lHandList.FuzzyFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftGrab() || LTouch);
+					RFocusObject = rHandList.FuzzyFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightGrab() || RTouch);
 					break;
-				case SelectionType.RayCast:
-					lFocusObject = lHandList.RayCastFindFocusObject(lFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
-					rFocusObject = rHandList.RayCastFindFocusObject(rFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
+				case SelectionType.RAY_CAST:
+					LFocusObject = lHandList.RayCastFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || LTouch);
+					RFocusObject = rHandList.RayCastFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
 					break;
-				case SelectionType.Fusion:
-					lFocusObject = lHandList.FusionFindFocusObject(lFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || lTouch);
-					rFocusObject = rHandList.FusionFindFocusObject(rFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || rTouch);
+				case SelectionType.FUSION:
+					LFocusObject = lHandList.FusionFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || LTouch);
+					RFocusObject = rHandList.FusionFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
 					break;
 				default:
-					lFocusObject = null;
-					rFocusObject = null;
+					LFocusObject = null;
+					RFocusObject = null;
 					break;
 			}
 			
-			lLr.DrawLineRenderer(lFocusObject, lMidPoint, Controller.LeftTransform(), lTarget, lineRenderQuality, Controller.LeftGrab());
-			rLr.DrawLineRenderer(rFocusObject, rMidPoint, Controller.RightTransform() ,rTarget, lineRenderQuality, Controller.RightGrab());
+			LLr.DrawLineRenderer(LFocusObject, LMidPoint, Controller.LeftTransform(), lTarget, lineRenderQuality);
+			RLr.DrawLineRenderer(RFocusObject, RMidPoint, Controller.RightTransform() ,rTarget, lineRenderQuality);
 			
-			lFocusObject.Manipulation(rFocusObject, lSelectableObject, pLSelectableObject, Controller.LeftGrab(), lGrabPrevious, Controller.LeftTransform(), lTouch, rTouch);
-			rFocusObject.Manipulation(lFocusObject, rSelectableObject, pRSelectableObject, Controller.RightGrab(), rGrabPrevious, Controller.RightTransform(), rTouch, lTouch);
+			LFocusObject.Manipulation(RFocusObject, LSelectableObject, pLSelectableObject, Controller.LeftGrab(), LGrabPrevious, Controller.LeftTransform(), LTouch, RTouch);
+			RFocusObject.Manipulation(LFocusObject, RSelectableObject, pRSelectableObject, Controller.RightGrab(), RGrabPrevious, Controller.RightTransform(), RTouch, LTouch);
 			
-			lSelectableObject = lFocusObject.FindSelectableObject(lSelectableObject, Controller.LeftGrab());
-			rSelectableObject = rFocusObject.FindSelectableObject(rSelectableObject, Controller.RightGrab());
+			LSelectableObject = LFocusObject.FindSelectableObject(LSelectableObject, Controller.LeftGrab());
+			RSelectableObject = RFocusObject.FindSelectableObject(RSelectableObject, Controller.RightGrab());
 			
-			lGrabPrevious = Controller.LeftGrab();
-			rGrabPrevious = Controller.RightGrab();
+			LGrabPrevious = Controller.LeftGrab();
+			RGrabPrevious = Controller.RightGrab();
 		}
 
 		private void LateUpdate()
 		{
-			lFocusObject.Selection(lSelectableObject, Controller.LeftSelect(), lSelectPrevious);
-			rFocusObject.Selection(rSelectableObject, Controller.RightSelect(), rSelectPrevious);
+			LFocusObject.Selection(LSelectableObject, Controller.LeftSelect(), LSelectPrevious);
+			RFocusObject.Selection(RSelectableObject, Controller.RightSelect(), RSelectPrevious);
 			
-			lSelectableObject.Hover(pLSelectableObject);
-			rSelectableObject.Hover(pRSelectableObject);
+			LSelectableObject.Hover(pLSelectableObject, lTooltip);
+			RSelectableObject.Hover(pRSelectableObject, rTooltip);
 		
-			lSelectPrevious = Controller.LeftSelect();
-			rSelectPrevious = Controller.RightSelect();
+			LSelectPrevious = Controller.LeftSelect();
+			RSelectPrevious = Controller.RightSelect();
 
-			pLSelectableObject = lSelectableObject;
-			pRSelectableObject = rSelectableObject;
+			pLSelectableObject = LSelectableObject;
+			pRSelectableObject = RSelectableObject;
 		}
 
 		private void SortLists()

@@ -77,7 +77,7 @@ namespace VR_Prototyping.Scripts.Tools
             
             directInterfaceBlocks = nonDominant.GetComponentsInChildren<BaseDirectBlock>();
 
-            foreach (var block in directInterfaceBlocks)
+            foreach (BaseDirectBlock block in directInterfaceBlocks)
             {
                 block.controller = Controller;
             }

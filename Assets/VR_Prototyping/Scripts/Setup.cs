@@ -42,13 +42,13 @@ namespace VR_Prototyping.Scripts
             return !a.GetComponent<Outline>() ? a.gameObject.AddComponent<Outline>() : a.gameObject.GetComponent<Outline>();
         }
         
-        public static void SetupLineRenderObjects(this Transform m, Transform p, float offset)
+        public static void SetOffsetPosition(this Transform thisTransform, Transform parent, float offset)
         {
-            m.position = p.position;
-            m.parent = p;
-            m.localRotation = new Quaternion(0,0,0,0);
-            var position = m.position;
-            m.localPosition = new Vector3(position.x, position.y, position.z + offset);
+            thisTransform.position = parent.position;
+            thisTransform.SetParent(parent);
+            thisTransform.localRotation = Quaternion.identity;
+            Vector3 position = thisTransform.position;
+            thisTransform.localPosition = new Vector3(position.x, position.y, position.z + offset);
         }
 
         public static void SetupSphereCollider(this SphereCollider sc, bool trigger, float radius)
