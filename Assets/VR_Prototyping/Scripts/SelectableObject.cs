@@ -232,6 +232,7 @@ namespace VR_Prototyping.Scripts
 			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
 			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
 			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
+			
 		}
 		private void ReactiveMaterial()
 		{

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace VR_Prototyping.Interfaces
+﻿namespace VR_Prototyping.Interfaces
 {
     public interface ISelectableObject
     {

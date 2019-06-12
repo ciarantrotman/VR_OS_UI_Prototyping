@@ -1002,8 +1002,12 @@
             </e>
           </e>
           <e p="Scripts" t="Include">
+            <e p="Accessibility" t="Include">
+              <e p="Tooltip.cs" t="Include" />
+            </e>
             <e p="Check.cs" t="Include" />
             <e p="ControllerTransforms.cs" t="Include" />
+            <e p="DebugSelectableObject.cs" t="Include" />
             <e p="Demo_Scripts" t="Include">
               <e p="RecruitmentProjectSelection.cs" t="Include" />
               <e p="RecruitmentTableRotation.cs" t="Include" />

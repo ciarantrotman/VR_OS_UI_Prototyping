@@ -61,8 +61,6 @@ namespace VR_Prototyping.Scripts
             if (current != previous && previous != null)
             {
                 previous.HoverEnd(tooltip);
-                Debug.Log(previous.name + " hover end!");
-                return;
             }
         }
 
@@ -207,7 +205,7 @@ namespace VR_Prototyping.Scripts
         {
             if (disable)
             {
-                target.transform.TransformLerpPosition(inactive.transform, .1f);
+                target.transform.TransformLerpPosition(inactive.transform, .05f);
                 return current == null ? null : current;
             }
             
@@ -217,12 +215,18 @@ namespace VR_Prototyping.Scripts
         
         public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target,GameObject inactive, Transform controller, float distance, bool disable)
         {
+            if (disable && current == null)
+            {
+                target.transform.TransformLerpPosition(inactive.transform, .2f);
+                return null;
+            }
+            
             if (disable) return current == null ? null : current;
+
+            Vector3 position = controller.position;
+            Vector3 forward = controller.forward;
             
-            var position = controller.position;
-            var forward = controller.forward;
-            
-            if (Physics.Raycast(position, forward, out var hit, distance) && objects.Contains(hit.transform.gameObject))
+            if (Physics.Raycast(position, forward, out RaycastHit hit, distance) && objects.Contains(hit.transform.gameObject))
             {
                 target.transform.SetParent(hit.transform);
                 target.transform.VectorLerpPosition(hit.point, .25f);

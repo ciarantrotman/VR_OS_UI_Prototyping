@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using LeapInternal;
-using TMPro;
-using UnityEditor.Experimental.UIElements.GraphView;
+﻿using TMPro;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools.Measure

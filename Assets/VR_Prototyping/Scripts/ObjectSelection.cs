@@ -48,6 +48,8 @@ namespace VR_Prototyping.Scripts
 		public GameObject RFocusObject { get; set; }
 		public SelectableObject RSelectableObject { get; set; }
 		public SelectableObject LSelectableObject { get; set; }
+		public SelectableObject RPreviousSelectableObject { get; set; }
+		public SelectableObject LPreviousSelectableObject { get; set; }
 		public LineRenderer LLr { get; private set; }
 		public LineRenderer RLr { get; private set; }
 		public bool DisableSelection { get; set; }
@@ -155,6 +157,18 @@ namespace VR_Prototyping.Scripts
 			
 			LGrabPrevious = Controller.LeftGrab();
 			RGrabPrevious = Controller.RightGrab();
+
+			if (LPreviousSelectableObject != null && LSelectableObject != LPreviousSelectableObject)
+			{
+				LPreviousSelectableObject.HoverEnd(lTooltip);
+			}
+			if (RPreviousSelectableObject != null && RSelectableObject != RPreviousSelectableObject)
+			{
+				RPreviousSelectableObject.HoverEnd(rTooltip);
+			}
+
+			LPreviousSelectableObject = LSelectableObject;
+			RPreviousSelectableObject = RSelectableObject;
 		}
 
 		private void LateUpdate()
