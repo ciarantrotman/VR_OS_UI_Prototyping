@@ -6,8 +6,8 @@ namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardKey : SelectableObject
     {
-        public KeyboardManager keyboardManager { private get; set; }
-        public int index { private get; set; }
+        public KeyboardManager KeyboardManager { private get; set; }
+        public int Index { private get; set; }
 
         [BoxGroup ("Key Settings")] public KeyboardManager.KeyboardKeyValues keyValue;
 
@@ -23,18 +23,17 @@ namespace VR_Prototyping.Scripts.Keyboard
 
         public void SetupKey(KeyboardManager manager, GameObject p)
         {
-            keyboardManager = manager;
+            KeyboardManager = manager;
             player = p;
             name = "Key_" + (char)keyValue;
             buttonText.SetText(""+(char)keyValue);
             buttonBack.shadowCastingMode = ShadowCastingMode.Off;
-            toolTip = true;
             toolTipText = keyValue.ToString();
         }
         
         private void KeyStroke()
         {
-            keyboardManager.Keystroke(index, keyValue);
+            KeyboardManager.Keystroke(Index, keyValue);
         }
     }
 }

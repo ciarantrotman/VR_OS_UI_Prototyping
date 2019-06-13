@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.vr_os_ui_design.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "S:\\Personal\\Projects\\Unity Development\\HDRP Sketches\\VR_OS_UI_Design\\VR_OS_UI_Design\\actions.json",
+      "action_manifest_path": "C:\\Projects Repos\\VR_UI_Prototyping\\actions.json",
       "strings": {
         "en_us": {
           "name": "VR_OS_UI_Design [Testing]"

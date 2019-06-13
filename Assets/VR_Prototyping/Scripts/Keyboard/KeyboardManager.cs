@@ -70,9 +70,9 @@ namespace VR_Prototyping.Scripts.Keyboard
             {
                 if (child.GetComponent<KeyboardKey>() == null) continue;
                 var key = child.GetComponent<KeyboardKey>();
-                key.keyboardManager = this;
+                key.KeyboardManager = this;
                 key.player = ControllerTransforms.Player();
-                key.index = index;
+                key.Index = index;
                 key.SetupKey(this, ControllerTransforms.Player());
                 keyboardKeys.Add(key);
                 index++;
