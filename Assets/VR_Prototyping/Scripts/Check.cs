@@ -58,7 +58,7 @@ namespace VR_Prototyping.Scripts
                 current.HoverStay();
                 return;
             }
-            if (current != previous && previous != null)
+            if (previous != null && current != previous)
             {
                 previous.HoverEnd(tooltip);
             }

@@ -8,14 +8,31 @@ ModelImporter:
     100004: Cube
     100006: //RootNode
     100008: Sphere_1
+    100010: Camera
+    100012: Lamp
+    100014: Sphere
     400000: Boole__Copy_
     400002: CINEMA_4D_Editor
     400004: Cube
     400006: //RootNode
     400008: Sphere_1
+    400010: Camera
+    400012: Lamp
+    400014: Sphere
     2000000: CINEMA_4D_Editor
+    2000002: Camera
+    2100000: Material
+    2100002: No Name
+    2300000: Cube
+    2300002: Sphere
+    3300000: Cube
+    3300002: Sphere
+    4300000: Cube
+    4300002: Sphere
     7400000: CINEMA_4D_Main
+    7400002: Cube|CubeAction
     9500000: //RootNode
+    10800000: Lamp
   externalObjects: {}
   materials:
     importMaterials: 1
