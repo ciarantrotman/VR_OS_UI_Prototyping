@@ -1,0 +1,43 @@
+fileFormatVersion: 2
+guid: c9b0fd01bb53c5648827c6d06d609d3e
+ScriptedImporter:
+  fileIDToRecycleName:
+    100000: Sphere_Reveal/Sphere_Reveal
+    100002: Sphere_Reveal/Sphere_Reveal/Sphere
+    100004: Sphere_Reveal/Sphere_Reveal/Sphere/SphereCloud
+    400000: Sphere_Reveal/Sphere_Reveal/Transform
+    400002: Sphere_Reveal/Sphere_Reveal/Sphere/Transform
+    400004: Sphere_Reveal/Sphere_Reveal/Sphere/SphereCloud/Transform
+    11400000: Sphere_Reveal/Sphere_Reveal/MonoBehaviour-UnityEngine.Formats.Alembic.Importer.AlembicStreamPlayer
+    11400002: Sphere_Reveal_ABCDesc
+    100100000: Sphere_Reveal
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: f53f5fc499d31e44b9deee84d28a9ee8, type: 3}
+  streamSettings:
+    normals: 1
+    tangents: 1
+    cameraAspectRatio: 2
+    importVisibility: 1
+    scaleFactor: 0.01
+    swapHandedness: 1
+    flipFaces: 0
+    turnQuadEdges: 0
+    interpolateSamples: 1
+    importPointPolygon: 1
+    importLinePolygon: 1
+    importTrianglePolygon: 1
+    importXform: 1
+    importCameras: 1
+    importMeshes: 1
+    importPoints: 0
+  abcStartTime: 0
+  abcEndTime: 0
+  startTime: 0
+  endTime: 0
+  importWarning: 
+  varyingTopologyMeshNames: []
+  splittingMeshNames: []
+  firstImport: 0
