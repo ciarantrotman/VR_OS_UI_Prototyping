@@ -42,6 +42,7 @@ namespace VR_Prototyping.Scripts.Tools
                 // reference those initialised components here
                 
                 tool.ToolButton.player = player;
+                tool.ToolButton.ToolModel = tool.buttonModel;
                 tool.ToolButton.enabled = startsActive;
                 tool.ToolButton.buttonText.SetText(item.Key + " Tool");
                 tool.ToolButton.Index = toolNumber;

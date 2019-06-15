@@ -40,7 +40,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material sliderMaterial;
         [TabGroup("Aesthetics Settings")] [Required] [Space(5)] public GameObject sliderCap;
         [TabGroup("Aesthetics Settings")] [Required] public GameObject sliderHandle;
-
+        
         [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStart;
         [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverStay;
         [FoldoutGroup("Slider Events")] [SerializeField] private UnityEvent hoverEnd;

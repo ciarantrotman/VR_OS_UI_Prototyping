@@ -22,6 +22,7 @@ namespace VR_Prototyping.Scripts.Tools
         private BaseDirectBlock[] directInterfaceBlocks;
         
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject buttonPrefab;
+        [FoldoutGroup("Generic Tool Prefabs")] [Required] [Indent] public GameObject buttonModel;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject nonDominant;
         [FoldoutGroup("Generic Tool Prefabs")] [Required] public GameObject dominant;
         

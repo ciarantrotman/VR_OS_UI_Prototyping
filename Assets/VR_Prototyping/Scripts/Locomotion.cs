@@ -38,7 +38,7 @@ namespace VR_Prototyping.Scripts
 
         private Vignette vignetteLayer;
 
-        private LocomotionPositionPreview _ghost;
+        private LocomotionPositionPreview positionPreview;
         
         [HideInInspector] public LineRenderer lLr;
         [HideInInspector] public LineRenderer rLr;
@@ -57,7 +57,6 @@ namespace VR_Prototyping.Scripts
         private bool pTouchL;
 
         private Vector3 rRotTarget;
-        
         private bool active;
 
         private enum Method
@@ -93,12 +92,15 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Aesthetic Settings")] [SerializeField] [Required] private AnimationCurve locomotionEasing;
         [TabGroup("Aesthetic Settings")] [SerializeField] [Required] private Material lineRenderMat;
         [TabGroup("Aesthetic Settings")] [Range(3f, 50f)] [SerializeField] private int lineRenderQuality = 40;
+        [TabGroup("Aesthetic Settings")] [Space(10)] [SerializeField] [Required] private GameObject sceneChangeWipe;
+        [TabGroup("Aesthetic Settings")] [Indent] [SerializeField] [Range(.25f, 5f)] private float sceneWipeDuration;
 
-        private ControllerTransforms c;
-        
+        private SceneWipe sceneWipe;
+        private ControllerTransforms controllerTransforms;
+
         private void Start()
         {
-            c = GetComponent<ControllerTransforms>();
+            controllerTransforms = GetComponent<ControllerTransforms>();
             SetupGameObjects();
         }
 
@@ -106,8 +108,8 @@ namespace VR_Prototyping.Scripts
         {
             volume.profile.TryGetSettings(out vignetteLayer);
             parent = new GameObject("Locomotion/Calculations");
-            var p = parent.transform;
-            p.SetParent(transform);
+            Transform parentTransform = parent.transform;
+            parentTransform.SetParent(transform);
             
             cN = new GameObject("Locomotion/Temporary");
             
@@ -137,11 +139,15 @@ namespace VR_Prototyping.Scripts
             
             ghost = Instantiate(ghost);
             ghost.name = "Locomotion/Ghost";
-            _ghost = ghost.GetComponent<LocomotionPositionPreview>();
-            _ghost.ControllerTransforms = c;
-            _ghost.GhostToggle(null, false);;
+            positionPreview = ghost.GetComponent<LocomotionPositionPreview>();
+            positionPreview.ControllerTransforms = controllerTransforms;
+            positionPreview.GhostToggle(null, false);
 
-            rCf.transform.SetParent(p);
+            sceneChangeWipe = Instantiate(sceneChangeWipe, controllerTransforms.Player().transform);
+            sceneWipe = sceneChangeWipe.AddComponent<SceneWipe>();
+            sceneWipe.Initialise(controllerTransforms);
+
+            rCf.transform.SetParent(parentTransform);
             rCp.transform.SetParent(rCf.transform);
             rCn.transform.SetParent(rCf.transform);
             rMp.transform.SetParent(rCp.transform);
@@ -149,7 +155,7 @@ namespace VR_Prototyping.Scripts
             rHp.transform.SetParent(transform);
             rRt.transform.SetParent(rHp.transform);
             
-            lCf.transform.SetParent(p);
+            lCf.transform.SetParent(parentTransform);
             lCp.transform.SetParent(lCf.transform);
             lCn.transform.SetParent(lCf.transform);
             lMp.transform.SetParent(lCp.transform);
@@ -166,8 +172,8 @@ namespace VR_Prototyping.Scripts
 
         private void Update()
         {
-            rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, c.RightTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
-            lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, c.LeftTransform(), c.CameraTransform(), c.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
+            rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, controllerTransforms.RightTransform(), controllerTransforms.CameraTransform(), controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
+            lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, controllerTransforms.LeftTransform(), controllerTransforms.CameraTransform(), controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
 
             rTs.TargetLocation(rHp, rLastValidPosition = rTs.LastValidPosition(rLastValidPosition), layerIndex);
             lTs.TargetLocation(lHp, lLastValidPosition = lTs.LastValidPosition(lLastValidPosition), layerIndex);
@@ -175,23 +181,23 @@ namespace VR_Prototyping.Scripts
             rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
             lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);
             
-            rVo.Target(rHp, rCn.transform, c.RightJoystick(), rRt, advancedLocomotion);
-            lVo.Target(lHp, lCn.transform, c.LeftJoystick(), lRt, advancedLocomotion);
+            rVo.Target(rHp, rCn.transform, controllerTransforms.RightJoystick(), rRt, advancedLocomotion);
+            lVo.Target(lHp, lCn.transform, controllerTransforms.LeftJoystick(), lRt, advancedLocomotion);
             
-            rLr.BezierLineRenderer(c.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
-            lLr.BezierLineRenderer(c.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
+            rLr.BezierLineRenderer(controllerTransforms.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
+            lLr.BezierLineRenderer(controllerTransforms.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
         }
 
         private void LateUpdate()
         {
-            rJoystickValues.JoystickTracking(c.RightJoystick(), Sensitivity);
-            lJoystickValues.JoystickTracking(c.LeftJoystick(), Sensitivity);
+            rJoystickValues.JoystickTracking(controllerTransforms.RightJoystick(), Sensitivity);
+            lJoystickValues.JoystickTracking(controllerTransforms.LeftJoystick(), Sensitivity);
             
-            this.GestureDetection(c.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, c.RightJoystickPress(), pTouchR, disableRightHand, active);
-            this.GestureDetection(c.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, c.LeftJoystickPress(), pTouchL, disableLeftHand, active);
+            this.GestureDetection(controllerTransforms.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, controllerTransforms.RightJoystickPress(), pTouchR, disableRightHand, active);
+            this.GestureDetection(controllerTransforms.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, controllerTransforms.LeftJoystickPress(), pTouchL, disableLeftHand, active);
             
-            pTouchR = c.RightJoystickPress();
-            pTouchL = c.LeftJoystickPress();
+            pTouchR = controllerTransforms.RightJoystickPress();
+            pTouchL = controllerTransforms.LeftJoystickPress();
         }
 
         private static Vector3 RotationAngle(Transform target, float a)
@@ -205,8 +211,8 @@ namespace VR_Prototyping.Scripts
             if(transform.parent == cN.transform || !rotation) return;
             active = true;
             
-            c.CameraTransform().SplitRotation(cN.transform, false);
-            c.CameraTransform().SplitPosition(transform, cN.transform);
+            controllerTransforms.CameraTransform().SplitRotation(cN.transform, false);
+            controllerTransforms.CameraTransform().SplitPosition(transform, cN.transform);
             
             transform.SetParent(cN.transform);
             cN.transform.DORotate(RotationAngle(cN.transform, a), time);
@@ -216,7 +222,7 @@ namespace VR_Prototyping.Scripts
         public void LocomotionStart(GameObject visual, LineRenderer lr)
         {
             visual.SetActive(true);
-            _ghost.GhostToggle(visual.transform, true);
+            positionPreview.GhostToggle(visual.transform, true);
             lr.enabled = true;
             active = true;
         }
@@ -225,8 +231,8 @@ namespace VR_Prototyping.Scripts
         {
             if (transform.parent == cN.transform) return;
             
-            c.CameraTransform().SplitRotation(cN.transform, false);
-            c.CameraTransform().SplitPosition(transform, cN.transform);
+            controllerTransforms.CameraTransform().SplitRotation(cN.transform, false);
+            controllerTransforms.CameraTransform().SplitPosition(transform, cN.transform);
             
             transform.SetParent(cN.transform);
             switch (locomotionMethod)
@@ -247,7 +253,7 @@ namespace VR_Prototyping.Scripts
             }
             
             visual.SetActive(false);
-            _ghost.GhostToggle(null, false);
+            positionPreview.GhostToggle(null, false);
             lr.enabled = false;
         }
         
@@ -265,6 +271,12 @@ namespace VR_Prototyping.Scripts
         {
             if (!motionSicknessVignette) return;
             vignetteLayer.intensity.value = intensity;
+        }
+        
+        [Button]
+        private void SceneWipe()
+        {
+            StartCoroutine(sceneWipe.SceneWipeStart(sceneWipeDuration));
         }
     }
 }
