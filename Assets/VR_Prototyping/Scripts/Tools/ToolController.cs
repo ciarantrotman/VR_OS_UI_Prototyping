@@ -8,18 +8,29 @@ namespace VR_Prototyping.Scripts.Tools
 {
     public class ToolController : SerializedMonoBehaviour
     {
-        [BoxGroup("Tool Controls")] [OdinSerialize] public Dictionary<string, BaseTool> tools;
-        [BoxGroup("Tool Controls")] [Range(0, 5)] [SerializeField] private int gridSize = 3;
+        [OdinSerialize] public Dictionary<string, BaseTool> tools;
+        
+        [BoxGroup("Tool Controls")] [Required] public GameObject toolMenuHeader;
+        [BoxGroup("Tool Controls")] [Indent] [Range(-1f, 1f)] [SerializeField] private float headerHeight = .07f;
+        [BoxGroup("Tool Controls")] [Indent] [Range(-1f, 1f)] [SerializeField] private float headerIndent = -.55f;
+        [BoxGroup("Tool Controls")] [Required] public GameObject toolMenuFooter;
+        [BoxGroup("Tool Controls")] [Space(10)] [Range(0, 5)] [SerializeField] private int gridSize = 3;
         [BoxGroup("Tool Controls")] [Range(0f, 1f)] [SerializeField] private float horizontalSpacing = .1f;
         [BoxGroup("Tool Controls")] [Range(0f, 1f)] [SerializeField] private float verticalSpacing = .1f;
 
-        public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller,
-            ToolMenu.Handedness handedness, ToolMenu toolMenu)
+        const float OffsetDepth = .2f;
+
+        public void Initialise(GameObject player, bool startsActive, ControllerTransforms controller, ToolMenu.Handedness handedness, ToolMenu toolMenu)
         {
-            float x = 0f;
-            float y = 0f;
+            float x = -horizontalSpacing;
+            float y = verticalSpacing;
             int toolNumber = 0;
 
+            toolMenuHeader = Instantiate(toolMenuHeader, transform);
+            toolMenuHeader.name = "Tool/Header";
+            toolMenuHeader.transform.localPosition = new Vector3(-horizontalSpacing + headerIndent,verticalSpacing + headerHeight, OffsetDepth);
+            toolMenuHeader.SetActive(false);
+            
             foreach (KeyValuePair<string, BaseTool> item in tools)
             {
                 // set up indices for the tool
@@ -49,7 +60,7 @@ namespace VR_Prototyping.Scripts.Tools
                 
                 tool.buttonPrefab.name = n + "/Button";
                 tool.buttonPrefab.transform.SetParent(transform);
-                tool.buttonPrefab.transform.localPosition = new Vector3(x, y, .2f);
+                tool.buttonPrefab.transform.localPosition = new Vector3(x, y, OffsetDepth);
                 
                 tool.SetToolState(false);
 
@@ -74,9 +85,14 @@ namespace VR_Prototyping.Scripts.Tools
                 // tool vertical grid spacing
                 
                 if (toolNumber % gridSize != 0) continue;
-                x = 0f;
+                x = -horizontalSpacing;
                 y -= verticalSpacing;
             }
+            
+            toolMenuFooter = Instantiate(toolMenuFooter, transform);
+            toolMenuFooter.name = "Tool/Footer";
+            toolMenuFooter.transform.localPosition = new Vector3(-horizontalSpacing + headerIndent, y + (verticalSpacing - (verticalSpacing * .25f)), OffsetDepth);
+            toolMenuFooter.SetActive(false);
         }
 
         public void ToggleTool(BaseTool activeTool)

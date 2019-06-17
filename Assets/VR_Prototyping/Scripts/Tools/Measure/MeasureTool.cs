@@ -26,9 +26,9 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         [BoxGroup("Tape Tool Settings")] [Space(10)] public bool grabNode;
         [BoxGroup("Tape Tool Settings")] [ShowIf("grabNode")] [Indent] [Range(.001f, .05f)] public float nodeGrabDistance = .1f;
         [BoxGroup("Tape Tool Settings")] [Space(10)] public Material tapeMaterial;
+        [BoxGroup("Tape Tool Settings")] [Indent] [Range(.001f, .05f)] public float tapeWidth;
         [BoxGroup("Tape Tool Settings")] [Space(10)] public float nodeTextFocusHeight = .2f;
         [BoxGroup("Tape Tool Settings")] public float nodeTextStandardHeight = .15f;
-        [BoxGroup("Tape Tool Settings")] [Range(.001f, .05f)] public float tapeWidth;
 
         private readonly List<MeasureTape> measureTapes = new List<MeasureTape>();
         public MeasureText MeasureText { get; set; }

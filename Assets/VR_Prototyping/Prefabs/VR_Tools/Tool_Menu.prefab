@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6464194781663961269}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.469, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -128,9 +128,14 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  gridSize: 3
-  horizontalSpacing: 0.1
-  verticalSpacing: 0.11
+  toolMenuHeader: {fileID: 100000, guid: d73d73feb2f9b194c9ba86a216b16099, type: 3}
+  headerHeight: 0.07
+  headerIndent: -0.05
+  toolMenuFooter: {fileID: 7471766173052431655, guid: 84c29d3e17a064c49878d92547979795,
+    type: 3}
+  gridSize: 2
+  horizontalSpacing: 0.12
+  verticalSpacing: 0.12
 --- !u!114 &1548152124150935786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09073bfac61932f4a8911b622199c767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 1635704444254063898, guid: f57cd04f7abfd0d43b15908e2f05e057,
+  buttonPrefab: {fileID: 4502723651188342817, guid: fda408bab8a496f49a6251692dd25fcb,
     type: 3}
   buttonModel: {fileID: 8604994689402678720, guid: 7ab192f1584b8a241b305bf147c0afb3,
     type: 3}
@@ -225,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed7c86d915891ad4d972f7847679d509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 1635704444254063898, guid: f57cd04f7abfd0d43b15908e2f05e057,
+  buttonPrefab: {fileID: 4502723651188342817, guid: fda408bab8a496f49a6251692dd25fcb,
     type: 3}
   buttonModel: {fileID: 1992522322137207222, guid: f8829db694abce143837885ae64b56b4,
     type: 3}
@@ -252,9 +257,9 @@ MonoBehaviour:
   grabNode: 1
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
+  tapeWidth: 0.004
   nodeTextFocusHeight: 0.2
   nodeTextStandardHeight: 0.15
-  tapeWidth: 0.0075
 --- !u!114 &8033839298211828535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62821a7665ec304ca3c83d645fac0df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 1635704444254063898, guid: f57cd04f7abfd0d43b15908e2f05e057,
+  buttonPrefab: {fileID: 4502723651188342817, guid: fda408bab8a496f49a6251692dd25fcb,
     type: 3}
   buttonModel: {fileID: 1697958560615545378, guid: 51754ddb5ae55dd43a1beebb18634855,
     type: 3}
@@ -293,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222b5ce9c9db1b34b8ca4c9679c3b6ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 1635704444254063898, guid: f57cd04f7abfd0d43b15908e2f05e057,
+  buttonPrefab: {fileID: 4502723651188342817, guid: fda408bab8a496f49a6251692dd25fcb,
     type: 3}
   buttonModel: {fileID: 1240458500235914628, guid: d082362b0f56c314cbc081668471c3ef,
     type: 3}

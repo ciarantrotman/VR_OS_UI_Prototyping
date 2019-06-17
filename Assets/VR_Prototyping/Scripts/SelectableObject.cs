@@ -129,9 +129,9 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [Range(1f, 10f)] [SerializeField] private float hoverOutlineWidth;
 		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Color hoverOutlineColor = new Color(0,0,0,255);
 		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [ShowIf("genericHoverEffect")] [ShowIf("hoverOutline")] [Indent(2)] [SerializeField] private Outline.Mode hoverOutlineMode;
-		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [Space(10)] [SerializeField] private UnityEvent hoverStart;
-		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverStay;
-		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] private UnityEvent hoverEnd;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [Space(10)] [SerializeField] public UnityEvent hoverStart;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] public UnityEvent hoverStay;
+		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] public UnityEvent hoverEnd;
 		
 		private static readonly int Threshold = Shader.PropertyToID("_ClipThreshold");
 
@@ -232,6 +232,12 @@ namespace VR_Prototyping.Scripts
 			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
 			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
 			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
+			
+			ObjectUpdate();
+		}
+
+		protected virtual void ObjectUpdate()
+		{
 			
 		}
 		private void ReactiveMaterial()
