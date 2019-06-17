@@ -6,7 +6,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
     public class MeasureNewTape : DirectButton
     {
         private MeasureTool measureTool;
-        private MeshRenderer meshRenderer;       
         
         private void Start()
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
 {
@@ -14,6 +15,11 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             meshRenderer.material = measureTool.tapeMaterial;
             measureTool.MeasureVisual = this;
             SetColor(measureTool.MeasureTape.tapeColor);
+        }
+
+        private void Update()
+        {
+            transform.rotation = Quaternion.identity;
         }
 
         public void SetColor(Color color)

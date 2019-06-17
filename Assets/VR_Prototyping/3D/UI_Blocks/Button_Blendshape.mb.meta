@@ -22,6 +22,9 @@ ModelImporter:
     100032: hoverShape
     100034: transform5
     100036: transform6
+    100038: Button_Label
+    100040: Target_Visual
+    100042: transform7
     400000: //RootNode
     400002: buttonActiveTransform
     400004: buttonBase
@@ -41,11 +44,24 @@ ModelImporter:
     400032: hoverShape
     400034: transform5
     400036: transform6
+    400038: Button_Label
+    400040: Target_Visual
+    400042: transform7
     2100000: lambert1
     2300000: hoverShape
+    2300002: Button_Label
+    2300004: Target_Visual
     3300000: hoverShape
+    3300002: Button_Label
+    3300004: Target_Visual
     4300000: buttonBaseInactive
     4300002: hoverShape
+    4300004: Target_Visual
+    4300006: Button_Label
+    6400000: buttonBaseInactive
+    6400002: hoverShape
+    6400004: Button_Label
+    6400006: Target_Visual
     9500000: //RootNode
     13700000: buttonBaseInactive
   externalObjects: {}

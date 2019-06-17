@@ -30,9 +30,9 @@ namespace VR_Prototyping.Scripts
             a.transform.rotation = b.transform.rotation;
         }
 
-        public static void LocalTransformZero(Transform a)
+        public static void LocalTransformZero(this Transform a)
         {
-            var transform = a.transform;
+            Transform transform = a.transform;
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
         }

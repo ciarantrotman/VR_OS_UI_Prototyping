@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 namespace VR_Prototyping.Scripts.UI_Blocks
@@ -11,12 +12,12 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private LineRenderer targetLr;
 
         private MeshFilter buttonSurface;
-        protected MeshRenderer buttonVisual;
+        protected MeshRenderer ButtonVisual;
         private MeshCollider buttonCollider;
 
-        private GameObject restTarget;
-        private GameObject hoverTarget;
-        private GameObject toggleTarget;
+        protected GameObject RestTarget;
+        protected GameObject HoverTarget;
+        protected GameObject ToggleTarget;
 
         private bool state;
         private bool statePrevious;
@@ -32,8 +33,16 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private ButtonState buttonState { get; set; }
         private ButtonState previousButtonState;
+        
+        protected GameObject Button;
+        private GameObject parent;
+        protected GameObject Target;
+        private GameObject visual;
 
-        [TabGroup("Button Settings")] [SerializeField] private bool placeholderButton = true;
+        protected bool Active;
+        protected bool ToggleState;
+
+        [TabGroup("Button Settings")] [SerializeField] public bool placeholderButton = true;
         [TabGroup("Button Settings")] [SerializeField] [Header("Button Function")] public bool toggle;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [SerializeField] [Indent] private bool startsActive;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [Indent] [Range(.01f, .05f)] public float toggleDepth;
@@ -42,19 +51,20 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth = .005f;
         [TabGroup("Button Settings")] [Space(5)] public bool ignoreLeftHand;
         [TabGroup("Button Settings")] public bool ignoreRightHand;
-        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject parent;
-        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject target;
-        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject button;
-        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject visual;
         
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth = .02f;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(.01f, .05f)] public float buttonRadius = .02f;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius = .025f;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Indent] private Color buttonColor = new Color(255f,255f,255f, 255f);
-        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
+        [Header("Button Setup")]
+        [TabGroup("Button Settings")] [Space(10)] [HideIf("placeholderButton")] [SerializeField] [Required] public GameObject customButton;
+        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Required] public GameObject customHoverVisual;
+        [TabGroup("Button Settings")] [Indent] [HideIf("placeholderButton")] [Range(.01f, .5f)] public float hoverThreshold = .1f;
+        
+        [TabGroup("Button Settings")] [Space(10)] [ShowIf("placeholderButton")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth = .02f;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [Range(.01f, .05f)] public float buttonRadius = .02f;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius = .025f;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [SerializeField] [Indent] private Color buttonColor = new Color(255f,255f,255f, 255f);
+        [TabGroup("Button Settings")] [ShowIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
         private bool ValidateRadius(float value)
         {
             return value > buttonRadius;
@@ -62,13 +72,13 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private bool ValidateDepth(float value)
         {
             return value > restDepth;
-        }
+        }   
+        [FoldoutGroup("Button Events")] public UnityEvent activate;
+        [FoldoutGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
+        [FoldoutGroup("Button Events")] public  UnityEvent hoverStart;
         
-        [BoxGroup("Button Events")] public UnityEvent activate;
-        [BoxGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
-        [BoxGroup("Button Events")] public  UnityEvent hover;
-        static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
-        static readonly int MatColor = Shader.PropertyToID("_Diffusecolor");
+        private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
+        private static readonly int MatColor = Shader.PropertyToID("_Diffusecolor");
 
         private void Start()
         {
@@ -78,67 +88,93 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private void InitialiseSelectableObject()
         {
             SetupButton();
+            ButtonSetup();
+        }
+
+        protected virtual void ButtonSetup()
+        {
+            
         }
 
         public void SetupButton()
         {
             parent = gameObject;
             parent.name = "Button/Parent";
-            target = new GameObject("Button/Target");
-            visual = new GameObject("Button/Visual") {layer = controller.layerIndex};
-            button = new GameObject("Button/Button") {layer = controller.layerIndex};
+            Target = new GameObject("Button/Target");
+            RestTarget = new GameObject("Button/RestTarget");
+            HoverTarget = new GameObject("Button/HoverTarget");
+            ToggleTarget = new GameObject("Button/ToggleTarget");
+            Target.transform.SetParent(parent.transform);
+            RestTarget.transform.SetParent(parent.transform);
+            HoverTarget .transform.SetParent(parent.transform);
+            ToggleTarget.transform.SetParent(parent.transform);
+            Target.transform.LocalTransformZero();
 
-            restTarget = new GameObject("Button/RestTarget");
-            hoverTarget = new GameObject("Button/HoverTarget");
-            toggleTarget = new GameObject("Button/ToggleTarget");
-            
-            target.transform.SetParent(parent.transform);
-            button.transform.SetParent(parent.transform);
-            visual.transform.SetParent(button.transform);
+            switch (placeholderButton)
+            {
+                case true:
+                    visual = new GameObject("Button/Visual") {layer = controller.layerIndex};
+                    Button = new GameObject("Button/Button") {layer = controller.layerIndex};
+                    
+                    Button.transform.SetParent(parent.transform);
+                    visual.transform.SetParent(Button.transform);
+                    
+                    rb = Button.transform.AddOrGetRigidbody();
+                    
+                    targetLr = LineRender(Target.transform, targetLineRenderWidth);
+                    targetLr.CircleLineRenderer(targetRadius, Draw.Orientation.Forward, circleQuality);
+                    
+                    buttonSurface = visual.AddComponent<MeshFilter>();
+                    ButtonVisual = visual.AddComponent<MeshRenderer>();
+                    ButtonVisual.material = buttonMaterial;
+                    buttonSurface.mesh = buttonRadius.GenerateCircleMesh(Draw.Orientation.Forward);
+                    ButtonVisual.material.SetColor(MatColor, buttonColor);
+                    ButtonVisual.material.SetColor(EmissionColor, buttonColor);
+                    buttonCollider = visual.AddComponent<MeshCollider>();
+                    buttonCollider.convex = true;
+                    
+                    Button.transform.LocalTransformZero();
+                    visual.transform.LocalTransformZero();
+                    
+                    RestTarget.transform.localPosition = Offset(Target.transform, restDepth);
+                    HoverTarget.transform.localPosition = Offset(Target.transform, hoverDepth);
+                    ToggleTarget.transform.localPosition = Offset(Target.transform, -toggleDepth);
+                    break;
+                default:
+                    customButton.layer = controller.layerIndex;
+                    rb = customButton.transform.AddOrGetRigidbody();
+                    RestTarget.transform.localPosition = Offset(customButton.transform, restDepth);
+                    HoverTarget.transform.localPosition = Offset(customButton.transform, hoverDepth);
+                    ToggleTarget.transform.localPosition = Offset(customButton.transform, -toggleDepth);
 
-            restTarget.transform.SetParent(parent.transform);
-            hoverTarget .transform.SetParent(parent.transform);
-            toggleTarget.transform.SetParent(parent.transform);
+                    Button = customButton;
+                    break;
+            }
             
-            targetLr = LineRender(target.transform, targetLineRenderWidth);
-            targetLr.CircleLineRenderer(targetRadius, Draw.Orientation.Forward, circleQuality);
-            
-            rb = button.transform.AddOrGetRigidbody();
             rb.RigidBody(.1f, 10f, true, false);
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-            
-            buttonSurface = visual.AddComponent<MeshFilter>();
-            buttonVisual = visual.AddComponent<MeshRenderer>();
-            buttonVisual.material = buttonMaterial;
-            buttonSurface.mesh = buttonRadius.GenerateCircleMesh(Draw.Orientation.Forward);
-            buttonVisual.material.SetColor(MatColor, buttonColor);
-            buttonVisual.material.SetColor(EmissionColor, buttonColor);
-            buttonCollider = visual.AddComponent<MeshCollider>();
-            buttonCollider.convex = true;
-            
-            Set.LocalTransformZero(target.transform);
-            Set.LocalTransformZero(button.transform);
-            Set.LocalTransformZero(visual.transform);
-
-            restTarget.transform.localPosition = Offset(target.transform, restDepth);
-            hoverTarget.transform.localPosition = Offset(target.transform, hoverDepth);
-            toggleTarget.transform.localPosition = Offset(target.transform, -toggleDepth);
 
             buttonState = toggle && startsActive ? ButtonState.ACTIVE : ButtonState.INACTIVE;
 
             if (toggle && startsActive)
             {
+                buttonState = ButtonState.ACTIVE;
                 activate.Invoke();
+                Active = true;
+                state = true;
             }
             else if (toggle && !startsActive)
             {
+                buttonState = ButtonState.INACTIVE;
                 deactivate.Invoke();
+                Active = false;
+                state = false;
             }
         }
    
         private LineRenderer LineRender(Component a, float width)
         {
-            var lr = a.gameObject.AddComponent<LineRenderer>();
+            LineRenderer lr = a.gameObject.AddComponent<LineRenderer>();
             lr.SetupLineRender(targetMaterial, width, true);
             return lr;
         }
@@ -147,96 +183,128 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         {
             SetState();  
             ButtonAlignment();
+            ButtonUpdate();
             
-            var buttonPos = button.transform.position;
+            Vector3 buttonPos = Button.transform.position;
             switch (buttonState)
             {
                 case ButtonState.INACTIVE:
-                    rb.AddForce(Force(restTarget, buttonPos, springiness), ForceMode.Force);
+                    rb.AddForce(Force(RestTarget, buttonPos, springiness), ForceMode.Force);
                     break;
-                case ButtonState.HOVER:
-                    rb.AddForce(Force(hoverTarget, buttonPos, springiness), ForceMode.Force);
+                case ButtonState.HOVER when placeholderButton:
+                    rb.AddForce(Force(HoverTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 case ButtonState.ACTIVE:
-                    rb.AddForce(Force(target, buttonPos, springiness), ForceMode.Force);
+                    rb.AddForce(Force(RestTarget, buttonPos, springiness), ForceMode.Force);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    rb.AddForce(Force(RestTarget, buttonPos, springiness), ForceMode.Force);
+                    break;
             }
 
             statePrevious = state;
 
             if (!controller.debugActive) return;
-            Debug.DrawRay(buttonPos, Force(hoverTarget, buttonPos, springiness), Color.yellow);
-            Debug.DrawRay(buttonPos, Force(restTarget, buttonPos, springiness), Color.red);
-            Debug.DrawRay(buttonPos, Force(target, buttonPos, springiness), Color.green);
+            Debug.DrawRay(buttonPos, Force(HoverTarget, buttonPos, springiness), Color.yellow);
+            Debug.DrawRay(buttonPos, Force(RestTarget, buttonPos, springiness), Color.red);
+            Debug.DrawRay(buttonPos, Force(Target, buttonPos, springiness), Color.green);
+        }
+
+        protected virtual void ButtonUpdate()
+        {
+            
         }
 
         private void ButtonAlignment()
         {
-            var local = button.transform.localPosition;
-            button.transform.localPosition = new Vector3(0, 0, local.z);
+            Vector3 local = Button.transform.localPosition;
+            Button.transform.localPosition = new Vector3(0, 0, local.z);
         }
 
         private void SetState()
         {
-            if (DirectCheck() && buttonState != ButtonState.ACTIVE)
+            if (DirectCheck() && buttonState != ButtonState.ACTIVE && placeholderButton)
             {
                 buttonState = ButtonState.HOVER;
-                hover.Invoke();
+                hoverStart.Invoke();
             }
-            else if (!DirectCheck() && buttonState != ButtonState.ACTIVE)
+            else if (!DirectCheck() && buttonState != ButtonState.ACTIVE && placeholderButton)
             {
                 buttonState = ButtonState.INACTIVE;
                 state = false;
                 return;
             }
-            
-            if (/*buttonState == ButtonState.HOVER && */ActiveDistance())// && state != statePrevious)
+
+            if (!Active && ActiveDistance() && buttonState == ButtonState.INACTIVE)
             {
-                buttonState = toggle ? ButtonState.ACTIVE : ButtonState.INACTIVE;
+                Active = true;
                 activate.Invoke();
                 state = true;
             }
-
-            if (buttonState == ButtonState.ACTIVE && ToggleDistance() && toggle)
+            if (ToggleDistance() && toggle && !ToggleState)
             {
-                buttonState = ButtonState.INACTIVE;
+                switch (buttonState)
+                {
+                    case ButtonState.INACTIVE:
+                        buttonState = ButtonState.ACTIVE;
+                        activate.Invoke();
+                        ToggleState = true;
+                        break;
+                    case ButtonState.HOVER:
+                        return;
+                    case ButtonState.ACTIVE:
+                        buttonState = ButtonState.INACTIVE;
+                        deactivate.Invoke();
+                        ToggleState = true;
+                        break;
+                }
+            }
+            if (Active && RestDistance() && !toggle)
+            {
                 deactivate.Invoke();
+                Active = false;
+                return;
+            }
+            if (ToggleState && RestDistance() && toggle)
+            {
+                ToggleState = false;
             }
         }
-
         private bool ActiveDistance()
         {
-            return Vector3.Distance(button.transform.position, target.transform.position) <= Tolerance;
+            return Vector3.Distance(Button.transform.position, Target.transform.position) <= Tolerance;
         }
         
         private bool ToggleDistance()
         {
-            return Vector3.Distance(button.transform.position, toggleTarget.transform.position) <= Tolerance;
+            return Vector3.Distance(Button.transform.position, ToggleTarget.transform.position) <= Tolerance;
+        }
+        
+        private bool RestDistance()
+        {
+            return Vector3.Distance(Button.transform.position, RestTarget.transform.position) <= Tolerance;
         }
 
         private bool DirectCheck()
         {
-            var buttonPos = button.transform.position;
-            
+            Vector3 buttonPos = Button.transform.position;
+
             if (ignoreLeftHand)
             {
-                return Vector3.Distance(buttonPos, controller.RightTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, controller.RightPosition()) <= hoverDistance;
             }
 
             if (ignoreRightHand)
             {
-                return Vector3.Distance(buttonPos, controller.LeftTransform().position) <= hoverDistance;
+                return Vector3.Distance(buttonPos, controller.LeftPosition()) <= hoverDistance;
             }
             
-            return Vector3.Distance(buttonPos, controller.LeftTransform().position) <= hoverDistance ||
-                   Vector3.Distance(buttonPos, controller.RightTransform().position) <= hoverDistance;
+            return Vector3.Distance(buttonPos, controller.LeftPosition()) <= hoverDistance || Vector3.Distance(buttonPos, controller.RightPosition()) <= hoverDistance;
         }
 
         private static Vector3 Offset(Transform local, float offset)
         {
-            var pos = local.localPosition;
+            Vector3 pos = local.localPosition;
             return new Vector3(pos.x, pos.y, pos.z + offset);
         }
 
