@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Tools.Memo
             memoNode = transform.parent.transform.GetComponentInParent<MemoNode>();
             controller = memoNode.Controller;
             activate.AddListener(memoNode.PlayMemo);
-            SetupButton();
+            InitialiseSelectableObject();
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace VR_Prototyping.Scripts.UI_Blocks
 {
-    public class ToolMenuButton : DirectButton
+    public abstract class ToolMenuButton : DirectButton
     {
         private float visualDepth;
         private float blendShapeWeight;
@@ -19,7 +19,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Button Settings")] [Indent] [HideIf("placeholderButton")] [Range(.01f, 1)] [SerializeField] private  float buttonAnimationDuration = .5f;
         [TabGroup("Button Settings")] [Space(10)] [HideIf("placeholderButton")] [SerializeField] private GameObject buttonText;
         [TabGroup("Button Settings")] [Indent] [HideIf("placeholderButton")] [SerializeField] private Color activeColor = new Color(255f,255f,255f, 255f);
-        [TabGroup("Button Settings")] [Indent] [HideIf("placeholderButton")] [SerializeField] private Color inactiveColor = new Color(0f,0f,0f, 255f);
+        [TabGroup("Button Settings")] [Indent] [HideIf("placeholderButton")] [SerializeField] private Color inactiveColor = new Color(45f,45f,45f, 255f);
 
         protected override void ButtonSetup()
         {

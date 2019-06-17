@@ -51,7 +51,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         protected override void Initialise()
         {
-            NewTape();
             intersectionPointPrefab = Instantiate(intersectionPointPrefab, transform);
             intersectionPointPrefab.name = "Measure/Intersection";
         }

@@ -13,7 +13,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             controller = measureTool.Controller;
             activate.AddListener(measureTool.LockNode);
-            SetupButton();
+            InitialiseSelectableObject();
         }
     }
 }

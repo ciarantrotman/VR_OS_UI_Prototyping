@@ -91,7 +91,7 @@ namespace VR_Prototyping.Scripts.Tools
             
             toolMenuFooter = Instantiate(toolMenuFooter, transform);
             toolMenuFooter.name = "Tool/Footer";
-            toolMenuFooter.transform.localPosition = new Vector3(-horizontalSpacing + headerIndent, y + (verticalSpacing - (verticalSpacing * .25f)), OffsetDepth);
+            toolMenuFooter.transform.localPosition = new Vector3(-horizontalSpacing + headerIndent, y + (verticalSpacing * .1f), OffsetDepth);
             toolMenuFooter.SetActive(false);
         }
 

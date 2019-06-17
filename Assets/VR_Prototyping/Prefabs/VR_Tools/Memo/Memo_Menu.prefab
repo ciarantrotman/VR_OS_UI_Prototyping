@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4895332889516485830
 Transform:
   m_ObjectHideFlags: 0
@@ -44,21 +44,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedElement: 1
-  c: {fileID: 0}
+  controller: {fileID: 0}
+  placeholderButton: 1
   toggle: 0
   startsActive: 0
   toggleDepth: 0
   springiness: 10
   hoverDistance: 0.1
   restDepth: 0.005
+  ignoreLeftHand: 1
+  ignoreRightHand: 0
+  customButton: {fileID: 0}
+  customHoverVisual: {fileID: 0}
+  hoverThreshold: 0.1
   hoverDepth: 0.02
   buttonRadius: 0.02
   targetRadius: 0.025
-  ignoreLeftHand: 1
-  ignoreRightHand: 0
   targetLineRenderWidth: 0.0025
   circleQuality: 360
   buttonMaterial: {fileID: 2100000, guid: 596d0419533ea6445b1d7c51602a31f7, type: 2}
+  buttonColor: {r: 1, g: 0.2028302, b: 0.2028302, a: 0}
   targetMaterial: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb, type: 2}
   activate:
     m_PersistentCalls:
@@ -70,12 +75,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  hover:
+  hoverStart:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  buttonColor: {r: 1, g: 0.2028302, b: 0.2028302, a: 0}
+  skinnedMeshRenderer: {fileID: 0}
+  hoverVisualDepth: 0.1
+  buttonAnimationDuration: 0.5
+  buttonText: {fileID: 0}
+  activeColor: {r: 255, g: 255, b: 255, a: 255}
+  inactiveColor: {r: 45, g: 45, b: 45, a: 255}
 --- !u!1 &6400732894752833174
 GameObject:
   m_ObjectHideFlags: 0

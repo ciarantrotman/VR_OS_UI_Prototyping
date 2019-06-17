@@ -48,7 +48,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [TabGroup("Button Settings")] [ShowIf("toggle")] [Indent] [Range(.01f, .05f)] public float toggleDepth;
         [TabGroup("Button Settings")] [Header("Button Parameters")] [Space(5)] [Range(0f, 10f)] public float springiness = 10f;
         [TabGroup("Button Settings")] [Space(5)] [Range(.01f, .5f)] [SerializeField] private float hoverDistance = .01f;
-        [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth = .005f;
+        [TabGroup("Button Settings")] [Space(5)] [Range(0f, .1f)] public float restDepth = .02f;
         [TabGroup("Button Settings")] [Space(5)] public bool ignoreLeftHand;
         [TabGroup("Button Settings")] public bool ignoreRightHand;
         
@@ -85,7 +85,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             InitialiseSelectableObject();
         }
 
-        private void InitialiseSelectableObject()
+        public void InitialiseSelectableObject()
         {
             SetupButton();
             ButtonSetup();
@@ -96,7 +96,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             
         }
 
-        public void SetupButton()
+        private void SetupButton()
         {
             parent = gameObject;
             parent.name = "Button/Parent";

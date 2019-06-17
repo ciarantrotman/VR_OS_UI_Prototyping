@@ -4,22 +4,21 @@ using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools
 {
-    public class CloseButton : DirectButton
+    public class CloseButton : ToolMenuButton
     {
-        private BaseTool _tool;
+        private BaseTool tool;
 
         private void Start()
         {
-            _tool = transform.parent.transform.GetComponentInParent<BaseTool>();
-            controller = _tool.Controller;
+            tool = transform.parent.transform.GetComponentInParent<BaseTool>();
+            controller = tool.Controller;
             activate.AddListener(DeactivateTool);
-            
-            SetupButton();
+            InitialiseSelectableObject();
         }
 
         private void DeactivateTool()
         {
-            _tool.SetToolState(false);
+            tool.SetToolState(false);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             controller = sketchTool.Controller;
             activate.AddListener(EraseDeactivate);
             deactivate.AddListener(EraseActivate);
-            SetupButton();
+            InitialiseSelectableObject();
         }
 
         private void EraseActivate()
