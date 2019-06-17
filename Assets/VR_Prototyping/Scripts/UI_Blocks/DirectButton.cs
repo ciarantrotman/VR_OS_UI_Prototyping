@@ -14,11 +14,6 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         protected MeshRenderer buttonVisual;
         private MeshCollider buttonCollider;
 
-        private GameObject parent;
-        private GameObject target;
-        private GameObject button;
-        private GameObject visual;
-
         private GameObject restTarget;
         private GameObject hoverTarget;
         private GameObject toggleTarget;
@@ -35,20 +30,31 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             ACTIVE
         }
 
-        public ButtonState buttonState { get; private set; }
+        private ButtonState buttonState { get; set; }
         private ButtonState previousButtonState;
 
-        [TabGroup("Button Settings")] [Header("Button Function")] public bool toggle;
+        [TabGroup("Button Settings")] [SerializeField] private bool placeholderButton = true;
+        [TabGroup("Button Settings")] [SerializeField] [Header("Button Function")] public bool toggle;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [SerializeField] [Indent] private bool startsActive;
         [TabGroup("Button Settings")] [ShowIf("toggle")] [Indent] [Range(.01f, .05f)] public float toggleDepth;
         [TabGroup("Button Settings")] [Header("Button Parameters")] [Space(5)] [Range(0f, 10f)] public float springiness = 10f;
         [TabGroup("Button Settings")] [Space(5)] [Range(.01f, .5f)] [SerializeField] private float hoverDistance = .01f;
         [TabGroup("Button Settings")] [Space(5)] [Range(0f, .05f)] public float restDepth = .005f;
-        [TabGroup("Button Settings")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth = .02f;
-        [TabGroup("Button Settings")] [Range(.01f, .05f)] public float buttonRadius = .02f;
-        [TabGroup("Button Settings")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius = .025f;
         [TabGroup("Button Settings")] [Space(5)] public bool ignoreLeftHand;
         [TabGroup("Button Settings")] public bool ignoreRightHand;
+        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject parent;
+        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject target;
+        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject button;
+        [TabGroup("Button Settings")] [HideIf("placeholderButton")] [SerializeField] private GameObject visual;
+        
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(0f, .1f)] [ValidateInput("ValidateDepth", "Hover Depth should be bigger than Rest Depth!", InfoMessageType.Warning)] public float hoverDepth = .02f;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(.01f, .05f)] public float buttonRadius = .02f;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [Range(.01f, .05f)] [ValidateInput("ValidateRadius", "Target Radius should be bigger than Button Radius!", InfoMessageType.Warning)] public float targetRadius = .025f;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Indent] private Color buttonColor = new Color(255f,255f,255f, 255f);
+        [TabGroup("Placeholder Button Settings")] [HideIf("placeholderButton")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
         private bool ValidateRadius(float value)
         {
             return value > buttonRadius;
@@ -57,12 +63,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         {
             return value > restDepth;
         }
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Range(.001f, .005f)] private float targetLineRenderWidth = .002f;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] [Range(6, 360)] private int circleQuality = 360;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material buttonMaterial;
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Indent] private Color buttonColor = new Color(255f,255f,255f, 255f);
-        [TabGroup("Aesthetics Settings")] [SerializeField] [Required] [Space(10)] private Material targetMaterial;
-
+        
         [BoxGroup("Button Events")] public UnityEvent activate;
         [BoxGroup("Button Events")] [ShowIf("toggle")] public UnityEvent deactivate;
         [BoxGroup("Button Events")] public  UnityEvent hover;
