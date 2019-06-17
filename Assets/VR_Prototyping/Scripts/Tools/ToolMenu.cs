@@ -106,6 +106,8 @@ namespace VR_Prototyping.Scripts.Tools
         public void SetState(bool state, Transform c)
         {
             toolController.ToggleButtonState(state);
+            toolController.toolMenuHeader.SetActive(state);
+            toolController.toolMenuFooter.SetActive(state);
             active = state;
             rubberBanded = state;
             

@@ -10,6 +10,14 @@ namespace VR_Prototyping.Scripts
         {
             return !a.GetComponent<LineRenderer>() ? a.gameObject.AddComponent<LineRenderer>() : a.gameObject.GetComponent<LineRenderer>();
         }
+        public static MeshRenderer AddOrGetMeshRenderer(this Transform a)
+        {
+            return !a.GetComponent<MeshRenderer>() ? a.gameObject.AddComponent<MeshRenderer>() : a.gameObject.GetComponent<MeshRenderer>();
+        }
+        public static MeshRenderer GetMeshRenderer(this Transform a)
+        {
+            return !a.GetComponent<MeshRenderer>() ? null : a.gameObject.GetComponent<MeshRenderer>();
+        }
         public static void SetupLineRender(this LineRenderer lr, Material material, float width, bool startEnabled)
         {
             lr.material = material;

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
@@ -13,7 +14,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public float Distance { get; set; }
         public int NodeIndex { get; set; }
         private MeasureNode previousNode;
-        private MeshRenderer meshRenderer;
+        private SkinnedMeshRenderer skinnedMeshRenderer;
         private GameObject dominantFollow;
         
         public GameObject X {get; private set;}
@@ -33,6 +34,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public bool ZSnap { get; private set; }
         
         private const float DirectDistance = .05f;
+        private const float TriggerDistance = DirectDistance + DirectDistance + DirectDistance;
         
         private bool rGrabP;
         private bool lGrabP;
@@ -43,7 +45,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             Controller = c;
             MeasureTape = tape;
             Text = GetComponentInChildren<TextMeshPro>();
-            meshRenderer = GetComponentInChildren<MeshRenderer>();
+            skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
             SetupAxis();
         }
 
@@ -88,6 +90,26 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             lGrabP = Controller.LeftGrab();
             
             NodeEvents();
+            NodeBlendShape();
+        }
+
+        private void NodeBlendShape()
+        {
+            skinnedMeshRenderer.SetBlendShapeWeight(0, BlendShapeWeight());
+        }
+
+        private float BlendShapeWeight()
+        {
+            Vector3 position = transform.position;
+            
+            float domDistance = Vector3.Distance(position, MeasureTool.dominant.transform.position);
+            float nonDistance = Vector3.Distance(position, MeasureTool.nonDominant.transform.position);
+
+            if (domDistance < nonDistance)
+            {
+                return domDistance < DirectDistance ? 0f : (Mathf.InverseLerp(DirectDistance, TriggerDistance, domDistance)) * 100f;
+            }
+            return nonDistance < DirectDistance ? 0f : (Mathf.InverseLerp(DirectDistance, TriggerDistance, nonDistance)) * 100f;
         }
 
         private void NodeEvents()
@@ -158,6 +180,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                         MeasureTool.NodeSnap(controller, this,  previousNode, MeasureTape);
                         break;
                 }
+                
                 MeasureTape.AdjustTape();
                 return;
             }
@@ -183,8 +206,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             Z.SetActive(true);
             Text.fontSize = MeasureTool.nodeTextFocusHeight;
         }
-        
-        public void NodeStay()
+
+        private void NodeStay()
         {
             SnappingTransforms();
 
@@ -239,7 +262,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void SetColor(Color color)
         {
-            meshRenderer.material.color = color;
+            skinnedMeshRenderer.material.color = color;
         }
     }
 }

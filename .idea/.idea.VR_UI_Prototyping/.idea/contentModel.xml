@@ -881,6 +881,9 @@
           <e p="Interfaces" t="Include">
             <e p="Interfaces.cs" t="Include" />
           </e>
+          <e p="Materials" t="Include">
+            <e p="AlphaWipeShader.shader" t="Include" />
+          </e>
           <e p="Plugins" t="Include">
             <e p="AmplifyShaderEditor" t="Include">
               <e p="ChangeLog.txt" t="Include" />
@@ -2025,6 +2028,7 @@
             <e p="Manipulation.cs" t="Include" />
             <e p="ObjectSelection.cs" t="Include" />
             <e p="RubberbandedObject.cs" t="Include" />
+            <e p="SceneWipe.cs" t="Include" />
             <e p="SelectableObject.cs" t="Include" />
             <e p="SelfRighting.cs" t="Include" />
             <e p="Set.cs" t="Include" />
@@ -2073,9 +2077,6 @@
               <e p="DirectSlider.cs" t="Include" />
             </e>
             <e p="VehicleController.cs" t="Include" />
-          </e>
-          <e p="Shaders" t="Include">
-            <e p="SphereWipeShader.shader" t="Include" />
           </e>
         </e>
       </e>
