@@ -2045,6 +2045,7 @@
                 <e p="MeasureLockNode.cs" t="Include" />
                 <e p="MeasureNewTape.cs" t="Include" />
                 <e p="MeasureNode.cs" t="Include" />
+                <e p="MeasureSnappingToggle.cs" t="Include" />
                 <e p="MeasureTape.cs" t="Include" />
                 <e p="MeasureTapeColor.cs" t="Include" />
                 <e p="MeasureText.cs" t="Include" />
@@ -2054,6 +2055,7 @@
               <e p="Memo" t="Include">
                 <e p="MemoNode.cs" t="Include" />
                 <e p="MemoPlayButton.cs" t="Include" />
+                <e p="MemoText.cs" t="Include" />
                 <e p="MemoTool.cs" t="Include" />
               </e>
               <e p="Note" t="Include">

@@ -15,9 +15,9 @@ MonoBehaviour:
   instantiatedElement: 1
   controller: {fileID: 0}
   placeholderButton: 0
-  toggle: 0
+  toggle: 1
   startsActive: 0
-  toggleDepth: 0
+  toggleDepth: 0.015
   springiness: 10
   hoverDistance: 0.1
   restDepth: 0.015

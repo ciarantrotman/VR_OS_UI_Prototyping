@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchTool : BaseTool
     {        
-        [BoxGroup("Sketch Tool Settings")] [Range(.001f, .1f)] public float erasingDistance = .05f;
+        [BoxGroup("Sketch Tool Settings")] [Range(.001f, .1f)] public float erasingDistance = .1f;
         [BoxGroup("Sketch Tool Settings")] [Range(.001f, .05f)] public float minWidth;
         [BoxGroup("Sketch Tool Settings")] [Range(.05f, .1f)] public float maxWidth;
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public Material sketchMaterial;
@@ -14,8 +15,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchTrail")] public AnimationCurve trailWidth;
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool gradientCircle;
         [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("gradientCircle")] [SerializeField] public Gradient colorGradient;
-
-        public bool erasing;
+        private bool Erasing { get; set; }
         
         public SketchBrushVisual SketchVisual { private get; set; }
 
@@ -32,15 +32,20 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         protected override void ToolUpdate()
         {
-            if (!erasing) return;
+            if (!Erasing) return;
             foreach (LineRenderer line in sketches)
             {
+                int proximity = 0;
                 for (int i = 0; i < line.positionCount; i++)
                 {
-                    if (EraseDistance(line, i) && CTrigger)
+                    if (EraseDistance(line, i))
                     {
-                        EraseSketch(line);
+                        proximity++;
                     }
+                }
+                if (proximity < 0 && CTrigger)
+                {
+                    EraseSketch(line);
                 }
             }
         }
@@ -52,13 +57,13 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         protected override void ToolStart()
         {
-            if (erasing) return;
+            if (Erasing) return;
             NewTape();
         }
 
         protected override void ToolStay()
         {
-            if (erasing) return;
+            if (Erasing) return;
             sketchLr.positionCount = position + 1;
             sketchLr.SetPosition(position, dominant.transform.position);
             position++;
@@ -66,7 +71,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         protected override void ToolEnd()
         {
-            if (erasing) return;
+            if (Erasing) return;
             sketchLr.BakeMesh(new Mesh(), true);
             sketchObject = null;
             sketchLr = null;
@@ -108,7 +113,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         public void EraseToggle(bool state)
         {
-            erasing = state;
+            Erasing = state;
         }
         
         public void SetWidth(float widthPercentage)

@@ -158,9 +158,9 @@ MonoBehaviour:
     type: 3}
   dominantSpeed: 0.5
   nonDominantSpeed: 1
-  erasingDistance: 0.001
-  minWidth: 0.003
-  maxWidth: 0.1
+  erasingDistance: 0.1
+  minWidth: 0.001
+  maxWidth: 0.05
   sketchMaterial: {fileID: 2100000, guid: a96d560642c451749959d8e0518abc9c, type: 2}
   sketchTrail: 1
   trailWidth:
@@ -217,7 +217,6 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
-  erasing: 0
 --- !u!114 &996178410202326001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +244,7 @@ MonoBehaviour:
   axisSnapping: 1
   snapObject: {fileID: 443859414914003195, guid: cb38ac6545c74fb46ab63f5ce6a40544,
     type: 3}
-  nodeLockingType: 0
+  nodeLockingType: 1
   snapTolerance: 0.15
   activeWidth: 0.002
   inactiveWidth: 0.0005
@@ -258,8 +257,8 @@ MonoBehaviour:
   nodeGrabDistance: 0.05
   tapeMaterial: {fileID: 2100000, guid: 8b32fcf34306a704c9423ba5b6596b0e, type: 2}
   tapeWidth: 0.004
-  nodeTextFocusHeight: 0.2
-  nodeTextStandardHeight: 0.15
+  nodeTextFocusHeight: 0.15
+  nodeTextStandardHeight: 0.1
 --- !u!114 &8033839298211828535
 MonoBehaviour:
   m_ObjectHideFlags: 0

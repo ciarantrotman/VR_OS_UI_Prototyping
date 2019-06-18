@@ -9,13 +9,17 @@ namespace VR_Prototyping.Scripts.Tools.Memo
         [BoxGroup("Memo Tool Settings")] [Required] public GameObject memoPrefab;
         [BoxGroup("Memo Tool Settings")] public List<string> microphones;
         [BoxGroup("Memo Tool Settings")] [Range(.01f, .1f)] public float triggerDistance = .05f;
+
+        internal MemoText MemoText { get; set; }
+        
         private readonly List<AudioSource> audioSources = new List<AudioSource>();
         private MemoNode memoNode;
         private string microphone;
         private int index;
-        private int clipLength;
         private float time;
 
+        private AudioClip memo;
+        
         protected override void Initialise()
         {
             SetupMicrophone();
@@ -49,44 +53,43 @@ namespace VR_Prototyping.Scripts.Tools.Memo
         
         protected override void ToolStart()
         {
-            NewMemo();
             time = Time.time;
-            audioSources.Add(memoNode.AudioSource);
-            memoNode.AudioSource.clip = Microphone.Start(microphone, true, 30, 44100);
+            memo = Microphone.Start(microphone, true, 30, 44100);
         }
 
         protected override void ToolStay()
         {
-            clipLength++;
-            memoNode.transform.Position(dominant.transform);
+            
         }
 
         protected override void ToolEnd()
         {
+            NewMemo();
             Microphone.End(microphone);
-            memoNode.ReleaseMemo(Time.time - time);
+            memoNode.ReleaseMemo(memo, Time.time - time);
             memoNode = null;
         }
 
-        protected override void ToolInactive()
+        protected override void ToolActivate()
         {
-            
+            MemoText.SetText(microphone);
         }
 
         private void NewMemo()
         {
-            var node = Instantiate(memoPrefab);
+            GameObject node = Instantiate(memoPrefab);
             memoNode = node.GetComponent<MemoNode>();
-            memoNode.Initialise(Color.HSVToRGB(Random.Range(0f, 1f), 1, 1, true), index, this);
+            memoNode.Initialise(index, this);
+            audioSources.Add(memoNode.AudioSource);
             index++;
         }
 
-        public void PlayAudio(int index)
+        public void PlayAudio(int memoIndex)
         {
             int i = 0;
             foreach (AudioSource audioSource in audioSources)
             {
-                if (index == i)
+                if (memoIndex == i)
                 {
                     audioSource.Play();
                 }
@@ -94,8 +97,14 @@ namespace VR_Prototyping.Scripts.Tools.Memo
                 {
                     audioSource.Stop();
                 }
-
                 i++;
+            }
+        }
+        public void PauseAudio()
+        {
+            foreach (AudioSource audioSource in audioSources)
+            {
+                audioSource.Stop();
             }
         }
     }

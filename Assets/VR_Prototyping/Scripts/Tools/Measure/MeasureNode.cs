@@ -1,6 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
 {
@@ -28,6 +29,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         private LineRenderer xLr;
         private LineRenderer yLr;
         private LineRenderer zLr;
+
+        private Transform grabController;
         
         public bool XSnap { get; private set; }
         public bool YSnap { get; private set; }
@@ -80,11 +83,12 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         private void FixedUpdate()
         {
             Text.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
+            Text.transform.eulerAngles = new Vector3(0, Text.transform.eulerAngles.y, 0);
             
             if (!MeasureTool.Active) return;
             
             DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), rGrabP);
-            DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);
+            //DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);
 
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
@@ -152,45 +156,40 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                     return;
                 }
             }
-            
             if (MeasureTool.FocusMeasureNode != null && MeasureTool.FocusMeasureNode != this && MeasureTool.Grabbing) return;
-
             if (grab && !pGrab)
             {
                 MeasureTool.GrabNode(this, MeasureTape);
                 MeasureTool.DeactivateAllTapes();
-
+                MeasureTool.Grabbing =  !LockNode;
                 if (NodeIndex == 0) return;
                 previousNode = MeasureTape.measureNodes[NodeIndex - 1];
                 MeasureTool.PreviousMeasureNode = previousNode;
                 previousNode.NodeStart();
                 return;
             }
-
-            if (grab)
+            if (grab && !LockNode)
             {
-                if (LockNode) return;
-                MeasureTool.Grabbing = true;
                 switch (NodeIndex)
                 {
                     case 0:
                         transform.TransformLerpPosition(controller, .85f);
+                        MeasureTape.AdjustTape();
                         break;
                     default:
                         MeasureTool.NodeSnap(controller, this,  previousNode, MeasureTape);
                         break;
                 }
-                
-                MeasureTape.AdjustTape();
-                return;
             }
-
-            if (!MeasureTool.Grabbing) return;
-            MeasureTool.Grabbing = false;
-            MeasureTool.MeasureNode = null;
-            MeasureTool.PreviousMeasureNode = MeasureTape.measureNodes[MeasureTape.measureNodes.Count - 1];
-            MeasureTool.PreviousMeasureNode.NodeStart();
-            if (previousNode != null) previousNode.NodeEnd();
+            else if (MeasureTool.Grabbing)
+            {
+                MeasureTool.Grabbing = false;
+                MeasureTool.MeasureNode = null;
+                MeasureTool.PreviousMeasureNode = MeasureTape.measureNodes[MeasureTape.measureNodes.Count - 1];
+                MeasureTool.PreviousMeasureNode.NodeStart();
+                if (previousNode == null) return;
+                previousNode.NodeEnd();
+            }
         }
 
         public void DeleteNode()
@@ -201,14 +200,15 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void NodeStart()
         {
+            if (!MeasureTool.axisSnapping) return;
             X.SetActive(true);
             Y.SetActive(true);
             Z.SetActive(true);
-            Text.fontSize = MeasureTool.nodeTextFocusHeight;
         }
 
         private void NodeStay()
         {
+            if (!MeasureTool.axisSnapping) return;
             SnappingTransforms();
 
             XSnap = CheckSnap(xDistance, yDistance, zDistance, MeasureTool.snapTolerance);
@@ -226,17 +226,12 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void NodeEnd()
         {
+            if (!MeasureTool.axisSnapping) return;
             X.SetActive(false);
             Y.SetActive(false);
             Z.SetActive(false);
-            Text.fontSize = MeasureTool.nodeTextStandardHeight;
         }
 
-        private void NodeInactiveStay()
-        {
-            
-        }
-        
         private void SnappingTransforms()
         {
             dominantFollow.transform.Transforms(MeasureTool.dominant.transform);

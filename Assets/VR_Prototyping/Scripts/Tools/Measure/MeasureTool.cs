@@ -60,7 +60,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         {
             intersectionPointPrefab.SetActive(Insertion);
             
-            if (MeasureText == null) return;
+            if (MeasureText == null || MeasureTape == null) return;
             MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
         }
 
@@ -239,6 +239,10 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         protected override void ToolActivate()
         {
+            if (measureTapes.Count == 0)
+            {
+                NewTape();
+            }
             if (PreviousMeasureNode == null) return;
             PreviousMeasureNode.NodeStart();
         }

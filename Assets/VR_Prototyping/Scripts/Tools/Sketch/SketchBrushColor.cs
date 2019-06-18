@@ -20,7 +20,6 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             
             SetupDial();
 
-            //dialCapMeshRenderer = SetupRenderer(dialCap);
             dialHandleMeshRenderer = SetupRenderer(dialHandle);
             spokeLr.material = sketchTool.sketchMaterial;
             dialSelection = Instantiate(dialSelection, anchor.transform);
@@ -45,11 +44,10 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         {
             Color color = Color.HSVToRGB(colorValue, 1, 1, true);
             sketchTool.SetColor(color);
-            
             //dialCapMeshRenderer.sharedMaterial.color = color;
             //dialHandleMeshRenderer.sharedMaterial.color = color;
-            spokeLr.startColor = color;
-            spokeLr.endColor = color;
+            //spokeLr.startColor = color;
+            //spokeLr.endColor = color;
         }
     }
 }

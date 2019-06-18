@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
@@ -7,14 +8,22 @@ namespace VR_Prototyping.Scripts.Tools.Measure
     {
         private MeasureTool measureTool;
         private MeshRenderer meshRenderer;       
-        
+        const float SpawnDelayDuration = 1.5f;
         private void Start()
         {
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
             controller = measureTool.Controller;
             measureTool.MeasureLockNode = this;
-            activate.AddListener(measureTool.LockNode);
+            StartCoroutine(SpawnDelay());
             InitialiseSelectableObject();
+        }
+
+        private IEnumerator SpawnDelay()
+        {
+            yield return new WaitForSeconds(SpawnDelayDuration);
+            //activate.AddListener(measureTool.LockNode);
+            //deactivate.AddListener(measureTool.LockNode);
+            yield return null;
         }
     }
 }

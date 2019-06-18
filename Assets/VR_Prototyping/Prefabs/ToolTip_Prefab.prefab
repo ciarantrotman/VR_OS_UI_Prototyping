@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 515782253350673967}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 8487820054650845724}
   m_RootOrder: 1
@@ -89,7 +89,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d94672f4177c586469067c03403cf914, type: 2}
+  - {fileID: 2100000, guid: e2baa0b38bb719a4e81edaa6698bb263, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -192,7 +192,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
+  m_SizeDelta: {x: 0.5, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &5292728153610355274
 MeshRenderer:
@@ -211,7 +211,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 21974639158376882, guid: 053ad863734f4ba4cb4161ca381191e3, type: 2}
+  - {fileID: 21241654649683910, guid: 8c42442c399615c4699e316a124985ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -269,8 +269,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 053ad863734f4ba4cb4161ca381191e3, type: 2}
-  m_sharedMaterial: {fileID: 21974639158376882, guid: 053ad863734f4ba4cb4161ca381191e3,
+  m_fontAsset: {fileID: 11400000, guid: 8c42442c399615c4699e316a124985ae, type: 2}
+  m_sharedMaterial: {fileID: 21241654649683910, guid: 8c42442c399615c4699e316a124985ae,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -296,8 +296,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 0.9
-  m_fontSizeBase: 0.9
+  m_fontSize: 0.7
+  m_fontSizeBase: 0.7
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -307,7 +307,7 @@ MonoBehaviour:
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 50
+  m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

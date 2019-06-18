@@ -39,13 +39,12 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 switch (node.LockNode)
                 {
                     case true:
-                        node.Text.SetText("[L] Node: {0} - Distance: {1:2}", node.NodeIndex, node.Distance);
+                        node.Text.SetText("<b>Locked</b>\nNode {0}\n{1:2}m", node.NodeIndex, node.Distance);
                         break;
                     default:
-                        node.Text.SetText("Node: {0} - Distance: {1:2}", node.NodeIndex, node.Distance);
+                        node.Text.SetText("Node {0}\n{1:2}m", node.NodeIndex, node.Distance);
                         break;
                 }
-
                 previousNode = position;
                 distance += node.Distance;
                 count++;

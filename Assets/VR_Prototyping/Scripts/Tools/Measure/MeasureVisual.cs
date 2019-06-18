@@ -6,12 +6,11 @@ namespace VR_Prototyping.Scripts.Tools.Measure
     public class MeasureVisual : MonoBehaviour
     {
         private MeasureTool measureTool;
-        private MeshRenderer meshRenderer;       
-        
+        private MeshRenderer meshRenderer;
         private void Start()
         {
             measureTool = transform.parent.transform.GetComponentInParent<MeasureTool>();
-            meshRenderer = transform.GetComponent<MeshRenderer>();
+            meshRenderer = transform.GetComponentInChildren<MeshRenderer>();
             meshRenderer.material = measureTool.tapeMaterial;
             measureTool.MeasureVisual = this;
         }
