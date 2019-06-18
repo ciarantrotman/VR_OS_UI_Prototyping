@@ -38,6 +38,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public MeasureNode FocusMeasureNode  { get; set; }
         public MeasureNode PreviousMeasureNode  { get; set; }
         public MeasureVisual MeasureVisual { get; set; }
+        public MeasureLockNode MeasureLockNode { get; set; }
         public bool Insertion { get; set; }
         public bool Grabbing { get; set; }
         public bool Placing { get; private set; }
@@ -58,8 +59,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         protected override void ToolUpdate()
         {
             intersectionPointPrefab.SetActive(Insertion);
+            
             if (MeasureText == null) return;
-            MeasureText.transform.LookAwayFrom(Controller.CameraTransform(), Vector3.up);
             MeasureText.SetText(MeasureTape.TapeDistance(), MeasureTape.TapeName);
         }
 
@@ -118,6 +119,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void NewTape()
         {
+            if (MeasureTape != null && MeasureTape.measureNodes.Count == 0) return;
+            
             tapeCount++;
             Color color = Color.HSVToRGB(Random.Range(0f, 1f), 1, 1, true);
             
@@ -230,6 +233,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             FocusMeasureNode = measureNode;
             MeasureTape = measureTape;
             FocusMeasureTape = measureTape;
+            MeasureLockNode.SetToggleState(measureNode.LockNode);
             MeasureVisual.SetColor(MeasureTape.tapeColor);
         }
 

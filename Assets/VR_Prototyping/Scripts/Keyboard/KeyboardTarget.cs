@@ -5,35 +5,35 @@ namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardTarget : MonoBehaviour
     {
-        private string _text;
-        private TextMeshPro _textField;
+        private string text;
+        private TextMeshPro textField;
 
         private void Awake()
         {
-            _textField = GetComponentInChildren<TextMeshPro>();
+            textField = GetComponentInChildren<TextMeshPro>();
         }
 
         public void SetText(char newText)
         {
-            _text += newText;
-            _textField.SetText(_text);
+            text += newText;
+            textField.SetText(text);
         }
 
         public string CheckText()
         {
-            return _text;
+            return text;
         }
 
     public void DeleteText()
         {
-            _text = _text.Substring(0, _text.Length - 1);
-            _textField.SetText(_text);
+            text = text.Substring(0, text.Length - 1);
+            textField.SetText(text);
         }
     
     public void ClearText()
         {
-            _text = "";
-            _textField.SetText(_text);
+            text = "";
+            textField.SetText(text);
         }
     }
 }

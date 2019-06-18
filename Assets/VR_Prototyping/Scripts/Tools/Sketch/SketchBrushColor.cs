@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools.Sketch
@@ -9,6 +10,8 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         private MeshRenderer dialCapMeshRenderer; 
         private MeshRenderer dialHandleMeshRenderer; 
         private  LineRenderer colorGuideCircle;
+        
+        [TabGroup("Aesthetics Settings")] [Required] [SerializeField] private GameObject dialSelection;
 
         private void Start()
         {
@@ -17,11 +20,11 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             
             SetupDial();
 
-            dialCapMeshRenderer = SetupRenderer(dialCap);
+            //dialCapMeshRenderer = SetupRenderer(dialCap);
             dialHandleMeshRenderer = SetupRenderer(dialHandle);
             spokeLr.material = sketchTool.sketchMaterial;
-            
-            SetupColorGradient();
+            dialSelection = Instantiate(dialSelection, anchor.transform);
+            dialSelection.transform.localPosition = Vector3.zero;
         }
 
         private MeshRenderer SetupRenderer(GameObject target)
@@ -31,21 +34,11 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             return meshRenderer;
         }
 
-        private void SetupColorGradient()
-        {
-            if (!sketchTool.gradientCircle) return;
-            
-            GameObject colorGuide = new GameObject();
-            colorGuide.transform.parent = transform;
-            colorGuide.transform.localPosition = Vector3.zero;
-            colorGuideCircle = LineRender(colorGuide.transform, activeCircleLineRendererWidth);
-            colorGuideCircle.CircleLineRenderer(dialRadius * .75f, Draw.Orientation.Right, circleQuality);
-            colorGuideCircle.colorGradient = sketchTool.colorGradient;
-        }
-        
         private void LateUpdate()
         {
             SetColor(dialValue);
+            dialSelection.transform.LookAt(center.transform);
+            dialSelection.transform.localEulerAngles = new Vector3(0, dialSelection.transform.localEulerAngles.y,0);
         }
 
         private void SetColor(float colorValue)
@@ -53,9 +46,10 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             Color color = Color.HSVToRGB(colorValue, 1, 1, true);
             sketchTool.SetColor(color);
             
-            dialCapMeshRenderer.sharedMaterial.color = color;
-            dialHandleMeshRenderer.sharedMaterial.color = color;
-            spokeLr.sharedMaterial.color = color;
+            //dialCapMeshRenderer.sharedMaterial.color = color;
+            //dialHandleMeshRenderer.sharedMaterial.color = color;
+            spokeLr.startColor = color;
+            spokeLr.endColor = color;
         }
     }
 }

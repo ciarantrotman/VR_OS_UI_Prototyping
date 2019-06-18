@@ -3,7 +3,7 @@ using VR_Prototyping.Scripts.UI_Blocks;
 
 namespace VR_Prototyping.Scripts.Tools.Measure
 {
-    public class MeasureDeleteNode : DirectButton
+    public class MeasureDeleteNode : ToolMenuButton
     {
         private MeasureTool measureTool;
         private MeshRenderer meshRenderer;       

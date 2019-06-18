@@ -8,9 +8,9 @@ namespace VR_Prototyping.Scripts
     {
         public enum SDK
         {
-            SteamVR,
+            STEAM_VR,
             VRTK,
-            LeapMotion
+            LEAP_MOTION
         }
         
         [BoxGroup("Settings")] [SerializeField] public bool debugActive;
@@ -36,7 +36,7 @@ namespace VR_Prototyping.Scripts
 
         private GameObject lHandDirect;
         private GameObject rHandDirect;
-        
+
         public const string LTag = "Direct/Left";
         public const string RTag = "Direct/Right";
         private void Start()
@@ -45,17 +45,19 @@ namespace VR_Prototyping.Scripts
             rHandDirect = new GameObject(RTag);
             lHandDirect.layer = layerIndex;
             rHandDirect.layer = layerIndex;
-            var ls = lHandDirect.AddComponent<SphereCollider>();
-            var rs = rHandDirect.AddComponent<SphereCollider>();
+            SphereCollider ls = lHandDirect.AddComponent<SphereCollider>();
+            SphereCollider rs = rHandDirect.AddComponent<SphereCollider>();
             ls.radius = directDistance;
             rs.radius = directDistance;
         }
 
         private void FixedUpdate()
         {
-            Set.Transforms(lHandDirect.transform, LeftTransform());
-            Set.Transforms(rHandDirect.transform, RightTransform());
+            lHandDirect.transform.Transforms(LeftTransform());
+            rHandDirect.transform.Transforms(RightTransform());
         }
+        
+        
 
         public GameObject Player()
         {

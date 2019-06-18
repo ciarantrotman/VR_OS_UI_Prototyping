@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using VR_Prototyping.Scripts.Tools;
@@ -6,7 +7,7 @@ using VR_Prototyping.Scripts.Tools;
 namespace VR_Prototyping.Scripts.Keyboard
 {
     public class KeyboardManager : MonoBehaviour
-    {
+    { 
         public KeyboardTarget KeyboardTarget { get; private set; }
         private ToolMenu ToolMenu { get; set; }
         private ControllerTransforms ControllerTransforms { get; set; }
@@ -56,7 +57,9 @@ namespace VR_Prototyping.Scripts.Keyboard
             BACK = '<', 
             ENTER = '¬'
         }
-        public List<KeyboardKey> keyboardKeys = new List<KeyboardKey>();
+        
+        [BoxGroup] [SerializeField] [Required] private Transform keyboardParent;
+        [BoxGroup] [HideInEditorMode] [Space(10)] public List<KeyboardKey> keyboardKeys = new List<KeyboardKey>();
         [HideInInspector] public UnityEvent enter;
 
         public void InitialiseKeyboard(ControllerTransforms c, ToolMenu t, Transform parent)
@@ -65,11 +68,11 @@ namespace VR_Prototyping.Scripts.Keyboard
             ToolMenu = t;
             transform.SetParent(parent);
             
-            var index = 0;
-            foreach (Transform child in transform)
+            int index = 0;
+            foreach (Transform child in keyboardParent)
             {
                 if (child.GetComponent<KeyboardKey>() == null) continue;
-                var key = child.GetComponent<KeyboardKey>();
+                KeyboardKey key = child.GetComponent<KeyboardKey>();
                 key.KeyboardManager = this;
                 key.player = ControllerTransforms.Player();
                 key.Index = index;
@@ -85,7 +88,7 @@ namespace VR_Prototyping.Scripts.Keyboard
         
         public void ToggleKeyboard(bool state)
         {
-            foreach (var key in keyboardKeys)
+            foreach (KeyboardKey key in keyboardKeys)
             {
                 key.enabled = state;
                 key.gameObject.SetActive(state);

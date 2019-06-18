@@ -58,6 +58,13 @@ namespace VR_Prototyping.Scripts
             c.transform.position = new Vector3(position.x, y.position.y, position.z);
         }
         
+        public static void SplitPositionVector(this Transform c, float y, Transform xz) // messed up the thing here
+        {
+            if (xz == null || c == null) return;
+            Vector3 position = xz.position;
+            c.transform.position = new Vector3(position.x, y, position.z);
+        }
+        
         public static void PositionSplit(this Transform c, Transform xz, Transform y)
         {
             if (xz == null || y == null || c == null) return;

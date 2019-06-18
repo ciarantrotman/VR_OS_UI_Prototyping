@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +23,10 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         private bool state;
         private bool statePrevious;
 
+        //private bool disable = true;
+
         private const float Tolerance = .005f;
+        const float SpawnDelayDuration = 1.5f;
 
         public enum ButtonState
         {
@@ -89,6 +93,23 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         {
             SetupButton();
             ButtonSetup();
+            
+            if (!toggle) return;
+            if (startsActive)
+            {
+                //disable = false;
+            }
+            else
+            {
+                //StartCoroutine(ToggleDelay());
+            }
+        }
+        
+        private IEnumerator ToggleDelay()
+        {
+            yield return new WaitForSeconds(SpawnDelayDuration);
+            //disable = false;
+            yield return null;
         }
 
         protected virtual void ButtonSetup()
@@ -158,17 +179,11 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
             if (toggle && startsActive)
             {
-                buttonState = ButtonState.ACTIVE;
-                activate.Invoke();
-                Active = true;
-                state = true;
+                SetToggleState(true);
             }
             else if (toggle && !startsActive)
             {
-                buttonState = ButtonState.INACTIVE;
-                deactivate.Invoke();
-                Active = false;
-                state = false;
+                SetToggleState(false);
             }
         }
    
@@ -223,6 +238,14 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private void SetState()
         {
+            /*if (toggle && disable)
+            {
+                
+                deactivate.Invoke();
+                buttonState = ButtonState.INACTIVE;
+                return;
+            }*/
+            
             if (DirectCheck() && buttonState != ButtonState.ACTIVE && placeholderButton)
             {
                 buttonState = ButtonState.HOVER;
@@ -246,17 +269,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                 switch (buttonState)
                 {
                     case ButtonState.INACTIVE:
-                        buttonState = ButtonState.ACTIVE;
-                        activate.Invoke();
-                        ToggleState = true;
+                        SetToggleState(true);
                         break;
                     case ButtonState.HOVER:
                         return;
                     case ButtonState.ACTIVE:
-                        buttonState = ButtonState.INACTIVE;
-                        deactivate.Invoke();
-                        ToggleState = true;
+                        SetToggleState(false);
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             if (Active && RestDistance() && !toggle)
@@ -300,6 +321,23 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             }
             
             return Vector3.Distance(buttonPos, controller.LeftPosition()) <= hoverDistance || Vector3.Distance(buttonPos, controller.RightPosition()) <= hoverDistance;
+        }
+
+        public void SetToggleState(bool active)
+        {
+            switch (active)
+            {
+                case true:
+                    buttonState = ButtonState.ACTIVE;
+                    activate.Invoke();
+                    Active = true;
+                    break;
+                default:
+                    buttonState = ButtonState.INACTIVE;
+                    deactivate.Invoke();
+                    Active = false;
+                    break;
+            }
         }
 
         private static Vector3 Offset(Transform local, float offset)

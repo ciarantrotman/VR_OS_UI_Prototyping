@@ -9,7 +9,7 @@ namespace VR_Prototyping.Scripts.Tools
     public abstract class BaseTool : MonoBehaviour
     {
         public ControllerTransforms Controller { get; set; }
-        public ToolController ToolController { private get; set; }
+        public ToolController ToolController { get; set; }
         public ToolMenu ToolMenu { get; set; }
         public ToolButton ToolButton { get; private set; }
         public ToolMenu.Handedness Handedness { private get; set; }

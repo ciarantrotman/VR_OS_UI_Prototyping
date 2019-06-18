@@ -14,7 +14,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             meshRenderer = transform.GetComponent<MeshRenderer>();
             meshRenderer.material = measureTool.tapeMaterial;
             measureTool.MeasureVisual = this;
-            SetColor(measureTool.MeasureTape.tapeColor);
         }
 
         private void Update()

@@ -302,8 +302,10 @@ MonoBehaviour:
     type: 3}
   buttonModel: {fileID: 1240458500235914628, guid: d082362b0f56c314cbc081668471c3ef,
     type: 3}
-  nonDominant: {fileID: 0}
-  dominant: {fileID: 0}
+  nonDominant: {fileID: 2539755873991121999, guid: 453c2d873358be9459a62215a50d7cf2,
+    type: 3}
+  dominant: {fileID: 2294465584451555479, guid: 49b23826101229c4ab0c2d26a6177f02,
+    type: 3}
   dominantSpeed: 1
   nonDominantSpeed: 1
   notePrefab: {fileID: 5820125354782596746, guid: 257b819d1bb0e7b4587f8ac24639cffa,

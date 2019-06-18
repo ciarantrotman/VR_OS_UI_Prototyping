@@ -2043,6 +2043,7 @@
                 <e p="MeasureLockNode.cs" t="Include" />
                 <e p="MeasureNewTape.cs" t="Include" />
                 <e p="MeasureNode.cs" t="Include" />
+                <e p="MeasureSnappingToggle.cs" t="Include" />
                 <e p="MeasureTape.cs" t="Include" />
                 <e p="MeasureTapeColor.cs" t="Include" />
                 <e p="MeasureText.cs" t="Include" />
@@ -2075,6 +2076,7 @@
               <e p="DirectButton.cs" t="Include" />
               <e p="DirectDial.cs" t="Include" />
               <e p="DirectSlider.cs" t="Include" />
+              <e p="ToolMenuButton.cs" t="Include" />
             </e>
             <e p="VehicleController.cs" t="Include" />
           </e>

@@ -54,7 +54,7 @@ MonoBehaviour:
   buttonAnimationDuration: 0.3
   buttonText: {fileID: 2912193508974539231}
   activeColor: {r: 255, g: 255, b: 255, a: 255}
-  inactiveColor: {r: 45, g: 45, b: 45, a: 255}
+  inactiveColor: {r: 0.1764706, g: 0.019607844, b: 0.1764706, a: 255}
 --- !u!65 &7467453782902119558
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78,6 +78,30 @@ PrefabInstance:
     - target: {fileID: 100018, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
       propertyPath: m_Name
       value: New_Tape_Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -138,30 +162,6 @@ PrefabInstance:
     - target: {fileID: 13700000, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
       propertyPath: m_DirtyAABB
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_BlendShapeWeights.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 0.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_AABB.m_Extent.z
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_DirtyAABB
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 13700002, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}
-      propertyPath: m_BlendShapeWeights.Array.data[0]
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f685cd0d53eb3734d9dbe4263a4a61ad, type: 3}

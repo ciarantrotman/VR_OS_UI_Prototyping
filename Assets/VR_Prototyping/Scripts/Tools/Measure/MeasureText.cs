@@ -18,8 +18,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void SetText(float total, string tapeName)
         {
-            HighLevelText.SetText("Tape: <b>" + tapeName +
-                                  "</b> - Length: <b>{0:2}</b> ", total);
+            HighLevelText.SetText("<b>" +tapeName + "</b> \n" +
+                                  "{0:2}", total);
         }
     }
 }

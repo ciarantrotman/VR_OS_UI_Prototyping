@@ -13,11 +13,11 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         
         private const float DirectDistance = .05f;
 
-        private GameObject dial;
-        private GameObject center;
-        private GameObject anchor;
-        private GameObject handle;
-        private GameObject handleNormalised;
+        protected GameObject dial;
+        protected GameObject center;
+        protected GameObject anchor;
+        protected GameObject handle;
+        protected GameObject handleNormalised;
 
         [HideInInspector] public float dialValue;
 
@@ -49,7 +49,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         {
             GameObject o = gameObject;
             dial = o;
-            o.name = "Dial/Dial";
+            o.name += "//Dial/Dial";
             center = new GameObject("Dial/Center");
             handle = Instantiate(dialHandle, dial.transform);
             handle.name = "Dial/Handle";

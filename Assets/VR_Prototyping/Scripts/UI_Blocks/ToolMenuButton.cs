@@ -66,11 +66,13 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private void ButtonTextActive()
         {
+            Debug.Log("FontActive");
             textRenderer.material.color = activeColor;
         }
         
         private void ButtonTextInactive()
         {
+            Debug.Log("FontInactive");
             textRenderer.material.color = inactiveColor;
         }
     }

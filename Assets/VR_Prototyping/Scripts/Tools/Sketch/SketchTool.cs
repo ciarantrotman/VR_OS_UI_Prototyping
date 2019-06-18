@@ -6,7 +6,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 {
     public class SketchTool : BaseTool
     {        
-        [BoxGroup("Sketch Tool Settings")] [Range(.001f, .05f)] public float erasingDistance;
+        [BoxGroup("Sketch Tool Settings")] [Range(.001f, .1f)] public float erasingDistance = .05f;
         [BoxGroup("Sketch Tool Settings")] [Range(.001f, .05f)] public float minWidth;
         [BoxGroup("Sketch Tool Settings")] [Range(.05f, .1f)] public float maxWidth;
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public Material sketchMaterial;
@@ -39,7 +39,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
                 {
                     if (EraseDistance(line, i) && CTrigger)
                     {
-                        DeleteTape(line);
+                        EraseSketch(line);
                     }
                 }
             }
@@ -94,8 +94,9 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
             sketchTrail = false;
         }
 
-        private void DeleteTape(LineRenderer line)
+        private void EraseSketch(LineRenderer line)
         {
+            Debug.Log(line.name);
             sketches.Remove(line);
             Destroy(line.gameObject);
         }
