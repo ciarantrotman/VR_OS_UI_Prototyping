@@ -168,6 +168,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             MeasureNode = node.GetComponent<MeasureNode>();
             FocusMeasureNode = MeasureNode;
             
+            MeasureLockNode.SetToggleState(false, true);
+            
             FocusMeasureTape = tape;
             FocusMeasureTape.Controller = Controller;
             
@@ -191,7 +193,6 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         public void DeleteNode()
         {
             if (FocusMeasureNode == null) return;
-            
             FocusMeasureNode.DeleteNode();
             FocusMeasureTape.RefactorNodes();
             RemoveLineRenderNode(FocusMeasureTape.TapeLr);
@@ -202,7 +203,15 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         {
             if (FocusMeasureNode == null) return;
             
-            FocusMeasureNode.LockNode = !FocusMeasureNode.LockNode;
+            FocusMeasureNode.LockNode = true;
+            FocusMeasureTape.RefactorNodes();
+        }
+        
+        public void UnlockNode()
+        {
+            if (FocusMeasureNode == null && FocusMeasureNode.NodeIndex > 0) return;
+            
+            FocusMeasureNode.LockNode = false;
             FocusMeasureTape.RefactorNodes();
         }
 
@@ -233,7 +242,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             FocusMeasureNode = measureNode;
             MeasureTape = measureTape;
             FocusMeasureTape = measureTape;
-            MeasureLockNode.SetToggleState(measureNode.LockNode);
+            MeasureLockNode.SetToggleState(measureNode.LockNode, true);
             MeasureVisual.SetColor(MeasureTape.tapeColor);
         }
 

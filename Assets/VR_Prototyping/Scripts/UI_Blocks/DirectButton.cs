@@ -252,12 +252,12 @@ namespace VR_Prototyping.Scripts.UI_Blocks
                 switch (buttonState)
                 {
                     case ButtonState.INACTIVE:
-                        SetToggleState(true);
+                        SetToggleState(true, true);
                         break;
                     case ButtonState.HOVER:
                         return;
                     case ButtonState.ACTIVE:
-                        SetToggleState(false);
+                        SetToggleState(false, true);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -303,19 +303,25 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             return Vector3.Distance(buttonPos, controller.LeftPosition()) <= hoverDistance || Vector3.Distance(buttonPos, controller.RightPosition()) <= hoverDistance;
         }
         [Button]
-        public void SetToggleState(bool active)
+        public void SetToggleState(bool active, bool trigger)
         {
             switch (active)
             {
                 case true:
                     buttonState = ButtonState.ACTIVE;
-                    activate.Invoke();
                     Active = true;
+                    if (trigger)
+                    {
+                        activate.Invoke();
+                    }
                     break;
                 default:
                     buttonState = ButtonState.INACTIVE;
-                    deactivate.Invoke();
                     Active = false;
+                    if (trigger)
+                    {
+                        deactivate.Invoke();
+                    }
                     break;
             }
         }

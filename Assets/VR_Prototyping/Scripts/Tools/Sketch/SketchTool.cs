@@ -13,40 +13,51 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public Material sketchMaterial;
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool sketchTrail;
         [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchTrail")] public AnimationCurve trailWidth;
-        [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool gradientCircle;
-        [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("gradientCircle")] [SerializeField] public Gradient colorGradient;
+        [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool sketchProfile;
+        [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchProfile")] public AnimationCurve profileCurve;
         private bool Erasing { get; set; }
         
         public SketchBrushVisual SketchVisual { private get; set; }
 
-        private readonly List<LineRenderer> sketches = new List<LineRenderer>();
+        private readonly List<SketchObject> sketches = new List<SketchObject>();
 
         private Color brushColor;
-        private float brushWidth;
+        internal float brushWidth;
 
         private int sketchCount;
         private int position = 1;
         
-        private GameObject sketchObject;
-        private LineRenderer sketchLr;
+        private GameObject sketchGameObject;
+        private SketchObject sketchObject;
+        private LineRenderer sketchLineRenderer;
 
         protected override void ToolUpdate()
         {
             if (!Erasing) return;
-            foreach (LineRenderer line in sketches)
+            
+            foreach (SketchObject sketch in sketches)
             {
                 int proximity = 0;
-                for (int i = 0; i < line.positionCount; i++)
+                
+                for (int i = 0; i < sketch.SketchLineRenderer.positionCount; i++)
                 {
-                    if (EraseDistance(line, i))
+                    if (EraseDistance(sketch.SketchLineRenderer, i))
                     {
                         proximity++;
                     }
                 }
-                if (proximity < 0 && CTrigger)
+                
+                if (proximity > 0)
                 {
-                    EraseSketch(line);
+                    sketch.SketchLineRenderer.material.color = Color.white;
+                    if (CTrigger)
+                    {
+                        EraseSketch(sketch);
+                    }
+                    return;
                 }
+
+                sketch.SketchLineRenderer.material.color = sketch.SketchColor;
             }
         }
 
@@ -64,17 +75,17 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         protected override void ToolStay()
         {
             if (Erasing) return;
-            sketchLr.positionCount = position + 1;
-            sketchLr.SetPosition(position, dominant.transform.position);
+            sketchLineRenderer.positionCount = position + 1;
+            sketchLineRenderer.SetPosition(position, dominant.transform.position);
             position++;
         }
 
         protected override void ToolEnd()
         {
             if (Erasing) return;
-            sketchLr.BakeMesh(new Mesh(), true);
+            sketchLineRenderer.BakeMesh(new Mesh(), true);
             sketchObject = null;
-            sketchLr = null;
+            sketchLineRenderer = null;
             sketchTrail = true;
         }
 
@@ -87,23 +98,33 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         private void NewTape()
         {
-            sketchCount++;
-            sketchObject = new GameObject("Sketch_" + sketchCount);
-            sketchObject.transform.Transforms(dominant.transform);
-            sketchLr = sketchObject.AddComponent<LineRenderer>();
-            sketchLr.SetupLineRender(sketchMaterial, brushWidth, true);
-            sketchLr.material.color = brushColor;
-            sketchObject.AddComponent<SketchColor>().Color = brushColor;
-            sketches.Add(sketchLr);
+            sketchGameObject = new GameObject("Sketch_" + sketchCount);
+            sketchObject = sketchGameObject.AddComponent<SketchObject>();
+            sketchLineRenderer = sketchGameObject.AddComponent<LineRenderer>();
+            AnimationCurve normalisedCurve = new AnimationCurve();
+            foreach (Keyframe key in profileCurve.keys)
+            {
+                Keyframe keyframe = key;
+                keyframe.value *= brushWidth;
+                keyframe.outWeight *= brushWidth;
+                keyframe.inTangent *= brushWidth;
+                keyframe.inWeight *= brushWidth;
+                keyframe.outTangent *= brushWidth;
+                keyframe.time = key.time;
+                normalisedCurve.AddKey(keyframe);
+            }
+            sketchObject.Initialise(this, brushColor, sketchLineRenderer, normalisedCurve, sketchCount);
+            sketchGameObject.transform.Transforms(dominant.transform);
+            sketches.Add(sketchObject);
             position = 0;
             sketchTrail = false;
+            sketchCount++;
         }
 
-        private void EraseSketch(LineRenderer line)
+        private void EraseSketch(SketchObject sketch)
         {
-            Debug.Log(line.name);
-            sketches.Remove(line);
-            Destroy(line.gameObject);
+            sketches.RemoveAt(sketch.SketchIndex);
+            Destroy(sketch.gameObject);
         }
         
         public void SetColor(Color color)
@@ -114,14 +135,15 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         public void EraseToggle(bool state)
         {
             Erasing = state;
+            sketchTrail = !state;
         }
         
         public void SetWidth(float widthPercentage)
         {
             brushWidth = Mathf.Lerp(minWidth, maxWidth, widthPercentage);
-            if (sketchLr != null)
+            if (sketchLineRenderer != null)
             {
-                sketchLr.LineRenderWidth(brushWidth, brushWidth);
+                sketchLineRenderer.LineRenderWidth(brushWidth, brushWidth);
             }
         }
     }

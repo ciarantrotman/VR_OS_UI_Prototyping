@@ -21,8 +21,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         private IEnumerator SpawnDelay()
         {
             yield return new WaitForSeconds(SpawnDelayDuration);
-            //activate.AddListener(measureTool.LockNode);
-            //deactivate.AddListener(measureTool.LockNode);
+            activate.AddListener(measureTool.LockNode);
+            deactivate.AddListener(measureTool.UnlockNode);
             yield return null;
         }
     }

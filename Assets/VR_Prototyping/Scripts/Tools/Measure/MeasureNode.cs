@@ -87,8 +87,8 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             
             if (!MeasureTool.Active) return;
             
-            DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), rGrabP);
-            //DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), lGrabP);
+            DirectGrabCheck(Controller.RightTransform(), Controller.RightGrab(), Controller.LeftGrab(), rGrabP);
+            DirectGrabCheck(Controller.LeftTransform(), Controller.LeftGrab(), Controller.RightGrab(), lGrabP);
 
             rGrabP = Controller.RightGrab();
             lGrabP = Controller.LeftGrab();
@@ -146,7 +146,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             return MeasureTool.FocusMeasureNode == this;
         }
         
-        private void DirectGrabCheck(Transform controller, bool grab, bool pGrab)
+        private void DirectGrabCheck(Transform controller, bool grab, bool altGrab, bool pGrab)
         {
             if (!MeasureTool.grabNode) return;
             if (!MeasureTool.Grabbing)
@@ -162,17 +162,28 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                 MeasureTool.GrabNode(this, MeasureTape);
                 MeasureTool.DeactivateAllTapes();
                 MeasureTool.Grabbing =  !LockNode;
-                if (NodeIndex == 0) return;
-                previousNode = MeasureTape.measureNodes[NodeIndex - 1];
-                MeasureTool.PreviousMeasureNode = previousNode;
-                previousNode.NodeStart();
+                switch (NodeIndex)
+                {
+                    case 0 when MeasureTape.measureNodes.Count > 1:
+                        previousNode = MeasureTape.measureNodes[NodeIndex + 1];
+                        MeasureTool.PreviousMeasureNode = previousNode;
+                        previousNode.NodeStart();
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        previousNode = MeasureTape.measureNodes[NodeIndex - 1];
+                        MeasureTool.PreviousMeasureNode = previousNode;
+                        previousNode.NodeStart();
+                        break;
+                }
                 return;
             }
             if (grab && !LockNode)
             {
                 switch (NodeIndex)
                 {
-                    case 0:
+                    case 0 when MeasureTape.measureNodes.Count == 0:
                         transform.TransformLerpPosition(controller, .85f);
                         MeasureTape.AdjustTape();
                         break;
@@ -181,7 +192,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
                         break;
                 }
             }
-            else if (MeasureTool.Grabbing)
+            else if (MeasureTool.Grabbing && !altGrab)
             {
                 MeasureTool.Grabbing = false;
                 MeasureTool.MeasureNode = null;
@@ -194,6 +205,15 @@ namespace VR_Prototyping.Scripts.Tools.Measure
 
         public void DeleteNode()
         {
+            switch (MeasureTape.measureNodes.Count)
+            {
+                case 0:
+                    break;
+                default:
+                    MeasureTool.PreviousMeasureNode = MeasureTape.measureNodes[MeasureTape.measureNodes.Count - 1];
+                    MeasureTool.PreviousMeasureNode.NodeStart();
+                    break;
+            }
             MeasureTape.measureNodes.RemoveAt(NodeIndex);
             Destroy(transform.gameObject);
         }
