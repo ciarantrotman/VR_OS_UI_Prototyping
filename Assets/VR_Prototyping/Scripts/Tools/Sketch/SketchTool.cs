@@ -16,7 +16,6 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         [BoxGroup("Sketch Tool Settings")] [Space(5)] public bool sketchProfile;
         [BoxGroup("Sketch Tool Settings")] [Indent] [ShowIf("sketchProfile")] public AnimationCurve profileCurve;
         private bool Erasing { get; set; }
-        
         public SketchBrushVisual SketchVisual { private get; set; }
 
         private readonly List<SketchObject> sketches = new List<SketchObject>();
@@ -30,7 +29,6 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         private GameObject sketchGameObject;
         private SketchObject sketchObject;
         private LineRenderer sketchLineRenderer;
-
         protected override void ToolUpdate()
         {
             if (!Erasing) return;
@@ -75,6 +73,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         protected override void ToolStay()
         {
             if (Erasing) return;
+            sketchObject.AdjustWidthCurve();
             sketchLineRenderer.positionCount = position + 1;
             sketchLineRenderer.SetPosition(position, dominant.transform.position);
             position++;
@@ -83,6 +82,7 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
         protected override void ToolEnd()
         {
             if (Erasing) return;
+            sketchObject.AdjustWidthCurve();
             sketchLineRenderer.BakeMesh(new Mesh(), true);
             sketchObject = null;
             sketchLineRenderer = null;

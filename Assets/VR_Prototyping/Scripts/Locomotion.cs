@@ -274,7 +274,7 @@ namespace VR_Prototyping.Scripts
         }
         
         [Button]
-        private void SceneWipe()
+        public void SceneWipe()
         {
             StartCoroutine(sceneWipe.SceneWipeStart(sceneWipeDuration));
         }

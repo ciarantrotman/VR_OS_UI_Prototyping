@@ -17,15 +17,15 @@ namespace VR_Prototyping.Scripts
         {
             if (!active) return;
 
-            head.localPosition = new Vector3(0, ControllerTransforms.CameraLocalPosition().y, 0);
-            head.forward = transform.parent.forward;
-            lHand.localPosition = RelativeHandPosition(ControllerTransforms.LeftLocalPosition());
-            rHand.localPosition = RelativeHandPosition(ControllerTransforms.RightLocalPosition());
-        }
-
-        private Vector3 RelativeHandPosition(Vector3 handPosition)
-        {
-            return handPosition - ControllerTransforms.CameraLocalPosition();
+            Transform thisTransform = transform;
+            
+            thisTransform.localPosition = Vector3.zero;
+            thisTransform.forward = thisTransform.parent.forward;
+            head.transform.LocalTransforms(ControllerTransforms.HmdLocalRelativeTransform());
+            Vector3 localRot = head.transform.localEulerAngles;
+            head.transform.localEulerAngles = new Vector3(localRot.x, 0, localRot.z);
+            lHand.transform.LocalTransforms(ControllerTransforms.LeftLocalRelativeTransform());
+            rHand.transform.LocalTransforms(ControllerTransforms.RightLocalRelativeTransform());
         }
 
         public void GhostToggle(Transform parent, bool state)

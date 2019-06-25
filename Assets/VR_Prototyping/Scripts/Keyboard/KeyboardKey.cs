@@ -9,13 +9,12 @@ namespace VR_Prototyping.Scripts.Keyboard
     {
         public KeyboardManager KeyboardManager { private get; set; }
         public int Index { private get; set; }
-        
         private float borderDepth;
 
-        [BoxGroup("Key Settings")] [SerializeField] private Transform border;
-        [BoxGroup("Key Settings")] [Space(10)] [SerializeField] [Range(0f, .01f)] private float restDepth;
-        [BoxGroup("Key Settings")] [SerializeField] [Range(.01f, .05f)] private float hoverDepth;
-        [BoxGroup("Key Settings")] [SerializeField] [Range(.1f, 1f)] private float hoverDuration;
+        [BoxGroup("Key Settings")] [SerializeField] private Transform hoverBorder;
+        [BoxGroup("Key Settings")] [Space(10)] [SerializeField] [Range(0f, .01f)] private float hoverRestDepth;
+        [BoxGroup("Key Settings")] [SerializeField] [Range(.01f, .05f)] private float hoverActiveDepth;
+        [BoxGroup("Key Settings")] [SerializeField] [Range(.1f, 1f)] private float duration;
         [BoxGroup("Key Settings")] [Space(10)] public KeyboardManager.KeyboardKeyValues keyValue;
 
         private void Awake()
@@ -43,19 +42,19 @@ namespace VR_Prototyping.Scripts.Keyboard
         
         protected override void ObjectUpdate()
         {
-            border.localPosition = new Vector3(0, 0, borderDepth);
+            hoverBorder.localPosition = new Vector3(0, 0, borderDepth);
         }
 
         private void HoverBorderStart()
         {
-            borderDepth = border.localPosition.z;
-            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverDepth, hoverDuration);
+            borderDepth = hoverBorder.localPosition.z;
+            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverActiveDepth, duration);
         }
 
         private void HoverBorderEnd()
         {
-            borderDepth = border.localPosition.z;
-            DOTween.To(()=> borderDepth, x=> borderDepth = x, -restDepth, hoverDuration);
+            borderDepth = hoverBorder.localPosition.z;
+            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverRestDepth, duration);
         }
     }
 }

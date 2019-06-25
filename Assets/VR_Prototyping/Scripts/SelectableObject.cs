@@ -19,6 +19,7 @@ namespace VR_Prototyping.Scripts
 	{
 		#region Inspector and Variables
 
+		internal ControllerTransforms controllerTransforms;
 		private ObjectSelection objectSelection;
 		private Manipulation manipulation;
 		private Outline outline;
@@ -39,6 +40,10 @@ namespace VR_Prototyping.Scripts
 		private RotationLock rotLock;
 		private float gazeAngle;
 		private float manualRef;
+
+		private float buttonBlendShapeWeight = BlendShapeInactive;
+		private float buttonBorderDepth;
+		private MeshRenderer textRenderer;
 		
 		private Rigidbody rb;
 		public float AngleL { get; private set; }
@@ -66,7 +71,8 @@ namespace VR_Prototyping.Scripts
 		[Header("Define Object Behaviour")]
 		[BoxGroup("Script Setup")] [HideIf("button")] [SerializeField] private bool grab;
 		[BoxGroup("Script Setup")] [HideIf("grab")] [SerializeField] private bool button;
-		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool startsActive;
+		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool toggle;
+		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent(2)] private bool startsActive;
 		[BoxGroup("Script Setup")] [ShowIf("button")] [SerializeField] [Indent] private bool menu;
 		[BoxGroup("Script Setup")] [ShowIf("button")] [ShowIf("menu")] [Indent(2)] public GameObject menuItems;
 		
@@ -99,17 +105,29 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabStay;
 		[FoldoutGroup("Manipulation Settings")] [ShowIf("grab")] [HideIf("genericGrabEffect")] [ShowIf("directGrab")] [Indent] public UnityEvent dualGrabEnd;
 		
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public TextMeshPro buttonText;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Required] public MeshRenderer buttonBack;
 		[Header("Visual Effects")]
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(5)] [SerializeField] private bool genericSelectState;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset activeFont;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset inactiveFont;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [Space(5)] [SerializeField] private bool genericSelectState;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Required] public TextMeshPro buttonText;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Required] public MeshRenderer buttonBack;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectOffset;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectScale;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [Range(0, 1f)] [SerializeField] private float selectEffectDuration = .1f;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset activeFont;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [Required] [SerializeField] private TMP_FontAsset inactiveFont;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color activeColor = new Color(0,0,0,255);
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [HideIf("blendShapeButton")] [ShowIf("genericSelectState")] [Indent] [SerializeField] private Color inactiveColor = new Color(0,0,0,255);
+		[Header("Visual Effects")]
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("button")] [HideIf("genericSelectState")] [Space(5)] [SerializeField] private bool blendShapeButton;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal SkinnedMeshRenderer buttonSkinnedMeshRenderer;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal GameObject text;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal Transform border;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Space(10)] [SerializeField] [Range(0f, .01f)] internal float restDepth;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Range(.01f, .5f)] internal float hoverDepth;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Range(.1f, 1f)] internal float hoverDuration;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [Range(.01f, 1)] [SerializeField] internal float buttonAnimationDuration = .5f;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] internal Color activeFontColor = new Color(255f,255f,255f, 255f);
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] internal Color inactiveFontColor = new Color(45f,45f,45f, 255f);
+		
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(5)] private ButtonTrigger buttonTrigger;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(10)] public UnityEvent selectStart;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectStay;
@@ -134,7 +152,8 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Hover Settings")] [ShowIf("hover")] [HideIf("genericHoverEffect")] [SerializeField] public UnityEvent hoverEnd;
 		
 		private static readonly int Threshold = Shader.PropertyToID("_ClipThreshold");
-
+		internal const float BlendShapeActive = 0f;
+		internal const float BlendShapeInactive = 100f;
 		#endregion
 		private void Start ()
 		{
@@ -149,7 +168,18 @@ namespace VR_Prototyping.Scripts
 		{
 			InitialiseSelectableObject();
 		}
+
+		private void OnDestroy()
+		{
+			DestructSelectableObject();
+		}
+
 		public void OnDisable()
+		{
+			DestructSelectableObject();
+		}
+
+		private void DestructSelectableObject()
 		{
 			GameObject g = gameObject;
 			ToggleList(g, objectSelection.globalList, false);
@@ -173,6 +203,9 @@ namespace VR_Prototyping.Scripts
 			SetState(startsActive);
 			active = startsActive;
 			ResetState = transform;
+			
+			if(!blendShapeButton) return;
+			SetupBlendShape();
 		}
 		protected virtual void InitialiseOverride()
 		{
@@ -181,6 +214,7 @@ namespace VR_Prototyping.Scripts
 		private void AssignComponents()
 		{
 			objectSelection = player.GetComponent<ObjectSelection>();
+			controllerTransforms = objectSelection.Controller;
 			manipulation = player.GetComponent<Manipulation>();
 			Renderer = GetComponent<Renderer>();
 		}
@@ -209,6 +243,17 @@ namespace VR_Prototyping.Scripts
 			scaleMin = defaultLocalScale.ScaledScale(minScaleFactor);
 			scaleMax = defaultLocalScale.ScaledScale(maxScaleFactor);
 		}
+
+		private void SetupBlendShape()
+		{
+			textRenderer = text.GetComponent<MeshRenderer>();
+			hoverStart.AddListener(HoverBorderStart);
+			hoverEnd.AddListener(HoverBorderEnd);
+			selectStart.AddListener(ButtonTextActive);
+			//selectStart.AddListener(ButtonTextInactive);
+			selectStart.AddListener(SetBlendShapeActive);
+			//selectStart.AddListener(SetBlendShapeInactive);
+		}
 		private static void ToggleList(GameObject g, ICollection<GameObject> l, bool add)
 		{
 			switch (add)
@@ -227,13 +272,21 @@ namespace VR_Prototyping.Scripts
 		{					
 			GetAngles();
 			ReactiveMaterial();
-
+			SetButtonStates();
+			
 			GameObject o = gameObject;
 			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
 			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
 			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
 			
 			ObjectUpdate();
+		}
+
+		private void SetButtonStates()
+		{
+			if (!blendShapeButton) return;
+			border.localPosition = new Vector3(0, 0, buttonBorderDepth);
+			buttonSkinnedMeshRenderer.SetBlendShapeWeight(0, buttonBlendShapeWeight);
 		}
 
 		protected virtual void ObjectUpdate()
@@ -512,6 +565,48 @@ namespace VR_Prototyping.Scripts
 				default:
 					throw new ArgumentException();
 			}
+		}
+		
+		private void HoverBorderStart()
+		{
+			buttonBorderDepth = border.localPosition.z;
+			DOTween.To(()=> buttonBorderDepth, x=> buttonBorderDepth = x, hoverDepth, hoverDuration);
+		}
+
+		private void HoverBorderEnd()
+		{
+			buttonBorderDepth = border.localPosition.z;
+			DOTween.To(()=> buttonBorderDepth, x=> buttonBorderDepth = x, restDepth, hoverDuration);
+		}
+		
+		private void SetBlendShapeActive()
+		{
+			buttonBlendShapeWeight = buttonSkinnedMeshRenderer.GetBlendShapeWeight(0);
+			DOTween.To(()=> buttonBlendShapeWeight, x=> buttonBlendShapeWeight = x, BlendShapeActive, buttonAnimationDuration);
+			if (toggle) return;
+			StartCoroutine(ResetButton());
+		}
+
+		private IEnumerator ResetButton()
+		{
+			yield return new WaitForSeconds(buttonAnimationDuration + (buttonAnimationDuration * .25f));
+			SetBlendShapeInactive();
+			ButtonTextInactive();
+		}
+		private void SetBlendShapeInactive()
+		{
+			buttonBlendShapeWeight = buttonSkinnedMeshRenderer.GetBlendShapeWeight(0);
+			DOTween.To(()=> buttonBlendShapeWeight, x=> buttonBlendShapeWeight = x, BlendShapeInactive, buttonAnimationDuration);
+		}
+		
+		private void ButtonTextActive()
+		{
+			textRenderer.material.color = activeColor;
+		}
+        
+		private void ButtonTextInactive()
+		{
+			textRenderer.material.color = inactiveColor;
 		}
 	}
 }

@@ -12,6 +12,7 @@ namespace VR_Prototyping.Scripts.Tools.Note
         
         [BoxGroup("Note Objects Settings")] [SerializeField] [Required] private TextMeshPro noteText;
         [BoxGroup("Note Objects Settings")] [SerializeField] [Required] private TextMeshPro noteTitle;
+        [BoxGroup("Note Objects Settings")] [SerializeField] [Required] private TextMeshPro noteHeader;
         [BoxGroup("Note Objects Settings")] [SerializeField] [Required] private Transform anchorTop;
         [BoxGroup("Note Objects Settings")] [SerializeField] [Required] private Transform anchorBottom;
         [BoxGroup("Note Objects Settings")] [SerializeField] [Range(.001f, .005f)] private float lineRenderWidth = .002f;
@@ -33,11 +34,12 @@ namespace VR_Prototyping.Scripts.Tools.Note
             noteLineRenderer.SetPosition(1, anchorBottom.position);
         }
 
-        public void SetNote(string text, string title, Vector3 position)
+        public void SetNote(string text, string title, string header, Vector3 position)
         {
             transform.position = position;
             noteText.SetText(text);
             noteTitle.SetText(title);
+            noteHeader.SetText(header);
         }
     }
 }

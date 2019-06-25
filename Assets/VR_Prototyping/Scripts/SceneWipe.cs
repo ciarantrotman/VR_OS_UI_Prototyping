@@ -30,7 +30,8 @@ namespace VR_Prototyping.Scripts
         public IEnumerator SceneWipeStart(float duration)
         {
             DOTween.To(()=> value, x=> value = x, Value, duration);
-            yield return new WaitForSeconds(duration + (duration * .25f));
+            yield return new WaitForSeconds(duration + (duration * .1f));
+            controllerTransforms.SceneWipeTrigger.Invoke();
             DOTween.To(()=> value, x=> value = x, -Value, duration);
             yield return null;
         }

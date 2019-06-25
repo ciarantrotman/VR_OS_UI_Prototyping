@@ -37,6 +37,13 @@ namespace VR_Prototyping.Scripts
             transform.localRotation = Quaternion.identity;
         }
         
+        public static void LocalTransforms(this Transform a, Transform b)
+        {
+            Transform transform = a.transform;
+            transform.localPosition = b.localPosition;
+            transform.localRotation = b.localRotation;
+        }
+        
         public static void LookAtVertical(this Transform a, Transform b)
         {
             a.LookAwayFrom(b, Vector3.up);

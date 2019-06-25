@@ -47,7 +47,9 @@ namespace VR_Prototyping.Scripts.Tools.Note
             NewNote();
             Vector3 position = Controller.CameraTransform().position + Controller.CameraForwardVector();
             noteObject.SetNote(KeyboardManager.KeyboardTarget.CheckText(),
-                DateTime.Now.ToString(CultureInfo.InvariantCulture), position);
+                DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                "Note " + index,
+                position);
             KeyboardManager.KeyboardTarget.ClearText();
             note.name = "Note_" + index;
             note = null;

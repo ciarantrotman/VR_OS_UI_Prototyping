@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR;
 
 namespace VR_Prototyping.Scripts
@@ -37,9 +38,22 @@ namespace VR_Prototyping.Scripts
         private GameObject lHandDirect;
         private GameObject rHandDirect;
 
+        public UnityEvent SceneWipeTrigger { get; set; }
+        
+        private GameObject localRef;
+        private GameObject localHeadset;
+        private GameObject localR;
+        private GameObject localL;
+
         public const string LTag = "Direct/Left";
         public const string RTag = "Direct/Right";
         private void Start()
+        {
+            SetupDirect();
+            SetupLocal();
+        }
+
+        private void SetupDirect()
         {
             lHandDirect = new GameObject(LTag);
             rHandDirect = new GameObject(RTag);
@@ -51,13 +65,27 @@ namespace VR_Prototyping.Scripts
             rs.radius = directDistance;
         }
 
+        private void SetupLocal()
+        {
+            localRef = new GameObject("Local/Reference");
+            localRef.transform.SetParent(transform);
+            localHeadset = new GameObject("Local/HMD");
+            localHeadset.transform.SetParent(localRef.transform);
+            localR = new GameObject("Local/Right");
+            localR.transform.SetParent(localHeadset.transform);
+            localL = new GameObject("Local/Left");
+            localL.transform.SetParent(localHeadset.transform);
+        }
+
         private void FixedUpdate()
         {
             lHandDirect.transform.Transforms(LeftTransform());
             rHandDirect.transform.Transforms(RightTransform());
+            localRef.transform.SplitPositionVector(0, CameraTransform());
+            localHeadset.transform.Transforms(CameraTransform());
+            localR.transform.Transforms(RightTransform());
+            localL.transform.Transforms(LeftTransform());
         }
-        
-        
 
         public GameObject Player()
         {
@@ -77,6 +105,20 @@ namespace VR_Prototyping.Scripts
         {
             return leftController.localPosition;
         }
+        
+        public Transform HmdLocalRelativeTransform()
+        {
+            return localHeadset.transform;
+        }
+        public Transform LeftLocalRelativeTransform()
+        {
+            return localL.transform;
+        }
+        
+        public Transform RightLocalRelativeTransform()
+        {
+            return localR.transform;
+        }
     
         public Vector3 RightLocalPosition()
         {
@@ -87,7 +129,7 @@ namespace VR_Prototyping.Scripts
         {
             return leftController;
         }
-    
+
         public Transform RightTransform()
         {
             return rightController;

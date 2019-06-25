@@ -10,10 +10,10 @@ namespace VR_Prototyping.Scripts.Tools
     {
         [BoxGroup("Tool Settings")] [SerializeField] private GameObject mask;
         [BoxGroup("Tool Settings")] [SerializeField] private GameObject back;
-        [BoxGroup("Tool Settings")] [SerializeField] private Transform border;
-        [BoxGroup("Tool Settings")] [Space(10)] [SerializeField] [Range(0f, .01f)] private float restDepth;
-        [BoxGroup("Tool Settings")] [SerializeField] [Range(.01f, .05f)] private float hoverDepth;
-        [BoxGroup("Tool Settings")] [SerializeField] [Range(.1f, 1f)] private float hoverDuration;
+        [BoxGroup("Tool Settings")] [SerializeField] private Transform hoverBorder;
+        [BoxGroup("Tool Settings")] [Space(10)] [SerializeField] [Range(0f, .01f)] private float hoverRestDepth;
+        [BoxGroup("Tool Settings")] [SerializeField] [Range(.01f, .05f)] private float hoverActiveDepth;
+        [BoxGroup("Tool Settings")] [SerializeField] [Range(.1f, 1f)] private float duration;
     
         private float borderDepth;
         public GameObject ToolModel { private get; set; }
@@ -32,19 +32,19 @@ namespace VR_Prototyping.Scripts.Tools
         
         protected override void ObjectUpdate()
         {
-			border.localPosition = new Vector3(0, 0, borderDepth);
+			hoverBorder.localPosition = new Vector3(0, 0, borderDepth);
         }
 
         private void HoverBorderStart()
         {
-            borderDepth = border.localPosition.z;
-            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverDepth, hoverDuration);
+            borderDepth = hoverBorder.localPosition.z;
+            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverActiveDepth, duration);
         }
 
         private void HoverBorderEnd()
         {
-            borderDepth = border.localPosition.z;
-            DOTween.To(()=> borderDepth, x=> borderDepth = x, -restDepth, hoverDuration);
+            borderDepth = hoverBorder.localPosition.z;
+            DOTween.To(()=> borderDepth, x=> borderDepth = x, -hoverRestDepth, duration);
         }
         
         private void SetupStencilIndex()

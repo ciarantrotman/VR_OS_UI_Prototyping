@@ -72,6 +72,7 @@ namespace VR_Prototyping.Scripts.Tools.Memo
 
         protected override void ToolActivate()
         {
+            if (microphone == null) return;
             MemoText.SetText(microphone);
         }
 

@@ -102,9 +102,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  genericSelectState: 0
   buttonText: {fileID: 7482041260947545251}
   buttonBack: {fileID: 9080398353303953858}
-  genericSelectState: 0
   selectOffset: 0
   selectScale: 0
   selectEffectDuration: 0.1
@@ -112,6 +112,16 @@ MonoBehaviour:
   inactiveFont: {fileID: 0}
   activeColor: {r: 0, g: 0, b: 0, a: 255}
   inactiveColor: {r: 0, g: 0, b: 0, a: 255}
+  blendShapeButton: 0
+  buttonSkinnedMeshRenderer: {fileID: 0}
+  text: {fileID: 0}
+  border: {fileID: 9080398353302053664}
+  restDepth: 0
+  hoverDepth: 0.05
+  hoverDuration: 0.2
+  buttonAnimationDuration: 0.5
+  activeFontColor: {r: 255, g: 255, b: 255, a: 255}
+  inactiveFontColor: {r: 45, g: 45, b: 45, a: 255}
   selectStart:
     m_PersistentCalls:
       m_Calls: []
@@ -155,10 +165,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  border: {fileID: 9080398353302053664}
-  restDepth: 0
-  hoverDepth: 0.05
-  hoverDuration: 0.2
+  hoverBorder: {fileID: 9080398353302053664}
+  hoverRestDepth: 0
+  hoverActiveDepth: 0.05
+  duration: 0.5
   keyValue: 0
 --- !u!65 &5854448841577481754
 BoxCollider:

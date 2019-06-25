@@ -2018,6 +2018,11 @@
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
             <e p="Hover.cs" t="Include" />
+            <e p="Icon_Scripts" t="Include">
+              <e p="IconScenes.cs" t="Include" />
+              <e p="IntroScene.cs" t="Include" />
+              <e p="LaunchProject.cs" t="Include" />
+            </e>
             <e p="Intersection.cs" t="Include" />
             <e p="InverseLerp.cs" t="Include" />
             <e p="Keyboard" t="Include">
@@ -2027,6 +2032,7 @@
             </e>
             <e p="Locomotion.cs" t="Include" />
             <e p="LocomotionPositionPreview.cs" t="Include" />
+            <e p="LocomotionVisual.cs" t="Include" />
             <e p="Manipulation.cs" t="Include" />
             <e p="ObjectSelection.cs" t="Include" />
             <e p="RubberbandedObject.cs" t="Include" />
@@ -2066,8 +2072,8 @@
                 <e p="SketchBrushColor.cs" t="Include" />
                 <e p="SketchBrushVisual.cs" t="Include" />
                 <e p="SketchBrushWidth.cs" t="Include" />
-                <e p="SketchColor.cs" t="Include" />
                 <e p="SketchErase.cs" t="Include" />
+                <e p="SketchObject.cs" t="Include" />
                 <e p="SketchTool.cs" t="Include" />
               </e>
               <e p="ToolButton.cs" t="Include" />
