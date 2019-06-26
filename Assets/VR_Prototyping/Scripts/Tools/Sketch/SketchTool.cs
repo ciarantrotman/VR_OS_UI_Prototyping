@@ -123,8 +123,9 @@ namespace VR_Prototyping.Scripts.Tools.Sketch
 
         private void EraseSketch(SketchObject sketch)
         {
-            sketches.RemoveAt(sketch.SketchIndex);
-            Destroy(sketch.gameObject);
+            sketch.SketchLineRenderer.enabled = false;
+            //sketches.RemoveAt(sketch.SketchIndex);
+            //Destroy(sketch.gameObject);
         }
         
         public void SetColor(Color color)

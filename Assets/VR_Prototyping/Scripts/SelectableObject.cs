@@ -7,9 +7,11 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using VR_Prototyping.Interfaces;
 using VR_Prototyping.Plugins.QuickOutline.Scripts;
 using VR_Prototyping.Scripts.Accessibility;
+using VR_Prototyping.Scripts.Icon_Scripts;
 using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
@@ -213,6 +215,14 @@ namespace VR_Prototyping.Scripts
 		}
 		private void AssignComponents()
 		{
+			if (player == null)
+			{
+				foreach (GameObject rootGameObject in SceneManager.GetActiveScene().GetRootGameObjects())
+				{
+					if (rootGameObject.name != "[VR Player]") continue;
+					player = rootGameObject;
+				}
+			}
 			objectSelection = player.GetComponent<ObjectSelection>();
 			controllerTransforms = objectSelection.Controller;
 			manipulation = player.GetComponent<Manipulation>();

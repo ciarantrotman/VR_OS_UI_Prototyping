@@ -10,6 +10,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
     {
         private Scene mainScene;
         private IconScenes scenes;
+        
         private void Awake()
         {
             mainScene = SceneManager.GetActiveScene();
@@ -35,8 +36,8 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
 
         private void ManageScenes()
         {
-            SceneManager.UnloadScene(scenes.introScene);
-            SceneManager.LoadScene(scenes.dioramaScene, LoadSceneMode.Additive);
+            scenes.LoadScene(scenes.dioramaScene);
+            scenes.UnloadScene(scenes.introScene);
         }
     }
 }
