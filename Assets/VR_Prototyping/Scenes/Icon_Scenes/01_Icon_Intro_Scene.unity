@@ -112,6 +112,49 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1906693893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1906693895}
+  - component: {fileID: 1906693894}
+  m_Layer: 0
+  m_Name: Start_Location
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1906693894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906693893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83fbe95e8edd96f4790298f33665b1a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1906693895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906693893}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &619509032535106110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -137,7 +180,7 @@ PrefabInstance:
     - target: {fileID: 3942032726450408960, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 3942032726450408960, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
         type: 3}
@@ -193,6 +236,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: blendShapeButton
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: genericSelectState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: activeColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: activeColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: activeColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: inactiveFontColor.r
+      value: 0.1764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: inactiveFontColor.g
+      value: 0.1764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 5085303528196262525, guid: d7c53b7c961a2a549ab2c93b5f0409a4,
+        type: 3}
+      propertyPath: inactiveFontColor.b
+      value: 0.1764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7c53b7c961a2a549ab2c93b5f0409a4, type: 3}

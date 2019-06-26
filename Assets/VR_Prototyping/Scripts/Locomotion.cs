@@ -59,7 +59,10 @@ namespace VR_Prototyping.Scripts
         private Vector3 rRotTarget;
         private bool active;
 
-        private enum Method
+        private Vector3 customRotation;
+        private Vector3 customPosition;
+        
+        public enum Method
         {
             DASH,
             BLINK
@@ -255,6 +258,43 @@ namespace VR_Prototyping.Scripts
             visual.SetActive(false);
             positionPreview.GhostToggle(null, false);
             lr.enabled = false;
+        }
+
+        public void CustomLocomotion(Vector3 targetPosition, Vector3 targetRotation, Method method, bool wipe)
+        {
+            controllerTransforms.CameraTransform().SplitRotation(cN.transform, false);
+            controllerTransforms.CameraTransform().SplitPosition(transform, cN.transform);
+            transform.SetParent(cN.transform);
+            switch (method)
+            {
+                case Method.DASH when !wipe:
+                    cN.transform.DOMove(targetPosition, moveSpeed);
+                    cN.transform.DORotate(targetRotation, moveSpeed);
+                    StartCoroutine(Uncouple(transform, moveSpeed));
+                    break;
+                case Method.BLINK when !wipe:
+                    cN.transform.position = targetPosition;
+                    cN.transform.eulerAngles = targetRotation;
+                    transform.SetParent(null);
+                    active = false;
+                    break;
+                case Method.BLINK:
+                    customPosition = targetPosition;
+                    customRotation = targetRotation;
+                    SceneWipe();
+                    controllerTransforms.SceneWipeTrigger.AddListener(CustomWipe);
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
+        private void CustomWipe()
+        {
+            cN.transform.position = customPosition;
+            cN.transform.eulerAngles = customRotation;
+            transform.SetParent(null);
+            active = false;
         }
         
         private IEnumerator Uncouple(Transform a, float time)

@@ -613,12 +613,12 @@ namespace VR_Prototyping.Scripts
 		
 		private void ButtonTextActive()
 		{
-			textRenderer.material.color = activeColor;
+			textRenderer.material.color = activeFontColor;
 		}
         
 		private void ButtonTextInactive()
 		{
-			textRenderer.material.color = inactiveColor;
+			textRenderer.material.color = inactiveFontColor;
 		}
 	}
 }
