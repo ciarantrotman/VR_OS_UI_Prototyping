@@ -209,7 +209,7 @@ namespace VR_Prototyping.Scripts.Tools.Measure
         
         public void UnlockNode()
         {
-            if (FocusMeasureNode == null && FocusMeasureNode.NodeIndex > 0) return;
+            if ((FocusMeasureNode == null && FocusMeasureNode.NodeIndex > 0) || FocusMeasureTape == null) return;
             
             FocusMeasureNode.LockNode = false;
             FocusMeasureTape.RefactorNodes();
