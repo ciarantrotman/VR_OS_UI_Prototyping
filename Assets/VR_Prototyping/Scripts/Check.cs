@@ -213,14 +213,14 @@ namespace VR_Prototyping.Scripts
             return objects.Count > 0 ? objects[0].gameObject : null;
         }
         
-        public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target,GameObject inactive, Transform controller, float distance, bool disable)
+        public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
         {
             if (disable && current == null)
             {
                 target.transform.TransformLerpPosition(inactive.transform, .2f);
                 return null;
             }
-            
+
             if (disable) return current == null ? null : current;
 
             Vector3 position = controller.position;

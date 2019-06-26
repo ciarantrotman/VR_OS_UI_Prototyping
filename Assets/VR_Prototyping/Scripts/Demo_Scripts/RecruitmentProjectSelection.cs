@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts.Demo_Scripts
         [BoxGroup] public Transform target;
         [BoxGroup] public Transform dome;
         
-        protected override void InitialiseOverride()
+        protected override void InitialisePostSetup()
         {
             selectEnd.AddListener(SelectBuilding);
         }

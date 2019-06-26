@@ -23,21 +23,21 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         }
 
         private IntroScene introScene;
-        protected override void Initialise()
+        protected override void InitialisePostSetup()
         {
             selectEnd.AddListener(LoadScene);
         }
 
         private void LoadScene()
         {
-            player.GetComponent<Locomotion>().SceneWipe();
             controllerTransforms.SceneWipeTrigger.AddListener(ManageScenes);
+            player.GetComponent<Locomotion>().SceneWipe();
         }
 
         private void ManageScenes()
         {
-            scenes.LoadScene(scenes.dioramaScene);
-            scenes.UnloadScene(scenes.introScene);
+            IconScenes.LoadScene(scenes.dioramaScene);
+            IconScenes.UnloadScene(scenes.introScene);
         }
     }
 }

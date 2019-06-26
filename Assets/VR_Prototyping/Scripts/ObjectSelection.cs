@@ -191,5 +191,14 @@ namespace VR_Prototyping.Scripts
 			lHandList.Sort(SortBy.FocusObjectL);
 			rHandList.Sort(SortBy.FocusObjectR);
 		}
+
+		public void ResetObjects()
+		{
+			if (lTarget == null || rTarget == null) return;
+			lTarget.transform.SetParent(transform);
+			rTarget.transform.SetParent(transform);
+			lTarget.transform.SetParent(null);
+			rTarget.transform.SetParent(null);
+		}
 	}
 }

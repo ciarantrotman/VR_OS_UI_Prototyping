@@ -19,13 +19,15 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
             LoadScene(introScene);
         }
 
-        public void LoadScene(SceneAsset scene)
+        public static void LoadScene(SceneAsset scene)
         {
+            Debug.Log(">>> " + scene.name + " was loaded.");
             SceneManager.LoadScene(scene.name, LoadSceneMode.Additive);
         }
         
-        public void UnloadScene(SceneAsset scene)
+        public static void UnloadScene(SceneAsset scene)
         {
+            Debug.Log("<<< " + scene.name + " was unloaded.");
             SceneManager.UnloadScene(scene.name);
         }
     }

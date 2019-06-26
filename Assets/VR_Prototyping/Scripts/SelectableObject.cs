@@ -183,6 +183,8 @@ namespace VR_Prototyping.Scripts
 
 		private void DestructSelectableObject()
 		{
+			if (objectSelection == null) return;
+			objectSelection.ResetObjects();
 			GameObject g = gameObject;
 			ToggleList(g, objectSelection.globalList, false);
 			ToggleList(g, objectSelection.gazeList, false);
@@ -192,7 +194,6 @@ namespace VR_Prototyping.Scripts
 
 		private void InitialiseSelectableObject()
 		{
-			InitialiseOverride();
 			SetupScaling();
 			AssignComponents();
 			SetupRigidBody();
@@ -200,6 +201,7 @@ namespace VR_Prototyping.Scripts
 			SetupOutline();
 			ToggleList(gameObject, objectSelection.globalList, true);
 			ToggleList(gameObject, objectSelection.gazeList, true);
+			InitialisePostSetup();
 			
 			if(!button) return;
 			SetState(startsActive);
@@ -209,7 +211,7 @@ namespace VR_Prototyping.Scripts
 			if(!blendShapeButton) return;
 			SetupBlendShape();
 		}
-		protected virtual void InitialiseOverride()
+		protected virtual void InitialisePostSetup()
 		{
 			
 		}

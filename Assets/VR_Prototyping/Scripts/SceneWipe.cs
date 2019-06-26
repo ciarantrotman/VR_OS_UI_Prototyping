@@ -11,7 +11,7 @@ namespace VR_Prototyping.Scripts
         private MeshRenderer sceneWipeRenderer;
         private static readonly int Fade = Shader.PropertyToID("_Fade");
         
-        private const float Value = .6f;
+        private const float Value = .51f;
         private float value = -Value;
 
         public void Initialise(ControllerTransforms transforms)
@@ -30,7 +30,7 @@ namespace VR_Prototyping.Scripts
         public IEnumerator SceneWipeStart(float duration)
         {
             DOTween.To(()=> value, x=> value = x, Value, duration);
-            yield return new WaitForSeconds(duration + (duration * .1f));
+            yield return new WaitForSeconds(duration);// - (duration * .2f));
             controllerTransforms.SceneWipeTrigger.Invoke();
             DOTween.To(()=> value, x=> value = x, -Value, duration);
             yield return null;

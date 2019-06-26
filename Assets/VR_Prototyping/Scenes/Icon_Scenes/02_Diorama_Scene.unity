@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 1248665105}
   - component: {fileID: 1248665104}
   - component: {fileID: 1248665103}
+  - component: {fileID: 1248665107}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -203,3 +204,134 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1248665107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248665102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e76faffc98ce94b9058ae834b937df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiated: 1
+  player: {fileID: 0}
+  grab: 1
+  button: 0
+  toggle: 0
+  startsActive: 0
+  menu: 0
+  menuItems: {fileID: 0}
+  moveForce: 0.15
+  latency: 4.5
+  gravity: 0
+  directGrab: 1
+  freeRotationEnabled: 1
+  rotationLock: 0
+  scalingEnabled: 1
+  minScaleFactor: 0.01
+  maxScaleFactor: 5
+  genericGrabEffect: 1
+  grabOutline: 1
+  grabOutlineWidth: 10
+  grabOutlineColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 255}
+  grabOutlineMode: 2
+  touchOutline: 0
+  touchOutlineWidth: 0
+  touchOutlineColor: {r: 0, g: 0, b: 0, a: 255}
+  touchOutlineMode: 0
+  grabStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  grabStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  grabEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  genericSelectState: 0
+  buttonText: {fileID: 0}
+  buttonBack: {fileID: 0}
+  selectOffset: 0
+  selectScale: 0
+  selectEffectDuration: 0.1
+  activeFont: {fileID: 0}
+  inactiveFont: {fileID: 0}
+  activeColor: {r: 0, g: 0, b: 0, a: 255}
+  inactiveColor: {r: 0, g: 0, b: 0, a: 255}
+  blendShapeButton: 0
+  buttonSkinnedMeshRenderer: {fileID: 0}
+  text: {fileID: 0}
+  border: {fileID: 0}
+  restDepth: 0
+  hoverDepth: 0
+  hoverDuration: 0
+  buttonAnimationDuration: 0.5
+  activeFontColor: {r: 255, g: 255, b: 255, a: 255}
+  inactiveFontColor: {r: 45, g: 45, b: 45, a: 255}
+  selectStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  selectStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  selectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  reactiveMat: 0
+  clippingDistance: 0
+  hover: 1
+  toolTip: 0
+  toolTipText: Enter hover state text here.
+  genericHoverEffect: 1
+  hoverOffset: 0
+  hoverScale: 0
+  hoverEffectDuration: 0
+  hoverOutline: 1
+  hoverOutlineWidth: 7.5
+  hoverOutlineColor: {r: 1, g: 1, b: 1, a: 255}
+  hoverOutlineMode: 3
+  hoverStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
