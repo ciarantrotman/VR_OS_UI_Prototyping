@@ -2194,6 +2194,7 @@
               <e p="LaunchProject.cs" t="Include" />
               <e p="StartLocation.cs" t="Include" />
               <e p="ViewpointManager.cs" t="Include" />
+              <e p="ViewpointPreview.cs" t="Include" />
               <e p="ViewpointTarget.cs" t="Include" />
             </e>
             <e p="Intersection.cs" t="Include" />

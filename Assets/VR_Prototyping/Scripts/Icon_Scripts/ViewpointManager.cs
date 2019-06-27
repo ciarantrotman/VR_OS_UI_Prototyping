@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +8,8 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
 {
     public class ViewpointManager : MonoBehaviour
     {
+        [BoxGroup] [SerializeField] private GameObject viewpointPreview;
+        private GameObject rViewpointPreview;
         private Scene mainScene;
         private IconScenes scenes;
         private Locomotion locomotion;
@@ -14,9 +18,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private List<ViewpointTarget> viewpointTargets = new List<ViewpointTarget>();
 
         public FullModel FullModel { get; set; }
-        
-        //public FullModel FullModel { get; set; }
-        //public FullModel FullModel { get; set; }
+        public ViewpointPreview RViewpointPreview { get; set; }
 
         private Transform target;
 
@@ -37,7 +39,18 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
                 ViewpointTarget viewpointTarget = child.GetComponent<ViewpointTarget>();
                 viewpointTargets.Add(viewpointTarget);
                 viewpointTarget.ViewpointManager = this;
+                viewpointTarget.index = viewpointTargets.Count;
+                viewpointTarget.SetupViewpointTarget();
             }
+
+            rViewpointPreview = Instantiate(viewpointPreview);
+            RViewpointPreview = rViewpointPreview.GetComponentInChildren<ViewpointPreview>();
+            RViewpointPreview.DeactivatePreview();
+        }
+
+        private void Update()
+        {
+            rViewpointPreview.transform.Transforms(controllerTransforms.RightTransform());
         }
 
         public void TriggerEnterModel(Transform reference)
