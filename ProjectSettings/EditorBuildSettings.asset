@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/VR_Prototyping/Scenes/00_Demo_Scene.unity
+    guid: 8bbd95783bd11fd409d5e622dcbb4e41
+  - enabled: 1
+    path: Assets/VR_Prototyping/Scenes/Icon_Scenes/01_Icon_Intro_Scene.unity
+    guid: ebe927cb476f3994095249ce7eb2cc31
+  - enabled: 1
+    path: Assets/VR_Prototyping/Scenes/Icon_Scenes/02_Diorama_Scene.unity
+    guid: 28fc4ab3fbe433c42ba9787428b03265
   m_configObjects: {}

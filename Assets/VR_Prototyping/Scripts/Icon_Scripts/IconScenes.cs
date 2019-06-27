@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace VR_Prototyping.Scripts.Icon_Scripts
 {
+    [DisallowMultipleComponent]
     public class IconScenes : MonoBehaviour
     {
         [Header("Icon Scenes")] 

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -16,7 +17,7 @@ using Object = UnityEngine.Object;
 
 namespace VR_Prototyping.Scripts
 {
-	[DisallowMultipleComponent]
+	[DisallowMultipleComponent, CanEditMultipleObjects]
 	public abstract class SelectableObject : MonoBehaviour, ISelectableObject
 	{
 		#region Inspector and Variables

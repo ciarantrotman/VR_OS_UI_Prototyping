@@ -2020,6 +2020,7 @@
               <e p="IconScenes.cs" t="Include" />
               <e p="IntroScene.cs" t="Include" />
               <e p="LaunchProject.cs" t="Include" />
+              <e p="StartLocation.cs" t="Include" />
             </e>
             <e p="Intersection.cs" t="Include" />
             <e p="InverseLerp.cs" t="Include" />
