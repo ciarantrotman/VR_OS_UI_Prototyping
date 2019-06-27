@@ -10,11 +10,12 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
     {
         private Scene mainScene;
         private IconScenes scenes;
-
+        private ViewpointManager viewpointManager;
 
         private IntroScene introScene;
         protected override void InitialisePostSetup()
         {
+            viewpointManager = GetComponentInParent<ViewpointManager>();
             scenes = player.GetComponent<IconScenes>();
             selectEnd.AddListener(ManageScenes);
             //selectEnd.AddListener(LoadScene);
@@ -22,7 +23,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
 
         private void LoadScene()
         {
-            controllerTransforms.SceneWipeTrigger.AddListener(ManageScenes);
+            locomotion.sceneWipeTrigger.AddListener(ManageScenes);
             player.GetComponent<Locomotion>().SceneWipe();
         }
 

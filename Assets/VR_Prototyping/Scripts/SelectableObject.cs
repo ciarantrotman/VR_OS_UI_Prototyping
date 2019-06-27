@@ -23,8 +23,9 @@ namespace VR_Prototyping.Scripts
 		#region Inspector and Variables
 
 		internal ControllerTransforms controllerTransforms;
-		private ObjectSelection objectSelection;
-		private Manipulation manipulation;
+		internal ObjectSelection objectSelection;
+		internal Locomotion locomotion;
+		internal Manipulation manipulation;
 		private Outline outline;
 		
 		private Vector3 defaultPosition;
@@ -63,6 +64,13 @@ namespace VR_Prototyping.Scripts
 		{
 			ON_BUTTON_DOWN,
 			ON_BUTTON_UP				
+		}
+		
+		private enum HoverAxis
+		{
+			X,
+			Y,
+			Z
 		}
 		
 		private readonly List<Vector3> positions = new List<Vector3>();
@@ -124,10 +132,11 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal SkinnedMeshRenderer buttonSkinnedMeshRenderer;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal GameObject text;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Required] internal Transform border;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Space(10)] [SerializeField] [Range(0f, .01f)] internal float restDepth;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Range(.01f, .5f)] internal float hoverDepth;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [SerializeField] [Range(.1f, 1f)] internal float hoverDuration;
-		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [Range(.01f, 1)] [SerializeField] internal float buttonAnimationDuration = .5f;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Space(10)] [SerializeField] private HoverAxis hoverAxis = HoverAxis.Z;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] [Range(0f, .01f)] internal float restDepth;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] [Range(.01f, .5f)] internal float hoverDepth;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] [Range(.1f, 1f)] internal float hoverDuration;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Space(10)] [Range(.01f, 1)] [SerializeField] internal float buttonAnimationDuration = .5f;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] internal Color activeFontColor = new Color(255f,255f,255f, 255f);
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("blendShapeButton")] [HideIf("genericSelectState")] [Indent] [SerializeField] internal Color inactiveFontColor = new Color(45f,45f,45f, 255f);
 		
@@ -229,6 +238,7 @@ namespace VR_Prototyping.Scripts
 			objectSelection = player.GetComponent<ObjectSelection>();
 			controllerTransforms = objectSelection.Controller;
 			manipulation = player.GetComponent<Manipulation>();
+			locomotion = player.GetComponent<Locomotion>();
 			Renderer = GetComponent<Renderer>();
 		}
 		private void SetupRigidBody()
@@ -259,13 +269,19 @@ namespace VR_Prototyping.Scripts
 
 		private void SetupBlendShape()
 		{
-			textRenderer = text.GetComponent<MeshRenderer>();
 			hoverStart.AddListener(HoverBorderStart);
 			hoverEnd.AddListener(HoverBorderEnd);
-			selectStart.AddListener(ButtonTextActive);
-			//selectStart.AddListener(ButtonTextInactive);
-			selectStart.AddListener(SetBlendShapeActive);
-			//selectStart.AddListener(SetBlendShapeInactive);
+
+			if (buttonText != null)
+			{
+				textRenderer = text.GetComponent<MeshRenderer>();
+				selectStart.AddListener(ButtonTextActive);
+			}
+
+			if (buttonSkinnedMeshRenderer != null)
+			{
+				selectStart.AddListener(SetBlendShapeActive);
+			}
 		}
 		private static void ToggleList(GameObject g, ICollection<GameObject> l, bool add)
 		{
@@ -298,7 +314,21 @@ namespace VR_Prototyping.Scripts
 		private void SetButtonStates()
 		{
 			if (!blendShapeButton) return;
-			border.localPosition = new Vector3(0, 0, buttonBorderDepth);
+			switch (hoverAxis)
+			{
+				case HoverAxis.X:
+					border.localPosition = new Vector3(buttonBorderDepth, 0, 0);
+					break;
+				case HoverAxis.Y:
+					border.localPosition = new Vector3(0, buttonBorderDepth, 0);
+					break;
+				case HoverAxis.Z:
+					border.localPosition = new Vector3(0, 0, buttonBorderDepth);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			if(buttonSkinnedMeshRenderer == null) return;
 			buttonSkinnedMeshRenderer.SetBlendShapeWeight(0, buttonBlendShapeWeight);
 		}
 
@@ -582,13 +612,39 @@ namespace VR_Prototyping.Scripts
 		
 		private void HoverBorderStart()
 		{
-			buttonBorderDepth = border.localPosition.z;
+			switch (hoverAxis)
+			{
+				case HoverAxis.X:
+					buttonBorderDepth = border.localPosition.x;
+					break;
+				case HoverAxis.Y:
+					buttonBorderDepth = border.localPosition.y;
+					break;
+				case HoverAxis.Z:
+					buttonBorderDepth = border.localPosition.z;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 			DOTween.To(()=> buttonBorderDepth, x=> buttonBorderDepth = x, hoverDepth, hoverDuration);
 		}
 
 		private void HoverBorderEnd()
 		{
-			buttonBorderDepth = border.localPosition.z;
+			switch (hoverAxis)
+			{
+				case HoverAxis.X:
+					buttonBorderDepth = border.localPosition.x;
+					break;
+				case HoverAxis.Y:
+					buttonBorderDepth = border.localPosition.y;
+					break;
+				case HoverAxis.Z:
+					buttonBorderDepth = border.localPosition.z;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 			DOTween.To(()=> buttonBorderDepth, x=> buttonBorderDepth = x, restDepth, hoverDuration);
 		}
 		

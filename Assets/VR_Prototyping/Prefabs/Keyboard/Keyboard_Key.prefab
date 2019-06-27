@@ -51,6 +51,7 @@ MonoBehaviour:
   player: {fileID: 0}
   grab: 0
   button: 1
+  toggle: 0
   startsActive: 0
   menu: 0
   menuItems: {fileID: 0}
@@ -116,6 +117,7 @@ MonoBehaviour:
   buttonSkinnedMeshRenderer: {fileID: 0}
   text: {fileID: 0}
   border: {fileID: 9080398353302053664}
+  hoverAxis: 2
   restDepth: 0
   hoverDepth: 0.05
   hoverDuration: 0.2
@@ -168,7 +170,7 @@ MonoBehaviour:
   hoverBorder: {fileID: 9080398353302053664}
   hoverRestDepth: 0
   hoverActiveDepth: 0.05
-  duration: 0.5
+  duration: 0.3
   keyValue: 0
 --- !u!65 &5854448841577481754
 BoxCollider:
@@ -425,6 +427,18 @@ PrefabInstance:
     - target: {fileID: 400002, guid: 46b97a6b74bc6e14a93ee518cf80c357, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 46b97a6b74bc6e14a93ee518cf80c357, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 46b97a6b74bc6e14a93ee518cf80c357, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 46b97a6b74bc6e14a93ee518cf80c357, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: 46b97a6b74bc6e14a93ee518cf80c357, type: 3}
       propertyPath: m_LocalPosition.x

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.PostProcessing;
+using VR_Prototyping.Scripts.Icon_Scripts;
 
 namespace VR_Prototyping.Scripts
 {
@@ -62,6 +64,8 @@ namespace VR_Prototyping.Scripts
         private Vector3 customRotation;
         private Vector3 customPosition;
         
+        public ViewpointManager ViewpointManager { get; set; }
+        
         public enum Method
         {
             DASH,
@@ -98,6 +102,8 @@ namespace VR_Prototyping.Scripts
         [TabGroup("Aesthetic Settings")] [Space(10)] [SerializeField] [Required] private GameObject sceneChangeWipe;
         [TabGroup("Aesthetic Settings")] [Indent] [SerializeField] [Range(.25f, 5f)] private float sceneWipeDuration;
 
+        [HideInInspector] public UnityEvent sceneWipeTrigger;
+        
         private SceneWipe sceneWipe;
         private ControllerTransforms controllerTransforms;
 
@@ -105,6 +111,7 @@ namespace VR_Prototyping.Scripts
         {
             controllerTransforms = GetComponent<ControllerTransforms>();
             SetupGameObjects();
+            sceneWipeTrigger.AddListener(SceneWipeDebug);
         }
 
         private void SetupGameObjects()
@@ -148,7 +155,7 @@ namespace VR_Prototyping.Scripts
 
             sceneChangeWipe = Instantiate(sceneChangeWipe, controllerTransforms.Player().transform);
             sceneWipe = sceneChangeWipe.AddComponent<SceneWipe>();
-            sceneWipe.Initialise(controllerTransforms);
+            sceneWipe.Initialise(controllerTransforms, this);
 
             rCf.transform.SetParent(parentTransform);
             rCp.transform.SetParent(rCf.transform);
@@ -282,7 +289,7 @@ namespace VR_Prototyping.Scripts
                     customPosition = targetPosition;
                     customRotation = targetRotation;
                     SceneWipe();
-                    controllerTransforms.SceneWipeTrigger.AddListener(CustomWipe);
+                    sceneWipeTrigger.AddListener(CustomWipe);
                     break;
                 default:
                     throw new ArgumentException();
@@ -317,6 +324,11 @@ namespace VR_Prototyping.Scripts
         public void SceneWipe()
         {
             StartCoroutine(sceneWipe.SceneWipeStart(sceneWipeDuration));
+        }
+
+        private void SceneWipeDebug()
+        {
+            Debug.Log("Scene wipe was called.");
         }
     }
 }

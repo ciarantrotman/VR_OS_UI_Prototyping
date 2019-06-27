@@ -13,6 +13,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         [BoxGroup] [SerializeField] private bool launchIntroScene;
         [BoxGroup] public SceneAsset introScene;
         [BoxGroup] public SceneAsset dioramaScene;
+        [BoxGroup] public SceneAsset fullScene;
 
         private void Awake()
         {

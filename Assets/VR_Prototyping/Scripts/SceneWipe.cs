@@ -8,15 +8,17 @@ namespace VR_Prototyping.Scripts
     public class SceneWipe : MonoBehaviour
     {
         private ControllerTransforms controllerTransforms;
+        private Locomotion locomotion;
         private MeshRenderer sceneWipeRenderer;
         private static readonly int Fade = Shader.PropertyToID("_Fade");
         
         private const float Value = .51f;
         private float value = -Value;
 
-        public void Initialise(ControllerTransforms transforms)
+        public void Initialise(ControllerTransforms transforms, Locomotion l)
         {
             controllerTransforms = transforms;
+            locomotion = l;
             sceneWipeRenderer = GetComponent<MeshRenderer>();
         }
         private void Update()
@@ -30,8 +32,8 @@ namespace VR_Prototyping.Scripts
         public IEnumerator SceneWipeStart(float duration)
         {
             DOTween.To(()=> value, x=> value = x, Value, duration);
-            yield return new WaitForSeconds(duration);// - (duration * .2f));
-            controllerTransforms.SceneWipeTrigger.Invoke();
+            yield return new WaitForSeconds(duration);
+            locomotion.sceneWipeTrigger.Invoke();
             DOTween.To(()=> value, x=> value = x, -Value, duration);
             yield return null;
         }
