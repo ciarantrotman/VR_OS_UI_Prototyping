@@ -1,0 +1,267 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!65 &8515017201388282896
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152966869038741314}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 1, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8183072810326754923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152966869038741314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3de84ddb9fa684c8c66589e867d6a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiated: 1
+  player: {fileID: 0}
+  grab: 1
+  button: 0
+  toggle: 0
+  startsActive: 0
+  menu: 0
+  menuItems: {fileID: 0}
+  moveForce: 0.15
+  latency: 4.5
+  gravity: 0
+  directGrab: 1
+  freeRotationEnabled: 0
+  rotationLock: 1
+  scalingEnabled: 0
+  minScaleFactor: 0
+  maxScaleFactor: 0
+  genericGrabEffect: 0
+  grabOutline: 0
+  grabOutlineWidth: 0
+  grabOutlineColor: {r: 0, g: 0, b: 0, a: 255}
+  grabOutlineMode: 0
+  touchOutline: 0
+  touchOutlineWidth: 0
+  touchOutlineColor: {r: 0, g: 0, b: 0, a: 255}
+  touchOutlineMode: 0
+  grabStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  grabStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  grabEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  dualGrabEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  genericSelectState: 0
+  buttonText: {fileID: 0}
+  buttonBack: {fileID: 0}
+  selectOffset: 0
+  selectScale: 0
+  selectEffectDuration: 0.1
+  activeFont: {fileID: 0}
+  inactiveFont: {fileID: 0}
+  activeColor: {r: 0, g: 0, b: 0, a: 255}
+  inactiveColor: {r: 0, g: 0, b: 0, a: 255}
+  blendShapeButton: 0
+  buttonSkinnedMeshRenderer: {fileID: 0}
+  text: {fileID: 0}
+  border: {fileID: 0}
+  hoverAxis: 2
+  restDepth: 0
+  hoverDepth: 0
+  hoverDuration: 0
+  buttonAnimationDuration: 0.5
+  activeFontColor: {r: 255, g: 255, b: 255, a: 255}
+  inactiveFontColor: {r: 45, g: 45, b: 45, a: 255}
+  selectStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  selectStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  selectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  reactiveMat: 0
+  clippingDistance: 0
+  hover: 0
+  toolTip: 0
+  toolTipText: Enter hover state text here.
+  genericHoverEffect: 0
+  hoverOffset: 0
+  hoverScale: 0
+  hoverEffectDuration: 0
+  hoverOutline: 0
+  hoverOutlineWidth: 0
+  hoverOutlineColor: {r: 0, g: 0, b: 0, a: 255}
+  hoverOutlineMode: 0
+  hoverStart:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverStay:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  grabTarget: {fileID: 152966869041920576}
+  triggerDistance: 0.25
+--- !u!1001 &152966869038707168
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_Name
+      value: Icon_Menu_Side
+      objectReference: {fileID: 0}
+    - target: {fileID: 100016, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_Name
+      value: Grab_Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 63ffc7dfaa022ba408c1509d5bdd53e2, type: 2}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: 0.0000000027939677
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: -0.0000000055879354
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.030000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.03000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 21d9fb6a022cced4a8d9cd90eb2fbae4, type: 2}
+    - target: {fileID: 2300002, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 63ffc7dfaa022ba408c1509d5bdd53e2, type: 2}
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 65da3788cd1379b4daaccb4875461a15, type: 3}
+--- !u!1 &152966869038741314 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: 65da3788cd1379b4daaccb4875461a15,
+    type: 3}
+  m_PrefabInstance: {fileID: 152966869038707168}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &152966869041920576 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700000, guid: 65da3788cd1379b4daaccb4875461a15,
+    type: 3}
+  m_PrefabInstance: {fileID: 152966869038707168}
+  m_PrefabAsset: {fileID: 0}

@@ -292,10 +292,10 @@ namespace VR_Prototyping.Scripts
 			target.SetParent(controller);
 		}
 		
-		public static void DirectGrabEnd(Rigidbody rigid, Transform target, bool g, List<Vector3> pos, List<Vector3> rot, float f, LineRenderer lr)
+		public static void DirectGrabEnd(Rigidbody rigid, Transform target, Transform originalParent, bool g, List<Vector3> pos, List<Vector3> rot, float f, LineRenderer lr)
 		{
 			rigid.useGravity = g;
-			target.SetParent(null);
+			target.SetParent(originalParent);
 			rigid.AddForce(pos.Velocity() * (f + f), ForceMode.VelocityChange);
 			rigid.AddTorque(rot.AngularVelocity() * (f + f), ForceMode.VelocityChange);
 			lr.enabled = true;

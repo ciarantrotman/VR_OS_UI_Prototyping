@@ -8,7 +8,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private new Camera camera;
         private RenderTexture renderTexture;
         public ViewpointManager ViewpointManager { get; set; }
-        public int index { get; set; }
+        public int Index { get; set; }
 
         public void SetupViewpointTarget()
         {
@@ -25,7 +25,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
             Transform cam = camera.transform;
             cam.localPosition = Vector3.zero;
             cam.rotation = Quaternion.identity;
-            ViewpointManager.RViewpointPreview.ActivatePreview(renderTexture, index);
+            ViewpointManager.RViewpointPreview.ActivatePreview(renderTexture, Index);
         }
         private void ViewpointPreviewEnd()
         {

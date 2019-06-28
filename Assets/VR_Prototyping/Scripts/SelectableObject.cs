@@ -39,6 +39,8 @@ namespace VR_Prototyping.Scripts
 		private bool pGrabR;
 		private bool pGrabL;
 
+		private Transform originalParent;
+
 		private bool pDualGrab;
 		
 		private RotationLock rotLock;
@@ -58,7 +60,8 @@ namespace VR_Prototyping.Scripts
 		
 		public enum RotationLock
 		{
-			FREE_ROTATION
+			FREE_ROTATION,
+			Y_ROTATION_ONLY
 		}
 		private enum ButtonTrigger
 		{
@@ -212,6 +215,7 @@ namespace VR_Prototyping.Scripts
 			ToggleList(gameObject, objectSelection.globalList, true);
 			ToggleList(gameObject, objectSelection.gazeList, true);
 			InitialisePostSetup();
+			originalParent = transform.parent;
 			
 			if(!button) return;
 			SetState(startsActive);
@@ -236,7 +240,7 @@ namespace VR_Prototyping.Scripts
 				}
 			}
 			objectSelection = player.GetComponent<ObjectSelection>();
-			controllerTransforms = objectSelection.Controller;
+			controllerTransforms = player.GetComponent<ControllerTransforms>();
 			manipulation = player.GetComponent<Manipulation>();
 			locomotion = player.GetComponent<Locomotion>();
 			Renderer = GetComponent<Renderer>();
@@ -377,7 +381,7 @@ namespace VR_Prototyping.Scripts
 					Manipulation.DirectGrabStart(rb, transform, manipulation.cR.transform);
 					break;
 				case Manipulation.RTag when !objectSelection.Controller.RightGrab() && pGrabR && objectSelection.RFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.RLr);
+					Manipulation.DirectGrabEnd(rb, transform, originalParent, gravity, positions, rotations, moveForce, objectSelection.RLr);
 					break;
 				case Manipulation.LTag when objectSelection.Controller.LeftGrab() && !pGrabL && objectSelection.LFocusObject == gameObject:
 					Manipulation.DirectGrabStart(rb, transform, manipulation.cL.transform);
@@ -385,7 +389,7 @@ namespace VR_Prototyping.Scripts
 					objectSelection.RFocusObject = null;
 					break;
 				case Manipulation.LTag when !objectSelection.Controller.LeftGrab() && pGrabL && objectSelection.LFocusObject == gameObject:
-					Manipulation.DirectGrabEnd(rb, transform, gravity, positions, rotations, moveForce, objectSelection.LLr);
+					Manipulation.DirectGrabEnd(rb, transform, originalParent, gravity, positions, rotations, moveForce, objectSelection.LLr);
 					objectSelection.LTouch = false;
 					objectSelection.LFocusObject = null;
 					break;

@@ -12,6 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66192d9f16e45064f9457ccf4b9ec273, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewpointPreview: {fileID: 0}
+--- !u!114 &6123645808919949175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8393713405712722441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3366e07084a0f364db1a7c7128b7d74d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minScaleFactor: 0.5
+  maxScaleFactor: 1.5
 --- !u!1001 &6392771563609060079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22,7 +37,7 @@ PrefabInstance:
     - target: {fileID: 3227913264475281638, guid: a2fcf08fe0f740c43b27016d3153c236,
         type: 3}
       propertyPath: m_Name
-      value: Diorama_Model
+      value: Diorama_Model_Micro
       objectReference: {fileID: 0}
     - target: {fileID: 3227913264475281636, guid: a2fcf08fe0f740c43b27016d3153c236,
         type: 3}

@@ -39,7 +39,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
                 ViewpointTarget viewpointTarget = child.GetComponent<ViewpointTarget>();
                 viewpointTargets.Add(viewpointTarget);
                 viewpointTarget.ViewpointManager = this;
-                viewpointTarget.index = viewpointTargets.Count;
+                viewpointTarget.Index = viewpointTargets.Count;
                 viewpointTarget.SetupViewpointTarget();
             }
 
