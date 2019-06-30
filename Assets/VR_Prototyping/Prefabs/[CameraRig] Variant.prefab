@@ -1349,6 +1349,8 @@ MonoBehaviour:
   lineRenderMat: {fileID: 2100000, guid: 6b77ce60b754a1547be62f5376a1899f, type: 2}
   doubleSidedLineRenderMat: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb,
     type: 2}
+  voidSkyBox: {fileID: 0}
+  environmentSkyBox: {fileID: 0}
   VR_SDK: 0
   grabGrip:
     actionPath: /actions/default/in/GrabGrip
@@ -1501,6 +1503,11 @@ MonoBehaviour:
   sceneChangeWipe: {fileID: 4682701757106891871, guid: e7cf404ab85b8b34ca9fbaf27821454f,
     type: 3}
   sceneWipeDuration: 3
+  sceneWipeTrigger:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &8008350058928402966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,6 +1537,24 @@ MonoBehaviour:
   toolTipPrefab: {fileID: 4587959169018795455, guid: 3354367ee8e9a764cacec99b757586a3,
     type: 3}
   toolTipOffset: 0.05
+--- !u!114 &5831107515765330985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956232358882789597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f140132747d5a7443a0ad7e6de092b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPrefab: {fileID: 7056651870024195140, guid: 00a8b1a660aab5441bf2ed4e4cefcb24,
+    type: 3}
+  menuSpawnOffset: 0
+  moveSpeed: 0.65
+  angleThreshold: 60
+  distanceThreshold: 3
 --- !u!114 &905022214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1751,9 +1776,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
+--- !u!4 &1956232358882529547 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 402434, guid: 4d293c8e162f3874b982baadd71153d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1956232358882931977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1956232358882789597 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1956232358882931977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1956232358882457671 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 478542, guid: 4d293c8e162f3874b982baadd71153d2,
     type: 3}
   m_PrefabInstance: {fileID: 1956232358882931977}
   m_PrefabAsset: {fileID: 0}
@@ -1766,18 +1803,6 @@ Transform:
 --- !u!4 &1956232358882473431 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 458974, guid: 4d293c8e162f3874b982baadd71153d2,
-    type: 3}
-  m_PrefabInstance: {fileID: 1956232358882931977}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1956232358882457671 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 478542, guid: 4d293c8e162f3874b982baadd71153d2,
-    type: 3}
-  m_PrefabInstance: {fileID: 1956232358882931977}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1956232358882529547 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 402434, guid: 4d293c8e162f3874b982baadd71153d2,
     type: 3}
   m_PrefabInstance: {fileID: 1956232358882931977}
   m_PrefabAsset: {fileID: 0}

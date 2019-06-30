@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private bool trigger;
         
         private ControllerTransforms controller;
+        private IconMenuController iconMenuController;
         
         [BoxGroup("Script Setup")] [Required] [SerializeField] private GameObject menuPrefab;
         [BoxGroup("Script Setup")] [Required] [SerializeField] [Range(.5f, 2.5f)] private float menuSpawnOffset;
@@ -34,7 +36,13 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         {
             menuPrefab = Instantiate(menuPrefab, transform);
             menuPrefab.name = "Icon/Menu/Parent";
-            SetState(Active);
+            iconMenuController = menuPrefab.GetComponent<IconMenuController>();
+            iconMenuController.Initialise(iconMenuController.modelControls, gameObject,  controller, this);
+            //iconMenuController.Initialise(iconMenuController.sceneControls, gameObject, controller, this);
+            
+            // Initialise everything, then disable them
+            SetState(true);
+            SetState(false);
         }
 
         private void Update()
@@ -58,6 +66,15 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
             Active = state;
             rubberBanded = state;
             menuPrefab.SetActive(Active);
+            
+//            foreach (Dictionary<string, BaseIconControl> controlSet in iconMenuController.controlSets)
+//            {
+//                foreach (KeyValuePair<string, BaseIconControl> control in controlSet)
+//                {
+//                    BaseIconControl tool = control.Value;
+//                    tool.IconButton.enabled = state;
+//                }
+//            }
             
             if(!state) return;
             menuPrefab.transform.position = controller.CameraPosition();

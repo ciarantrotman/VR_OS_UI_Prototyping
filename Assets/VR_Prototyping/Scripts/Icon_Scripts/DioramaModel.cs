@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -59,10 +60,13 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
                 manipulation.DualGrabEnd();
                 return;
             }
-            
+        }
+
+        private void LateUpdate()
+        {
             dualGrab = DualGrab();
         }
-        
+
         private bool DualGrab()
         {
             return controllerTransforms.LeftGrab() && controllerTransforms.RightGrab();

@@ -253,9 +253,9 @@ namespace VR_Prototyping.Scripts
 			{
 				mRp.transform.MidpointPosition(c.Controller.LeftTransform(), c.Controller.RightTransform(), true);
 			
-				var rotation = mRp.transform.rotation;
+				Quaternion rotation = mRp.transform.rotation;
 			
-				var aRot = pRot * Quaternion.Inverse(rotation);
+				Quaternion aRot = pRot * Quaternion.Inverse(rotation);
 				mRc.transform.rotation = Quaternion.Inverse(Quaternion.LerpUnclamped(Quaternion.identity, aRot, Scalar)) * mRc.transform.rotation;
 				mRc.transform.position = mRp.transform.position;
 
@@ -267,7 +267,7 @@ namespace VR_Prototyping.Scripts
 			}
 			if (sca && enableScaling)
 			{
-				var scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, c.Controller.ControllerDistance());
+				float scaleFactor = Mathf.InverseLerp(minDistance, maxDistance, c.Controller.ControllerDistance());
             
 				scaleFactor = scaleFactor <= 0 ? 0 : scaleFactor;
 				scaleFactor = scaleFactor >= 1 ? 1 : scaleFactor;
@@ -275,7 +275,7 @@ namespace VR_Prototyping.Scripts
 				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
 				
 				if(scaleLr == null) return;
-				Draw.LineRender(scaleLr, c.Controller.LeftTransform(), c.Controller.RightTransform());
+				scaleLr.LineRender(c.Controller.LeftTransform(), c.Controller.RightTransform());
 			}
 		}
 

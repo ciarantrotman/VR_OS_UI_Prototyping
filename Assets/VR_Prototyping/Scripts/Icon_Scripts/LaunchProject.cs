@@ -1,8 +1,4 @@
-﻿using System;
-using DG.Tweening;
-using Sirenix.OdinInspector;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace VR_Prototyping.Scripts.Icon_Scripts
 {
@@ -12,7 +8,6 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private IconScenes scenes;
         private ViewpointManager viewpointManager;
 
-        private IntroScene introScene;
         protected override void InitialisePostSetup()
         {
             viewpointManager = GetComponentInParent<ViewpointManager>();
@@ -23,8 +18,8 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
 
         private void LoadScene()
         {
-            locomotion.sceneWipeTrigger.AddListener(ManageScenes);
-            player.GetComponent<Locomotion>().SceneWipe();
+            //locomotion.sceneWipeTrigger.AddListener(ManageScenes);
+            //player.GetComponent<Locomotion>().SceneWipe();
         }
 
         private void ManageScenes()

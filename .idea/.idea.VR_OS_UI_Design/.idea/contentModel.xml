@@ -2188,13 +2188,16 @@
             <e p="Haptics.cs" t="Include" />
             <e p="Hover.cs" t="Include" />
             <e p="Icon_Scripts" t="Include">
+              <e p="BaseIconControl.cs" t="Include" />
               <e p="DioramaModel.cs" t="Include" />
               <e p="FullModel.cs" t="Include" />
+              <e p="IconButton.cs" t="Include" />
               <e p="IconMenu.cs" t="Include" />
+              <e p="IconMenuController.cs" t="Include" />
               <e p="IconMenuSideBar.cs" t="Include" />
               <e p="IconScenes.cs" t="Include" />
-              <e p="IntroScene.cs" t="Include" />
               <e p="LaunchProject.cs" t="Include" />
+              <e p="ReturnToDiorama.cs" t="Include" />
               <e p="StartLocation.cs" t="Include" />
               <e p="ViewpointManager.cs" t="Include" />
               <e p="ViewpointPreview.cs" t="Include" />

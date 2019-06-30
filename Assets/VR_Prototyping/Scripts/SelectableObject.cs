@@ -57,6 +57,8 @@ namespace VR_Prototyping.Scripts
 		public Renderer Renderer { get; private set; }
 
 		public Transform ResetState { get; private set; }
+
+		internal bool toggleState;
 		
 		public enum RotationLock
 		{
@@ -147,6 +149,8 @@ namespace VR_Prototyping.Scripts
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] [Space(10)] public UnityEvent selectStart;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectStay;
 		[FoldoutGroup("Button Settings")] [ShowIf("button")] public UnityEvent selectEnd;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("toggle")] public UnityEvent toggleStart;
+		[FoldoutGroup("Button Settings")] [ShowIf("button")] [ShowIf("toggle")] public UnityEvent toggleEnd;
 
 		[FoldoutGroup("Hover Settings")] [SerializeField] private bool reactiveMat;
 		[FoldoutGroup("Hover Settings")] [ShowIf("reactiveMat")] [SerializeField] [Indent] [Range(0, 1f)] private float clippingDistance;
@@ -215,15 +219,8 @@ namespace VR_Prototyping.Scripts
 			ToggleList(gameObject, objectSelection.globalList, true);
 			ToggleList(gameObject, objectSelection.gazeList, true);
 			InitialisePostSetup();
+			SetupButton();
 			originalParent = transform.parent;
-			
-			if(!button) return;
-			SetState(startsActive);
-			active = startsActive;
-			ResetState = transform;
-			
-			if(!blendShapeButton) return;
-			SetupBlendShape();
 		}
 		protected virtual void InitialisePostSetup()
 		{
@@ -237,6 +234,7 @@ namespace VR_Prototyping.Scripts
 				{
 					if (rootGameObject.name != "[VR Player]") continue;
 					player = rootGameObject;
+					Debug.Log(name + " player set to " + rootGameObject.name);
 				}
 			}
 			objectSelection = player.GetComponent<ObjectSelection>();
@@ -247,6 +245,7 @@ namespace VR_Prototyping.Scripts
 		}
 		private void SetupRigidBody()
 		{
+			if (!grab) return; // this seems like a band aid to be honest, figure out nested rigid bodies dude
 			rb = transform.AddOrGetRigidbody();
 			rb.freezeRotation = true;
 			rb.useGravity = !button && gravity;
@@ -271,6 +270,25 @@ namespace VR_Prototyping.Scripts
 			scaleMax = defaultLocalScale.ScaledScale(maxScaleFactor);
 		}
 
+		private void SetupButton()
+		{
+			if(!button) return;
+			toggleState = toggle && startsActive;
+			if (toggleState)
+			{
+				toggleStart.Invoke();
+			}
+			else if (toggle && !startsActive)
+			{
+				toggleEnd.Invoke();
+			}
+			SetState(toggle && toggleState);
+			active = startsActive;
+			ResetState = transform;
+			
+			if(!blendShapeButton) return;
+			SetupBlendShape();
+		}
 		private void SetupBlendShape()
 		{
 			hoverStart.AddListener(HoverBorderStart);
@@ -452,7 +470,7 @@ namespace VR_Prototyping.Scripts
 		}	
 		public void GrabStart(Transform con)
 		{
-			if (!grab) return;
+			if (!grab || rb == null) return;
 			rb.RigidBody(moveForce, latency,false, gravity);
 			manipulation.OnStart(con);
 			
@@ -462,7 +480,7 @@ namespace VR_Prototyping.Scripts
 		}	
 		public void GrabStay(Transform con)
 		{
-			if (!grab) return;
+			if (!grab || rb == null) return;
 			
 			manipulation.OnStay(con);
 			
@@ -521,6 +539,8 @@ namespace VR_Prototyping.Scripts
 		}
 		public void GrabEnd(Transform con)
 		{
+			if (!grab || rb == null) return;
+			
 			objectSelection.gazeList.Clear();
 			
 			rb.RigidBody(moveForce, latency,false, gravity);
@@ -578,18 +598,30 @@ namespace VR_Prototyping.Scripts
 		public void SelectStart()
 		{
 			selectStart.Invoke();
-
-			if (!genericSelectState || !button) return;
-			switch (buttonTrigger)
+			switch (toggleState)
 			{
-				case ButtonTrigger.ON_BUTTON_DOWN:
-					active = !active;
-					SetState(active);
-					break;
-				case ButtonTrigger.ON_BUTTON_UP:
+				case true:
+					toggleState = false;
+					toggleEnd.Invoke();
 					break;
 				default:
-					throw new ArgumentException();
+					toggleState = true;
+					toggleStart.Invoke();
+					break;
+			}
+			if (genericSelectState && button)
+			{
+				switch (buttonTrigger)
+				{
+					case ButtonTrigger.ON_BUTTON_DOWN:
+						active = !active;
+						SetState(active);
+						break;
+					case ButtonTrigger.ON_BUTTON_UP:
+						break;
+					default:
+						throw new ArgumentException();
+				}
 			}
 		}
 		public void SelectStay()

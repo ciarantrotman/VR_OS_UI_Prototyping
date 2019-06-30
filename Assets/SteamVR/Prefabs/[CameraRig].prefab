@@ -199,6 +199,7 @@ MonoBehaviour:
   launchIntroScene: 1
   introScene: {fileID: 102900000, guid: ebe927cb476f3994095249ce7eb2cc31, type: 3}
   dioramaScene: {fileID: 102900000, guid: 28fc4ab3fbe433c42ba9787428b03265, type: 3}
+  fullScene: {fileID: 0}
 --- !u!1 &147176
 GameObject:
   m_ObjectHideFlags: 0
