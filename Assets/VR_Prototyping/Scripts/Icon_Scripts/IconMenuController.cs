@@ -30,6 +30,8 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private int controlSetIndex = 0;
 
         private float constantSpacing;
+        
+        public IconMenu IconMenu { get; set; }
 
         private void Awake()
         {
@@ -38,7 +40,8 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
 
         public void Initialise(Dictionary<string, BaseIconControl> controlSet, GameObject player, ControllerTransforms controller, IconMenu iconMenu)
         {
-
+            IconMenu = iconMenu;
+            
             float x = horizontalSpacing;
             float y = verticalSpacing;
             int controlNumber = 0;
