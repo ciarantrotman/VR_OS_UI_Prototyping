@@ -627,6 +627,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.273
       objectReference: {fileID: 0}
+    - target: {fileID: 3596837904101859510, guid: bd6a88ddbda116b438c9a5da63810857,
+        type: 3}
+      propertyPath: iconMenuController
+      value: 
+      objectReference: {fileID: 8674674085389147253}
     m_RemovedComponents:
     - {fileID: 152966869046019200, guid: bd6a88ddbda116b438c9a5da63810857, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bd6a88ddbda116b438c9a5da63810857, type: 3}
