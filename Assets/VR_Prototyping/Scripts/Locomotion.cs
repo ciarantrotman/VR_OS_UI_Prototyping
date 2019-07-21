@@ -203,8 +203,8 @@ namespace VR_Prototyping.Scripts
             rJoystickValues.JoystickTracking(controllerTransforms.RightJoystick(), Sensitivity);
             lJoystickValues.JoystickTracking(controllerTransforms.LeftJoystick(), Sensitivity);
             
-            this.GestureDetection(controllerTransforms.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, controllerTransforms.RightJoystickPress(), pTouchR, disableRightHand, active);
-            this.GestureDetection(controllerTransforms.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, controllerTransforms.LeftJoystickPress(), pTouchL, disableLeftHand, active);
+            this.JoystickGestureDetection(controllerTransforms.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, controllerTransforms.RightJoystickPress(), pTouchR, disableRightHand, active);
+            this.JoystickGestureDetection(controllerTransforms.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, controllerTransforms.LeftJoystickPress(), pTouchL, disableLeftHand, active);
             
             pTouchR = controllerTransforms.RightJoystickPress();
             pTouchL = controllerTransforms.LeftJoystickPress();
@@ -212,7 +212,7 @@ namespace VR_Prototyping.Scripts
 
         private static Vector3 RotationAngle(Transform target, float a)
         {
-            var t = target.eulerAngles;
+            Vector3 t = target.eulerAngles;
             return new Vector3(t.x, t.y + a, t.z);
         }
 
@@ -326,7 +326,7 @@ namespace VR_Prototyping.Scripts
             StartCoroutine(sceneWipe.SceneWipeStart(sceneWipeDuration));
         }
 
-        private void SceneWipeDebug()
+        private static void SceneWipeDebug()
         {
             Debug.Log("Scene wipe was called.");
         }

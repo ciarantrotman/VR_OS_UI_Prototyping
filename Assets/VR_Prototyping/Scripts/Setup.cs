@@ -55,8 +55,7 @@ namespace VR_Prototyping.Scripts
             thisTransform.position = parent.position;
             thisTransform.SetParent(parent);
             thisTransform.localRotation = Quaternion.identity;
-            Vector3 position = thisTransform.position;
-            thisTransform.localPosition = new Vector3(position.x, position.y, position.z + offset);
+            thisTransform.localPosition = new Vector3(0, 0, offset);
         }
 
         public static void SetupSphereCollider(this SphereCollider sc, bool trigger, float radius)

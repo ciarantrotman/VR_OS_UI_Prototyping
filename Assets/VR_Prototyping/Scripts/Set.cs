@@ -126,6 +126,18 @@ namespace VR_Prototyping.Scripts
             Position(a, b);
             Rotation(a, b);
         }
+
+        public static void StableTransforms(this Transform a, Transform b, float l)
+        {
+            Position(a, b);
+            TransformLerpRotation(a, b, l);
+        }
+        
+        public static void StableTransformLook(this Transform a, Transform position, Transform look)
+        {
+            Position(a, position);
+            a.LookAt(look, a.up);
+        }
         
         public static void LerpTransform(this Transform a, Transform b, float l)
         {
@@ -158,6 +170,13 @@ namespace VR_Prototyping.Scripts
             if (!lookAt) return;
             
             target.LookAt(b);
+        }
+        
+        public static Vector3 MidpointPosition(Transform a, Transform b)
+        {
+            Vector3 posA = a.position;
+            Vector3 posB = b.position;
+            return Vector3.Lerp(posA, posB, .5f);
         }
 
         public static void AddForcePosition(this Rigidbody rb, Transform a, Transform b, bool debug)

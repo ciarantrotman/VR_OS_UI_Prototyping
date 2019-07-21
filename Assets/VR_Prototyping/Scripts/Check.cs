@@ -90,44 +90,7 @@ namespace VR_Prototyping.Scripts
                 list.RemoveAt(0);
             }
         }
-        
-        public static void GestureDetection(this Locomotion l, Vector2 current, Vector2 previous, float rot, float speed, float triggerValue, float toleranceValue, GameObject visual, LineRenderer lr, bool currentTouch, bool previousTouch, bool disabled, bool locomotionActive)
-        {
-            if (disabled) return;
-            
-            bool trigger = Mathf.Abs(current.x) > triggerValue || Mathf.Abs(current.y) > triggerValue;
-            bool tolerance = Mathf.Abs(previous.x) - 0 <= toleranceValue && Mathf.Abs(previous.y) - 0 <= toleranceValue;
-            bool triggerEnd = Mathf.Abs(current.x) - 0 <= toleranceValue && Mathf.Abs(current.y) - 0 <= toleranceValue;
-            bool toleranceEnd = Mathf.Abs(previous.x) > triggerValue || Mathf.Abs(previous.y) > triggerValue;
 
-            bool latch = trigger && toleranceEnd;
-            
-            if ((trigger && tolerance && !locomotionActive && !latch) || (currentTouch && !previousTouch && !locomotionActive))
-            {
-                if (current.x > triggerValue)
-                {
-                    l.RotateUser(rot, speed);
-                    
-                }
-                else if (current.x < -triggerValue)
-                {
-                    l.RotateUser(-rot, speed);
-                }
-                else if (current.y < -triggerValue)
-                {
-                    l.RotateUser(180f, speed);
-                }
-            }
-            else if ((currentTouch && previousTouch && !locomotionActive) || (trigger && toleranceEnd && !locomotionActive))
-            {
-                l.LocomotionStart(visual, lr);
-            }
-            else if ((triggerEnd && toleranceEnd && locomotionActive) || (!currentTouch && previousTouch && locomotionActive))
-            {
-                l.LocomotionEnd(visual, visual.transform.position, visual.transform.eulerAngles, lr);
-            }
-        }
-        
         public static void Target(this GameObject visual, GameObject parent, Transform normal, Vector2 pos, GameObject target, bool advanced)
         {
             visual.transform.LookAt(RotationTarget(pos, target, advanced));
@@ -213,7 +176,7 @@ namespace VR_Prototyping.Scripts
             return objects.Count > 0 ? objects[0].gameObject : null;
         }
         
-        public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, float distance, bool disable)
+        public static GameObject FusionFindFocusObject(this List<GameObject> objects, GameObject current, GameObject target, GameObject inactive, Transform controller, Vector3 forward, float distance, bool disable)
         {
             if (disable && current == null)
             {
@@ -224,8 +187,7 @@ namespace VR_Prototyping.Scripts
             if (disable) return current == null ? null : current;
 
             Vector3 position = controller.position;
-            Vector3 forward = controller.forward;
-            
+
             if (Physics.Raycast(position, forward, out RaycastHit hit, distance) && objects.Contains(hit.transform.gameObject))
             {
                 target.transform.SetParent(hit.transform);
@@ -329,6 +291,16 @@ namespace VR_Prototyping.Scripts
             {
                 l.Remove(g);
             }
+        }
+
+        public static float TransformDistance(this Transform a, Transform b)
+        {
+            return Vector3.Distance(a.position, b.position);
+        }
+        
+        public static bool TransformDistanceCheck(this Transform a, Transform b, float distance)
+        {
+            return Vector3.Distance(a.position, b.position) < distance;
         }
     }
 }

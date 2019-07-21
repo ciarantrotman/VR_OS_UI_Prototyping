@@ -97,7 +97,7 @@ namespace VR_Prototyping.Scripts
         {
             if (controller.LeftGrab())
             {
-                Haptics.Constant(controller.haptic, 150, 75, controller.LeftSource());
+                Haptics.Constant(controller.haptic, 150, 75, ControllerTransforms.LeftSource());
             }
             //r.material.SetVector(LeftHand, controller.LeftControllerTransform().position);
             //r.material.SetVector(RightHand, controller.RightControllerTransform().position);
@@ -106,14 +106,14 @@ namespace VR_Prototyping.Scripts
             switch (handle)
             {
                 case Handle.Left:
-                    HandleCheck(controller.LeftTransform(), controller.LeftGrab(), controller.LeftSource());
+                    HandleCheck(controller.LeftTransform(), controller.LeftGrab(), ControllerTransforms.LeftSource());
                     MidpointCalculation(transform, controller.LeftTransform());
                     SetTransform.Follow(midpointParent.transform, controller.LeftTransform());
                     Visual(controller.LeftTransform(), handleVisual.transform, controller.LeftGrab());
                     SetSmoothness(controller.LeftTransform());
                     break;
                 case Handle.Right:
-                    HandleCheck(controller.RightTransform(), controller.RightGrab(), controller.RightSource());
+                    HandleCheck(controller.RightTransform(), controller.RightGrab(), ControllerTransforms.RightSource());
                     MidpointCalculation(transform, controller.RightTransform());
                     SetTransform.Follow(midpointParent.transform, controller.RightTransform());
                     Visual(controller.RightTransform(), handleVisual.transform, controller.RightGrab());

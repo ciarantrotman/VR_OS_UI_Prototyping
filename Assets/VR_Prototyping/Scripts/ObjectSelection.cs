@@ -40,6 +40,8 @@ namespace VR_Prototyping.Scripts
 		private Tooltip lTooltip;
 		private Tooltip rTooltip;
 
+		private bool initialised;
+
 		public bool RTouch { get; set; }
 		public bool LTouch { get; set; }
 		public GameObject LMidPoint { get; private set; }
@@ -57,27 +59,30 @@ namespace VR_Prototyping.Scripts
 		public bool RSelectPrevious { get; set; }
 		public bool LGrabPrevious { get; set; }
 		public bool RGrabPrevious { get; set; }
+
+		private Transform lPrevious;
+		private Transform rPrevious;
 		
 		[ValidateInput("TypeCheck", "Recommended Selection Type is Fusion", InfoMessageType.Warning)]
-		[BoxGroup("Selection Settings")] [SerializeField] private SelectionType selectionType;
-		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RAY_CAST)] [Indent] [Range(0f, 180f)] public float gaze = 60f;
-		[BoxGroup("Selection Settings")] [HideIf("selectionType", SelectionType.RAY_CAST)] [Indent] [Range(0f, 180f)] public float manual = 25f;
-		[BoxGroup("Selection Settings")] [Space(10)]public bool setSelectionRange;		
-		[BoxGroup("Selection Settings")] [ShowIf("setSelectionRange")] [Indent] [Range(0f, 250f)] public float selectionRange = 25f;		
+		[BoxGroup("Selection Settings"), SerializeField] private SelectionType selectionType;
+		[BoxGroup("Selection Settings"), HideIf("selectionType", SelectionType.RAY_CAST), Indent, Range(0f, 180f)] public float gaze = 60f;
+		[BoxGroup("Selection Settings"), HideIf("selectionType", SelectionType.RAY_CAST), Indent, Range(0f, 180f)] public float manual = 25f;
+		[BoxGroup("Selection Settings"), Space(10)] public bool setSelectionRange;		
+		[BoxGroup("Selection Settings"), ShowIf("setSelectionRange"), Indent, Range(0f, 250f)] public float selectionRange = 25f;		
 		[BoxGroup("Selection Settings")] public bool disableLeftHand;
 		[BoxGroup("Selection Settings")] public bool disableRightHand;
 		
-		[BoxGroup("Aesthetics")] [Range(3f, 30f)] public int lineRenderQuality = 15;
-		[BoxGroup("Aesthetics")] [Range(.1f, 2.5f)] public float inactiveLineRenderOffset = 1f;
+		[BoxGroup("Aesthetics"), Range(3f, 30f)] public int lineRenderQuality = 15;
+		[BoxGroup("Aesthetics"), Range(.1f, 2.5f)] public float inactiveLineRenderOffset = 1f;
 		
-		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> globalList;
-		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> gazeList;
-		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> rHandList;
-		[BoxGroup("Object Lists")] [HideInEditorMode] public List<GameObject> lHandList;
+		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> globalList;
+		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> gazeList;
+		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> rHandList;
+		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> lHandList;
 
 		[BoxGroup("Accessibility Settings")] public bool toolTips;
-		[BoxGroup("Accessibility Settings")] [ShowIf("toolTips")] [Indent] [SerializeField] [Required] private GameObject toolTipPrefab;
-		[BoxGroup("Accessibility Settings")] [ShowIf("toolTips")] [Indent] [SerializeField] [Range(.01f, .2f)] private float toolTipOffset;
+		[BoxGroup("Accessibility Settings"), ShowIf("toolTips"), Indent, SerializeField, Required] private GameObject toolTipPrefab;
+		[BoxGroup("Accessibility Settings"), ShowIf("toolTips"), Indent, SerializeField, Range(.01f, .2f)] private float toolTipOffset;
 
 		#endregion
 		private void Start ()
@@ -94,21 +99,24 @@ namespace VR_Prototyping.Scripts
 		}
 		private void SetupGameObjects()
 		{
-			LMidPoint = new GameObject("MidPoint/Left");
-			RMidPoint = new GameObject("MidPoint/Right");
+			if (!initialised)
+			{
+				LMidPoint = new GameObject("MidPoint/Left");
+				RMidPoint = new GameObject("MidPoint/Right");
 			
-			lTarget = new GameObject("TargetLineRender/Left");
-			rTarget = new GameObject("Target/LineRender/Right");
+				lTarget = new GameObject("TargetLineRender/Left");
+				rTarget = new GameObject("Target/LineRender/Right");
 			
-			lDefault = new GameObject("Target/LineRender/Left/Default");
-			rDefault = new GameObject("Target/LineRender/Right/Default");
+				lDefault = new GameObject("Target/LineRender/Left/Default");
+				rDefault = new GameObject("Target/LineRender/Right/Default");
+				
+				lTooltipObject = Instantiate(toolTipPrefab);
+				rTooltipObject = Instantiate(toolTipPrefab);
+			
+				lTarget.transform.SetParent(transform);
+				rTarget.transform.SetParent(transform);
+			}
 
-			lTooltipObject = Instantiate(toolTipPrefab);
-			rTooltipObject = Instantiate(toolTipPrefab);
-			
-			lTarget.transform.SetParent(transform);
-			rTarget.transform.SetParent(transform);
-						
 			lDefault.transform.SetOffsetPosition(Controller.LeftTransform(), inactiveLineRenderOffset);
 			rDefault.transform.SetOffsetPosition(Controller.RightTransform(), inactiveLineRenderOffset);
 			
@@ -120,6 +128,8 @@ namespace VR_Prototyping.Scripts
 
 			lTooltip = lTooltipObject.GetComponent<Tooltip>();
 			rTooltip = rTooltipObject.GetComponent<Tooltip>();
+
+			initialised = true;
 		}
 
 		private void FixedUpdate()
@@ -137,8 +147,8 @@ namespace VR_Prototyping.Scripts
 					RFocusObject = rHandList.RayCastFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
 					break;
 				case SelectionType.FUSION:
-					LFocusObject = lHandList.FusionFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || LTouch);
-					RFocusObject = rHandList.FusionFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
+					LFocusObject = lHandList.FusionFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftTransform(), Controller.LeftForwardVector(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || LTouch);
+					RFocusObject = rHandList.FusionFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), Controller.RightForwardVector(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
 					break;
 				default:
 					LFocusObject = null;
@@ -169,6 +179,12 @@ namespace VR_Prototyping.Scripts
 
 			LPreviousSelectableObject = LSelectableObject;
 			RPreviousSelectableObject = RSelectableObject;
+			
+			ResetGameObjects(Controller.LeftTransform(), lPrevious);
+			ResetGameObjects(Controller.RightTransform(), rPrevious);
+
+			lPrevious = Controller.LeftTransform();
+			rPrevious = Controller.RightTransform();
 		}
 
 		private void LateUpdate()
@@ -190,6 +206,12 @@ namespace VR_Prototyping.Scripts
 		{
 			lHandList.Sort(SortBy.FocusObjectL);
 			rHandList.Sort(SortBy.FocusObjectR);
+		}
+
+		private void ResetGameObjects(Object current, Object previous)
+		{
+			if (current == previous) return;
+			SetupGameObjects();
 		}
 
 		public void ResetObjects()

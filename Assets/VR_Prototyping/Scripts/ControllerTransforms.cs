@@ -1,41 +1,56 @@
-﻿using Sirenix.OdinInspector;
+﻿using Leap;
+using Leap.Unity;
+using Sirenix.OdinInspector;
+using UnityEditor.U2D;
 using UnityEngine;
-using UnityEngine.Events;
 using Valve.VR;
 
 namespace VR_Prototyping.Scripts
 {
     public class ControllerTransforms : MonoBehaviour
     {
-        public enum SDK
-        {
-            STEAM_VR,
-            VRTK,
-            LEAP_MOTION
-        }
+        [BoxGroup("Settings"), SerializeField] public bool steamEnabled;
+        [BoxGroup("Settings"), SerializeField] public bool leapMotionEnabled;
+        [BoxGroup("Settings"), ShowIf("leapMotionEnabled"), Indent, Range(0, 1), SerializeField] private float leapStabilisation = .3f;
+        [BoxGroup("Settings"), ShowIf("leapMotionEnabled"), Indent, Range(.01f, .05f), SerializeField] private float leapGestureThreshold = .05f;
+        [BoxGroup("Settings"), ShowIf("leapMotionEnabled"), Indent, Range(.05f, .2f), SerializeField] private float leapControllerThreshold = .15f;
+        [BoxGroup("Settings"), SerializeField, Space(10)] public bool debugActive;
+        [BoxGroup("Settings"), SerializeField, Space(10)] public bool directInteraction;
+        [BoxGroup("Settings"), ShowIf("directInteraction"), Indent, Range(.01f, .05f), SerializeField] private float directDistance = .025f;
+        [BoxGroup("Settings"), ShowIf("directInteraction"), Indent, Range(0, 31)] public int layerIndex = 9;
         
-        [BoxGroup("Settings")] [SerializeField] public bool debugActive;
-        [BoxGroup("Settings")] [SerializeField] public bool directInteraction;
-        [BoxGroup("Settings")] [ShowIf("directInteraction")] [Indent] [Range(.01f, .05f)] [SerializeField] private float directDistance = .025f;
-        [BoxGroup("Settings")] [ShowIf("directInteraction")] [Indent] [Range(0, 31)] public int layerIndex = 9;
+        [FoldoutGroup("Transforms"), SerializeField, Required] private Transform cameraRig;
+        [FoldoutGroup("Transforms"), SerializeField, Space(10), Required, ShowIf("steamEnabled")] private Transform leftController;
+        [FoldoutGroup("Transforms"), SerializeField, Required, ShowIf("steamEnabled")] private Transform rightController;
+        [FoldoutGroup("Transforms"), SerializeField, Space(10), Required, ShowIf("leapMotionEnabled")] private Transform leftHand;
+        [FoldoutGroup("Transforms"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightHand;
         
-        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform leftController;
-        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform rightController;
-        [BoxGroup("Transforms")] [SerializeField] [Required] private Transform hmdCamera;
-        [BoxGroup("Transforms")] [SerializeField] [Required] private GameObject vrPlayer;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightThumb;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightIndex;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightMiddle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightRing;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightLittle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightPalm;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled"), Space(10)] private Transform leftThumb;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftIndex;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftMiddle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftRing;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftLittle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftPalm;
 
-        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material lineRenderMat;
-        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material doubleSidedLineRenderMat;
-        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material voidSkyBox;
-        [BoxGroup("Aesthetics")] [ SerializeField] [Required] public Material environmentSkyBox;
+        [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material lineRenderMat;
+        [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material doubleSidedLineRenderMat;
+        [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material voidSkyBox;
+        [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material environmentSkyBox;
         
-        [FoldoutGroup("Button Events")] public SDK VR_SDK;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean grabGrip;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean triggerGrip;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean menu;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Boolean joystickPress;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Vector2 joystickDirection;
-        [FoldoutGroup("Button Events")] public SteamVR_Action_Vibration haptic;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean grabGrip;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean triggerGrip;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean menu;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean joystickPress;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Vector2 joystickDirection;
+        [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Vibration haptic;
+        [FoldoutGroup("Events"), Space(10), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable leftHandEnabled;
+        [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable rightHandEnabled;
 
         private GameObject lHandDirect;
         private GameObject rHandDirect;
@@ -45,12 +60,19 @@ namespace VR_Prototyping.Scripts
         private GameObject localR;
         private GameObject localL;
 
+        private GameObject leftHandStable;
+        private GameObject leftPalmStable;
+        private GameObject rightHandStable;
+        private GameObject rightPalmStable;
+
         public const string LTag = "Direct/Left";
         public const string RTag = "Direct/Right";
+
         private void Start()
         {
             SetupDirect();
             SetupLocal();
+            SetupStable();
         }
 
         private void SetupDirect()
@@ -77,6 +99,17 @@ namespace VR_Prototyping.Scripts
             localL.transform.SetParent(localHeadset.transform);
         }
 
+        private void SetupStable()
+        {
+            leftHandStable = new GameObject("Left_Hand/Stable");
+            rightHandStable = new GameObject("Right_Hand/Stable");
+            leftPalmStable = new GameObject("Left_Palm/Stable");
+            rightPalmStable = new GameObject("Right_Palm/Stable");
+
+            leftHandStable.transform.SetParent(transform);
+            rightHandStable.transform.SetParent(transform);
+        }
+
         private void FixedUpdate()
         {
             lHandDirect.transform.Transforms(LeftTransform());
@@ -85,25 +118,46 @@ namespace VR_Prototyping.Scripts
             localHeadset.transform.Transforms(CameraTransform());
             localR.transform.Transforms(RightTransform());
             localL.transform.Transforms(LeftTransform());
+            
+            leftPalm.transform.StableTransforms(leftPalm, leapStabilisation);
+            rightPalmStable.transform.StableTransforms(rightPalm, leapStabilisation);
+            leftHandStable.transform.StableTransformLook(leftHand, leftPalmStable.transform);
+            rightHandStable.transform.StableTransformLook(rightHand, rightPalmStable.transform);
         }
 
         public GameObject Player()
         {
-            return vrPlayer;
+            return gameObject;
         }
+        
+        public Transform LeftTransform()
+        {
+            return LeftHandEnabled() && !leftHand.TransformDistanceCheck(leftController, leapControllerThreshold) ? leftHandStable.transform : leftController;
+        }
+
+        public Transform RightTransform()
+        {
+            return RightHandEnabled() && !rightHand.TransformDistanceCheck(rightController, leapControllerThreshold) ? rightHandStable.transform : rightController;
+        }
+        
         public Vector3 LeftPosition()
         {
-            return leftController.position;
+            return LeftTransform().position;
         }
     
         public Vector3 RightPosition()
         {
-            return rightController.position;
+            return RightTransform().position;
         }
         
         public Vector3 LeftLocalPosition()
         {
-            return leftController.localPosition;
+            return LeftTransform().localPosition;
+        }
+        
+        public Vector3 RightLocalPosition()
+        {
+            return RightTransform().localPosition;
         }
         
         public Transform HmdLocalRelativeTransform()
@@ -119,50 +173,47 @@ namespace VR_Prototyping.Scripts
         {
             return localR.transform;
         }
-    
-        public Vector3 RightLocalPosition()
-        {
-            return rightController.localPosition;
-        }
-        
-        public Transform LeftTransform()
-        {
-            return leftController;
-        }
-
-        public Transform RightTransform()
-        {
-            return rightController;
-        }
 
         public float ControllerDistance()
         {
-            return Vector3.Distance(rightController.position, leftController.position);
+            return Vector3.Distance(RightPosition(), LeftPosition());
         }
 
         public Transform CameraTransform()
         {
-            return hmdCamera;
+            return cameraRig;
         }
 
         public Vector3 CameraPosition()
         {
-            return hmdCamera.position;
+            return cameraRig.position;
         }
         
         public Vector3 CameraLocalPosition()
         {
-            return hmdCamera.localPosition;
+            return cameraRig.localPosition;
         }
 
         public bool LeftGrab()
         {
-            return grabGrip.GetState(SteamVR_Input_Sources.LeftHand);
+            return LeftHandEnabled()&& !leftHand.TransformDistanceCheck(leftController, directDistance) ? LeftHandGrab() : grabGrip.GetState(SteamVR_Input_Sources.LeftHand);
+        }
+
+        private bool LeftHandGrab()
+        {
+            return leftThumb.Select(leftIndex, leftMiddle, leapGestureThreshold);
+            return leftPalm.Grab(leftIndex, leftMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
     
         public bool RightGrab()
         {
-            return grabGrip.GetState(SteamVR_Input_Sources.RightHand);
+            return RightHandEnabled() && !rightHand.TransformDistanceCheck(leftController, directDistance) ? RightHandGrab() : grabGrip.GetState(SteamVR_Input_Sources.RightHand);
+        }
+        
+        private bool RightHandGrab()
+        {
+            return rightThumb.Select(rightIndex, rightMiddle, leapGestureThreshold);
+            return rightHand.Grab(rightIndex, rightMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
         
         public bool LeftMenu()
@@ -207,27 +258,46 @@ namespace VR_Prototyping.Scripts
         
         public Vector3 LeftForwardVector()
         {
-            return leftController.transform.TransformVector(Vector3.forward);
+            return LeftTransform().TransformVector(Vector3.forward);
         }
     
         public Vector3 RightForwardVector()
         {
-            return rightController.transform.TransformVector(Vector3.forward);
+            return RightHandEnabled() && !rightHand.TransformDistanceCheck(leftController, directDistance) ? AdjustedForward(CameraTransform(), RightTransform()) : RightTransform().TransformVector(Vector3.forward);
+            return RightTransform().TransformVector(Vector3.forward);
+        }
+
+        private static Vector3 AdjustedForward(Transform head, Transform hand)
+        {
+            Debug.DrawRay(head.position, head.forward.normalized, Color.red);
+            Debug.DrawRay(hand.position, hand.forward.normalized, Color.red);
+            Debug.DrawRay(Set.MidpointPosition(head, hand), head.forward.normalized + hand.forward.normalized, Color.blue);
+            return head.forward.normalized + hand.forward.normalized;
         }
 
         public Vector3 CameraForwardVector()
         {
-            return hmdCamera.forward;
+            return cameraRig.forward;
         }
 
-        public SteamVR_Input_Sources LeftSource()
+        public static SteamVR_Input_Sources LeftSource()
         {
             return SteamVR_Input_Sources.LeftHand;
         }
         
-        public SteamVR_Input_Sources RightSource()
+        public static SteamVR_Input_Sources RightSource()
         {
             return SteamVR_Input_Sources.RightHand;
+        }
+        
+        public bool LeftHandEnabled()
+        {
+            return leftHandEnabled.handEnabled && leapMotionEnabled;
+        }
+        
+        public bool RightHandEnabled()
+        {
+            return rightHandEnabled.handEnabled && leapMotionEnabled;
         }
     }
 }

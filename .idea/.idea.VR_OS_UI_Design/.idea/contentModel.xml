@@ -2185,6 +2185,7 @@
             </e>
             <e p="Draw.cs" t="Include" />
             <e p="FollowLerp.cs" t="Include" />
+            <e p="GestureDetection.cs" t="Include" />
             <e p="HandleController.cs" t="Include" />
             <e p="Haptics.cs" t="Include" />
             <e p="Hover.cs" t="Include" />
