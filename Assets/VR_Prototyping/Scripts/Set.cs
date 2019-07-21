@@ -133,10 +133,17 @@ namespace VR_Prototyping.Scripts
             TransformLerpRotation(a, b, l);
         }
         
-        public static void StableTransformLook(this Transform a, Transform position, Transform look)
+        public static void StableTransformLook(this Transform a, Transform position, Transform look, bool away)
         {
             Position(a, position);
-            a.LookAt(look, a.up);
+            if (!away)
+            {
+                a.LookAt(look, a.up);
+            }
+            else
+            {
+                a.LookAwayFrom(look, a.up);
+            }
         }
         
         public static void LerpTransform(this Transform a, Transform b, float l)

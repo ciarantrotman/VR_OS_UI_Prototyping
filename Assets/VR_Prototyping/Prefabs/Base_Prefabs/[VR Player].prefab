@@ -417,11 +417,11 @@ GameObject:
   - component: {fileID: 7473554891637304817}
   - component: {fileID: 6668207325446641152}
   - component: {fileID: 7473554891637304831}
-  - component: {fileID: 2459010844718547940}
-  - component: {fileID: 2453613896865763720}
-  - component: {fileID: 2910476754053980516}
-  - component: {fileID: 3988825840404499409}
   - component: {fileID: 618182138019180014}
+  - component: {fileID: 2459010844718547940}
+  - component: {fileID: 2910476754053980516}
+  - component: {fileID: 2453613896865763720}
+  - component: {fileID: 3988825840404499409}
   m_Layer: 0
   m_Name: '[VR Player]'
   m_TagString: Untagged
@@ -517,6 +517,7 @@ MonoBehaviour:
   leftLittle: {fileID: 6189610842465938137}
   leftPalm: {fileID: 81962661608298641}
   lineRenderMat: {fileID: 2100000, guid: 6b77ce60b754a1547be62f5376a1899f, type: 2}
+  dottedLineRenderMat: {fileID: 2100000, guid: 95adac4e70d55624ea95cb85f7af17e3, type: 2}
   doubleSidedLineRenderMat: {fileID: 2100000, guid: c370e6676fed2e14d87bc2991b4d69eb,
     type: 2}
   voidSkyBox: {fileID: 2100000, guid: f8f5137c34772dd40b4b964504217e4d, type: 2}
@@ -541,6 +542,35 @@ MonoBehaviour:
     needsReinit: 0
   leftHandEnabled: {fileID: 4239712436173930419}
   rightHandEnabled: {fileID: 4239250971014266099}
+--- !u!114 &618182138019180014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976386972615268133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8929538d7e8c6945b6ee8278fcdc3c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionType: 0
+  gaze: 60
+  manual: 10
+  setSelectionRange: 1
+  selectionRange: 100
+  disableLeftHand: 0
+  disableRightHand: 0
+  lineRenderQuality: 30
+  inactiveLineRenderOffset: 0.1
+  globalList: []
+  gazeList: []
+  rHandList: []
+  lHandList: []
+  toolTips: 1
+  toolTipPrefab: {fileID: 4587959169018795455, guid: 3354367ee8e9a764cacec99b757586a3,
+    type: 3}
+  toolTipOffset: 0.05
 --- !u!114 &2459010844718547940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,28 +604,6 @@ MonoBehaviour:
   distanceSnapping: 1
   snapDistance: 1
   maximumDistance: 1
---- !u!114 &2453613896865763720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8976386972615268133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31bc582457d68e443ade7c4a231b147d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 0
-  rubberBanded: 1
-  menuPrefab: {fileID: 6464194781663961269, guid: a2c2856de758ab746bac2a89690c0b1b,
-    type: 3}
-  keyboardPrefab: {fileID: 5860999561970161521, guid: 76fc5042d62a813469edf86267db966f,
-    type: 3}
-  moveSpeed: 0.65
-  angleThreshold: 70
-  distanceThreshold: 0.5
-  dominantHand: 0
 --- !u!114 &2910476754053980516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,6 +669,28 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &2453613896865763720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976386972615268133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bc582457d68e443ade7c4a231b147d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 0
+  rubberBanded: 1
+  menuPrefab: {fileID: 6464194781663961269, guid: a2c2856de758ab746bac2a89690c0b1b,
+    type: 3}
+  keyboardPrefab: {fileID: 5860999561970161521, guid: 76fc5042d62a813469edf86267db966f,
+    type: 3}
+  moveSpeed: 0.65
+  angleThreshold: 70
+  distanceThreshold: 0.5
+  dominantHand: 0
 --- !u!114 &3988825840404499409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,35 +709,6 @@ MonoBehaviour:
   moveSpeed: 0.65
   angleThreshold: 60
   distanceThreshold: 3
---- !u!114 &618182138019180014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8976386972615268133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8929538d7e8c6945b6ee8278fcdc3c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectionType: 0
-  gaze: 60
-  manual: 10
-  setSelectionRange: 1
-  selectionRange: 100
-  disableLeftHand: 0
-  disableRightHand: 0
-  lineRenderQuality: 30
-  inactiveLineRenderOffset: 0.2
-  globalList: []
-  gazeList: []
-  rHandList: []
-  lHandList: []
-  toolTips: 1
-  toolTipPrefab: {fileID: 4587959169018795455, guid: 3354367ee8e9a764cacec99b757586a3,
-    type: 3}
-  toolTipOffset: 0.05
 --- !u!1 &9085015246077292419
 GameObject:
   m_ObjectHideFlags: 0

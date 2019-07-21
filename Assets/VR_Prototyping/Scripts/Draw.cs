@@ -63,7 +63,7 @@ namespace VR_Prototyping.Scripts
 			}
 		}
 		
-		public static void LineRender(this LineRenderer lr, Transform start, Transform end)
+		public static void StraightLineRender(this LineRenderer lr, Transform start, Transform end)
 		{
 			lr.SetPosition(0, start.position);
 			lr.SetPosition(1, end.position);

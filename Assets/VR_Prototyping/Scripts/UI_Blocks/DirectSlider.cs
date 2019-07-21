@@ -28,7 +28,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         [HideInInspector] public Vector3 sliderMinPos;
         [HideInInspector] public float sliderValue;
 
-        [TabGroup("Slider Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance;
+        [TabGroup("Slider Settings")] [Range(.01f, .5f)] [SerializeField] private float directGrabDistance = .02f;
         [TabGroup("Slider Settings")] [Header("Slider Values")] [Space(5)] [SerializeField] [Range(0f, 1f)] private float startingValue;
         [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMax;
         [TabGroup("Slider Settings")] [HideInPlayMode] [Indent] [Range(.01f, 2f)] public float sliderMin;
@@ -60,7 +60,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         public void SetupSlider()
         {
-            var o = gameObject;
+            GameObject o = gameObject;
             slider = o;
             o.name = "Slider/Slider";
             min = Instantiate(sliderCap, slider.transform);
@@ -78,8 +78,8 @@ namespace VR_Prototyping.Scripts.UI_Blocks
             ActiveLr = LineRender(min.transform, activeWidth);
             InactiveLr = LineRender(max.transform, inactiveWidth);
 
-            rb = Setup.AddOrGetRigidbody(handle.transform);
-            Set.RigidBody(rb, .1f, 4.5f, true, false);
+            rb = handle.transform.AddOrGetRigidbody();
+            rb.RigidBody(.1f, 4.5f, true, false);
             
             min.transform.localPosition = new Vector3(-sliderMin, 0, 0);
             max.transform.localPosition = new Vector3(sliderMax, 0, 0);
@@ -91,15 +91,15 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         
         private LineRenderer LineRender(Component a, float width)
         {
-            var lr = a.gameObject.AddComponent<LineRenderer>();
-            Setup.SetupLineRender(lr, sliderMaterial, width, true);
+            LineRenderer lr = a.gameObject.AddComponent<LineRenderer>();
+            lr.SetupLineRender(sliderMaterial, width, true);
             return lr;
         }
 
         private void FixedUpdate()
         {
-            Draw.LineRender(ActiveLr, min.transform, handle.transform);
-            Draw.LineRender(InactiveLr, max.transform, handle.transform);
+            ActiveLr.StraightLineRender(min.transform, handle.transform);
+            InactiveLr.StraightLineRender(max.transform, handle.transform);
 
             if (!ignoreRightHand)
             {
@@ -116,21 +116,21 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         }
 
-        private void DirectSliderCheck(Transform controller, bool grab)
+        private void DirectSliderCheck(Transform controllerTransform, bool grab)
         {          
-            if (Vector3.Distance(handleNormalised.transform.position, controller.position) < directGrabDistance && !grab)
+            if (Vector3.Distance(handleNormalised.transform.position, controllerTransform.position) < directGrabDistance && !grab)
             {
-                Set.TransformLerpPosition(handle.transform, controller, .05f);
+                handle.transform.TransformLerpPosition(controllerTransform, .05f);
                 cHover = true;
             }
-            if (Vector3.Distance(handle.transform.position, controller.position) < DirectDistance && grab)
+            if (Vector3.Distance(handle.transform.position, controllerTransform.position) < DirectDistance && grab)
             {
                 sliderValue = SliderValue(sliderMax, sliderMin, HandleFollow());
-                Set.TransformLerpPosition(handle.transform, controller, .5f);
+                handle.transform.TransformLerpPosition(controllerTransform, .5f);
                 cGrab = true;
                 return;
             }
-            Set.TransformLerpPosition(handle.transform, handleNormalised.transform, .2f);
+            handle.transform.TransformLerpPosition(handleNormalised.transform, .2f);
             
             pHover = cHover;
             pGrab = cGrab;
@@ -143,17 +143,17 @@ namespace VR_Prototyping.Scripts.UI_Blocks
 
         private float HandleFollow()
         {
-            var value = handle.transform.localPosition;
-            var target = new Vector3(value.x, 0, 0);
+            Vector3 value = handle.transform.localPosition;
+            Vector3 target = new Vector3(value.x, 0, 0);
             if (value.x <= -sliderMin) target = new Vector3(-sliderMin, 0, 0);
             if (value.x >= sliderMax) target = new Vector3(sliderMax, 0, 0);
-            Set.VectorLerpLocalPosition(handleNormalised.transform, target, .2f);
+            handleNormalised.transform.VectorLerpLocalPosition(target, .2f);
             return handleNormalised.transform.localPosition.x;
         }
         
         public void AlignHandles(float pos, float neg)
         {
-            var p = transform.localPosition;
+            Vector3 p = transform.localPosition;
             sliderMaxPos = new Vector3(p.x + pos, p.y, p.z);
             sliderMinPos = new Vector3(p.x - neg, p.y, p.z);
         }
@@ -182,17 +182,17 @@ namespace VR_Prototyping.Scripts.UI_Blocks
     {
         private void OnSceneGUI()
         {
-            var slider = (DirectSlider)target;
-            var transform = slider.transform;
-            var right = transform.right;
-            var position = transform.position;
-            var size = HandleUtility.GetHandleSize(slider.sliderMaxPos) * .25f;
+            DirectSlider slider = (DirectSlider)target;
+            Transform transform = slider.transform;
+            Vector3 right = transform.right;
+            Vector3 position = transform.position;
+            float size = HandleUtility.GetHandleSize(slider.sliderMaxPos) * .25f;
             const float snap = .1f;
             
             EditorGUI.BeginChangeCheck();
             
-            var max = Handles.Slider(slider.sliderMaxPos, right, size, Handles.ConeHandleCap, snap);
-            var min = Handles.Slider(slider.sliderMinPos, -right, size, Handles.ConeHandleCap, snap);
+            Vector3 max = Handles.Slider(slider.sliderMaxPos, right, size, Handles.ConeHandleCap, snap);
+            Vector3 min = Handles.Slider(slider.sliderMinPos, -right, size, Handles.ConeHandleCap, snap);
             
             Handles.DrawLine(position, slider.sliderMaxPos);
             Handles.DrawLine(position, slider.sliderMinPos);

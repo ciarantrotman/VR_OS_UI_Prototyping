@@ -25,20 +25,21 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Transforms"), SerializeField, Space(10), Required, ShowIf("leapMotionEnabled")] private Transform leftHand;
         [FoldoutGroup("Transforms"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightHand;
         
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightThumb;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightIndex;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightMiddle;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightRing;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightLittle;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform rightPalm;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled"), Space(10)] private Transform leftThumb;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftIndex;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftMiddle;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftRing;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftLittle;
-        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] private Transform leftPalm;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightThumb;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightIndex;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightMiddle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightRing;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightLittle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightPalm;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled"), Space(10)] public Transform leftThumb;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftIndex;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftMiddle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftRing;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftLittle;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftPalm;
 
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material lineRenderMat;
+        [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material dottedLineRenderMat;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material doubleSidedLineRenderMat;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material voidSkyBox;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material environmentSkyBox;
@@ -121,8 +122,8 @@ namespace VR_Prototyping.Scripts
             
             leftPalm.transform.StableTransforms(leftPalm, leapStabilisation);
             rightPalmStable.transform.StableTransforms(rightPalm, leapStabilisation);
-            leftHandStable.transform.StableTransformLook(leftHand, leftPalmStable.transform);
-            rightHandStable.transform.StableTransformLook(rightHand, rightPalmStable.transform);
+            leftHandStable.transform.StableTransformLook(leftHand, leftPalmStable.transform, false);
+            rightHandStable.transform.StableTransformLook(rightHand, rightPalmStable.transform, false);
         }
 
         public GameObject Player()
@@ -271,8 +272,8 @@ namespace VR_Prototyping.Scripts
         {
             Debug.DrawRay(head.position, head.forward.normalized, Color.red);
             Debug.DrawRay(hand.position, hand.forward.normalized, Color.red);
-            Debug.DrawRay(Set.MidpointPosition(head, hand), head.forward.normalized + hand.forward.normalized, Color.blue);
-            return head.forward.normalized + hand.forward.normalized;
+            Debug.DrawRay(Set.MidpointPosition(head, hand), head.forward.normalized + hand.forward.normalized*.5f, Color.blue);
+            return head.forward.normalized + hand.forward*.5f;
         }
 
         public Vector3 CameraForwardVector()

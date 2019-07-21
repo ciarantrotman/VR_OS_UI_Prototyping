@@ -92,7 +92,7 @@ namespace VR_Prototyping.Scripts.UI_Blocks
         
         private void FixedUpdate()
         {
-            spokeLr.LineRender(anchor.transform, handle.transform);
+            spokeLr.StraightLineRender(anchor.transform, handle.transform);
             activeCircleLr.ArcLineRenderer(dialRadius, 0, center.transform.localEulerAngles.y, Draw.Orientation.Right, circleQuality);
 
             if (!ignoreRightHand)

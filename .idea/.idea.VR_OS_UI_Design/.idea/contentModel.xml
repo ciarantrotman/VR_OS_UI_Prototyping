@@ -2212,6 +2212,9 @@
               <e p="KeyboardManager.cs" t="Include" />
               <e p="KeyboardTarget.cs" t="Include" />
             </e>
+            <e p="LeapMotion" t="Include">
+              <e p="HandMenu.cs" t="Include" />
+            </e>
             <e p="Locomotion.cs" t="Include" />
             <e p="LocomotionPositionPreview.cs" t="Include" />
             <e p="LocomotionVisual.cs" t="Include" />

@@ -235,9 +235,9 @@ namespace VR_Prototyping.Scripts.Tools.Measure
             YSnap = CheckSnap(yDistance, xDistance, zDistance, MeasureTool.snapTolerance);
             ZSnap = CheckSnap(zDistance, xDistance, yDistance, MeasureTool.snapTolerance);
             
-            xLr.LineRender(transform, X.transform);
-            yLr.LineRender(transform, Y.transform);
-            zLr.LineRender(transform, Z.transform);
+            xLr.StraightLineRender(transform, X.transform);
+            yLr.StraightLineRender(transform, Y.transform);
+            zLr.StraightLineRender(transform, Z.transform);
             
             xLr.LineRenderWidth(XSnap ? MeasureTool.activeWidth : MeasureTool.inactiveWidth, XSnap ? MeasureTool.activeWidth : MeasureTool.inactiveWidth);
             yLr.LineRenderWidth(YSnap ? MeasureTool.activeWidth : MeasureTool.inactiveWidth, YSnap ? MeasureTool.activeWidth : MeasureTool.inactiveWidth);

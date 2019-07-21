@@ -275,7 +275,7 @@ namespace VR_Prototyping.Scripts
 				target.transform.localScale = Vector3.Lerp(scaleMin, scaleMax, scaleFactor);
 				
 				if(scaleLr == null) return;
-				scaleLr.LineRender(c.Controller.LeftTransform(), c.Controller.RightTransform());
+				scaleLr.StraightLineRender(c.Controller.LeftTransform(), c.Controller.RightTransform());
 			}
 		}
 
