@@ -52,7 +52,7 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Vibration haptic;
         [FoldoutGroup("Events"), Space(10), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable leftHandEnabled;
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable rightHandEnabled;
-
+        
         private GameObject lHandDirect;
         private GameObject rHandDirect;
 
@@ -202,7 +202,7 @@ namespace VR_Prototyping.Scripts
 
         private bool LeftHandGrab()
         {
-            return leftThumb.Select(leftIndex, leftMiddle, leapGestureThreshold);
+            return leftThumb.DualSelect(leftIndex, leftMiddle, leapGestureThreshold);
             return leftPalm.Grab(leftIndex, leftMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
     
@@ -213,7 +213,7 @@ namespace VR_Prototyping.Scripts
         
         private bool RightHandGrab()
         {
-            return rightThumb.Select(rightIndex, rightMiddle, leapGestureThreshold);
+            return rightThumb.DualSelect(rightIndex, rightMiddle, leapGestureThreshold);
             return rightHand.Grab(rightIndex, rightMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
         
@@ -229,12 +229,54 @@ namespace VR_Prototyping.Scripts
 
         public bool LeftSelect()
         {
+            return LeftHandEnabled()&& !leftHand.TransformDistanceCheck(leftController, directDistance) ? LeftIndexSelect() : triggerGrip.GetState(SteamVR_Input_Sources.LeftHand);
             return triggerGrip.GetState(SteamVR_Input_Sources.LeftHand);
         }
         
         public bool RightSelect()
         {
+            return RightHandEnabled() && !rightHand.TransformDistanceCheck(leftController, directDistance) ? RightIndexSelect() : triggerGrip.GetState(SteamVR_Input_Sources.RightHand);
             return triggerGrip.GetState(SteamVR_Input_Sources.RightHand);
+        }
+
+        public bool LeftIndexSelect()
+        {
+            return leftThumb.Select(leftIndex, leapGestureThreshold) && !LeftMiddleSelect() && !LeftRingSelect() && !LeftLittleSelect();
+        }
+        
+        public bool LeftMiddleSelect()
+        {
+            return leftThumb.Select(leftMiddle, leapGestureThreshold) && !LeftIndexSelect() && !LeftRingSelect() && !LeftLittleSelect();
+        }
+        
+        public bool LeftRingSelect()
+        {
+            return leftThumb.Select(leftRing, leapGestureThreshold) && !LeftIndexSelect() && !LeftMiddleSelect() && !LeftLittleSelect();
+        }
+        
+        public bool LeftLittleSelect()
+        {
+            return leftThumb.Select(leftLittle, leapGestureThreshold) && !LeftIndexSelect() && !LeftMiddleSelect() && !LeftRingSelect();
+        }
+        
+        public bool RightIndexSelect()
+        {
+            return rightThumb.Select(rightIndex, leapGestureThreshold) && !RightMiddleSelect() && !RightRingSelect() && !RightLittleSelect();
+        }
+        
+        public bool RightMiddleSelect()
+        {
+            return rightThumb.Select(rightMiddle, leapGestureThreshold) && !RightIndexSelect() && !RightRingSelect() && !RightLittleSelect();
+        }
+        
+        public bool RightRingSelect()
+        {
+            return rightThumb.Select(rightRing, leapGestureThreshold) && !RightIndexSelect() && !RightMiddleSelect() && !RightLittleSelect();
+        }
+        
+        public bool RightLittleSelect()
+        {
+            return rightThumb.Select(rightLittle, leapGestureThreshold) && !RightIndexSelect() && !RightMiddleSelect() && !RightRingSelect();
         }
         
         public bool LeftJoystickPress()

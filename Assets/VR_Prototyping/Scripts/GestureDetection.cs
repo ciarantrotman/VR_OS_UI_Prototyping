@@ -57,13 +57,19 @@ namespace VR_Prototyping.Scripts
             return average < threshold;
         }
         
-        public static bool Select(this Transform thumb, Transform index, Transform middle, float threshold)
+        public static bool DualSelect(this Transform thumb, Transform index, Transform middle, float threshold)
         {
             float average = (thumb.TransformDistance(index) +
                              thumb.TransformDistance(middle));
             Vector3 position = thumb.position;
             Debug.DrawRay(position, index.position - position, Color.red);
             Debug.DrawRay(position, middle.position - position, Color.blue);
+            return average < threshold;
+        }
+        
+        public static bool Select(this Transform thumb, Transform finger, float threshold)
+        {
+            float average = (thumb.TransformDistance(finger));
             return average < threshold;
         }
     }

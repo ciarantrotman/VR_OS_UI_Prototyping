@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace VR_Prototyping.Scripts.LeapMotion
@@ -8,6 +9,13 @@ namespace VR_Prototyping.Scripts.LeapMotion
     {
         private ControllerTransforms controllerTransforms;
         private LineRenderer proximityLine;
+
+        private bool fingerTrigger;
+
+        private Transform target;
+        
+        [BoxGroup("Menu Settings"), Range(.01f, .1f)] private float selectionTriggerDistance;
+        
         private void Awake()
         {
             SetupReferences();
@@ -20,6 +28,7 @@ namespace VR_Prototyping.Scripts.LeapMotion
         }
         private void SetupLineRenderer()
         {
+            target = controllerTransforms.leftThumb;
             proximityLine = controllerTransforms.leftThumb.AddOrGetLineRenderer();
             proximityLine.SetupLineRender(controllerTransforms.dottedLineRenderMat, .001f, true);
             proximityLine.positionCount = 2;
@@ -27,7 +36,23 @@ namespace VR_Prototyping.Scripts.LeapMotion
 
         private void Update()
         {
-            proximityLine.StraightLineRender(controllerTransforms.leftThumb, controllerTransforms.leftIndex);
+            if (controllerTransforms.LeftIndexSelect())
+            {
+                target = controllerTransforms.leftIndex;
+            }
+            if (controllerTransforms.LeftMiddleSelect())
+            {
+                target = controllerTransforms.leftMiddle;
+            }
+            if (controllerTransforms.LeftRingSelect())
+            {
+                target = controllerTransforms.leftRing;
+            }
+            if (controllerTransforms.LeftLittleSelect())
+            {
+                target = controllerTransforms.leftLittle;
+            }
+            proximityLine.StraightLineRender(controllerTransforms.leftThumb, target);
         }
     }
 }
