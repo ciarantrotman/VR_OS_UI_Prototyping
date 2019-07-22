@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Leap.Unity.Interaction;
+using UnityEngine;
 using UnityEngine.Rendering;
 using VR_Prototyping.Plugins.QuickOutline.Scripts;
 
@@ -48,6 +49,11 @@ namespace VR_Prototyping.Scripts
         public static Outline AddOrGetOutline(this Transform a)
         {
             return !a.GetComponent<Outline>() ? a.gameObject.AddComponent<Outline>() : a.gameObject.GetComponent<Outline>();
+        }
+        
+        public static InteractionBehaviour AddOrGetInteractionBehavior(this Transform a)
+        {
+            return !a.GetComponent<InteractionBehaviour>() ? a.gameObject.AddComponent<InteractionBehaviour>() : a.gameObject.GetComponent<InteractionBehaviour>();
         }
         
         public static void SetOffsetPosition(this Transform thisTransform, Transform parent, float offset)

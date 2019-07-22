@@ -6,6 +6,8 @@ namespace VR_Prototyping.Scripts
     {
         public static void JoystickGestureDetection(this Locomotion l, Vector2 current, Vector2 previous, float rot, float speed, float triggerValue, float toleranceValue, GameObject visual, LineRenderer lr, bool currentTouch, bool previousTouch, bool disabled, bool locomotionActive)
         {
+            Debug.Log(currentTouch + ", " + previousTouch);
+            
             if (disabled) return;
             
             bool trigger = Mathf.Abs(current.x) > triggerValue || Mathf.Abs(current.y) > triggerValue;

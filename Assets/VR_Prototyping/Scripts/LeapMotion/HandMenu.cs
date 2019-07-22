@@ -39,19 +39,27 @@ namespace VR_Prototyping.Scripts.LeapMotion
             if (controllerTransforms.LeftIndexSelect())
             {
                 target = controllerTransforms.leftIndex;
+                return;
             }
             if (controllerTransforms.LeftMiddleSelect())
             {
                 target = controllerTransforms.leftMiddle;
+                return;
             }
             if (controllerTransforms.LeftRingSelect())
             {
                 target = controllerTransforms.leftRing;
+                return;
             }
             if (controllerTransforms.LeftLittleSelect())
             {
                 target = controllerTransforms.leftLittle;
+                return;
             }
+        }
+
+        void LateUpdate()
+        {
             proximityLine.StraightLineRender(controllerTransforms.leftThumb, target);
         }
     }

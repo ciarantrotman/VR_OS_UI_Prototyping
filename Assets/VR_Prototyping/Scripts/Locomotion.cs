@@ -55,6 +55,8 @@ namespace VR_Prototyping.Scripts
         private readonly List<Vector2> rJoystickValues = new List<Vector2>();
         private readonly List<Vector2> lJoystickValues = new List<Vector2>();
         
+        private bool cTouchR;
+        private bool cTouchL;
         private bool pTouchR;
         private bool pTouchL;
 
@@ -182,32 +184,88 @@ namespace VR_Prototyping.Scripts
 
         private void Update()
         {
-            rTs.transform.LocalDepth(rCf.ControllerAngle(rCp, rCn, controllerTransforms.RightTransform(), controllerTransforms.CameraTransform(), controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform), false, .2f);
-            lTs.transform.LocalDepth(lCf.ControllerAngle(lCp, lCn, controllerTransforms.LeftTransform(), controllerTransforms.CameraTransform(), controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), false, .2f);
+            // set the positions of the local objects and calculate the depth based on the angle of the controller
+            rTs.transform.LocalDepth(
+                rCf.ControllerAngle(
+                    rCp, 
+                    rCn, 
+                    controllerTransforms.RightTransform(), 
+                    controllerTransforms.CameraTransform(),
+                    controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, rCp.transform),
+                false, 
+                .2f);
+            lTs.transform.LocalDepth(
+                lCf.ControllerAngle(
+                    lCp, 
+                    lCn, 
+                    controllerTransforms.LeftTransform(), 
+                    controllerTransforms.CameraTransform(), 
+                    controllerTransforms.debugActive).CalculateDepth(MaxAngle, MinAngle, max, min, lCp.transform), 
+                false, 
+                .2f);
+            
+            // detect valid positions for the target
+            rTs.TargetLocation(rHp,
+                rLastValidPosition = rTs.LastValidPosition(rLastValidPosition), 
+                layerIndex);
+            lTs.TargetLocation(lHp, 
+                lLastValidPosition = lTs.LastValidPosition(lLastValidPosition),
+                layerIndex);
 
-            rTs.TargetLocation(rHp, rLastValidPosition = rTs.LastValidPosition(rLastValidPosition), layerIndex);
-            lTs.TargetLocation(lHp, lLastValidPosition = lTs.LastValidPosition(lLastValidPosition), layerIndex);
-
+            // set the midpoint position
             rMp.transform.LocalDepth(rCp.transform.Midpoint(rTs.transform), false, 0f);
             lMp.transform.LocalDepth(lCp.transform.Midpoint(lTs.transform), false, 0f);
             
+            // set the rotation of the target based on the joystick values
             rVo.Target(rHp, rCn.transform, controllerTransforms.RightJoystick(), rRt, advancedLocomotion);
             lVo.Target(lHp, lCn.transform, controllerTransforms.LeftJoystick(), lRt, advancedLocomotion);
             
+            // draw the line renderer
             rLr.BezierLineRenderer(controllerTransforms.RightTransform().position,rMp.transform.position,rHp.transform.position,lineRenderQuality);
             lLr.BezierLineRenderer(controllerTransforms.LeftTransform().position, lMp.transform.position, lHp.transform.position, lineRenderQuality);
         }
 
         private void LateUpdate()
         {
-            rJoystickValues.JoystickTracking(controllerTransforms.RightJoystick(), Sensitivity);
-            lJoystickValues.JoystickTracking(controllerTransforms.LeftJoystick(), Sensitivity);
+            cTouchR = controllerTransforms.RightLocomotion();
+            cTouchL = controllerTransforms.LeftLocomotion();
             
-            this.JoystickGestureDetection(controllerTransforms.RightJoystick(), rJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, rVo, rLr, controllerTransforms.RightJoystickPress(), pTouchR, disableRightHand, active);
-            this.JoystickGestureDetection(controllerTransforms.LeftJoystick(), lJoystickValues[0], angle, rotateSpeed, Trigger, Tolerance, lVo, lLr, controllerTransforms.LeftJoystickPress(), pTouchL, disableLeftHand, active);
+            rJoystickValues.JoystickTracking(
+                controllerTransforms.RightJoystick(),
+                Sensitivity);
+            lJoystickValues.JoystickTracking(
+                controllerTransforms.LeftJoystick(),
+                Sensitivity);
             
-            pTouchR = controllerTransforms.RightJoystickPress();
-            pTouchL = controllerTransforms.LeftJoystickPress();
+            this.JoystickGestureDetection(
+                controllerTransforms.RightJoystick(), 
+                rJoystickValues[0], 
+                angle, 
+                rotateSpeed, 
+                Trigger, 
+                Tolerance,
+                rVo,
+                rLr, 
+                cTouchR, 
+                pTouchR, 
+                disableRightHand,
+                active);
+            this.JoystickGestureDetection(
+                controllerTransforms.LeftJoystick(), 
+                lJoystickValues[0], 
+                angle,
+                rotateSpeed,
+                Trigger,
+                Tolerance,
+                lVo,
+                lLr,
+                cTouchL,
+                pTouchL,
+                disableLeftHand,
+                active);
+            
+            pTouchR = controllerTransforms.RightLocomotion();
+            pTouchL = controllerTransforms.LeftLocomotion();
         }
 
         private static Vector3 RotationAngle(Transform target, float a)
@@ -218,7 +276,7 @@ namespace VR_Prototyping.Scripts
 
         public void RotateUser(float a, float time)
         {
-            if(transform.parent == cN.transform || !rotation) return;
+            if(transform.parent == cN.transform || !rotation || controllerTransforms.LeftHandEnabled() || controllerTransforms.RightHandEnabled()) return;
             active = true;
             
             controllerTransforms.CameraTransform().SplitRotation(cN.transform, false);
@@ -320,7 +378,7 @@ namespace VR_Prototyping.Scripts
             vignetteLayer.intensity.value = intensity;
         }
         
-        [Button]
+        [Button, HideInEditorMode]
         public void SceneWipe()
         {
             StartCoroutine(sceneWipe.SceneWipeStart(sceneWipeDuration));

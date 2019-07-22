@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DG.Tweening;
+using Leap.Unity.Interaction;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEditor;
@@ -50,8 +51,10 @@ namespace VR_Prototyping.Scripts
 		private float buttonBlendShapeWeight = BlendShapeInactive;
 		private float buttonBorderDepth;
 		private MeshRenderer textRenderer;
-		
 		private Rigidbody rb;
+
+		private InteractionBehaviour interactionBehaviour;
+		
 		public float AngleL { get; private set; }
 		public float AngleR { get; private set; }
 		public Renderer Renderer { get; private set; }
@@ -216,6 +219,7 @@ namespace VR_Prototyping.Scripts
 			SetupRigidBody();
 			SetupManipulation();
 			SetupOutline();
+			SetupInteractionBehaviour(controllerTransforms.InteractionManager());
 			ToggleList(gameObject, objectSelection.globalList, true);
 			ToggleList(gameObject, objectSelection.gazeList, true);
 			InitialisePostSetup();
@@ -242,6 +246,8 @@ namespace VR_Prototyping.Scripts
 			manipulation = player.GetComponent<Manipulation>();
 			locomotion = player.GetComponent<Locomotion>();
 			Renderer = GetComponent<Renderer>();
+			
+			
 		}
 		private void SetupRigidBody()
 		{
@@ -304,6 +310,13 @@ namespace VR_Prototyping.Scripts
 			{
 				selectStart.AddListener(SetBlendShapeActive);
 			}
+		}
+		private void SetupInteractionBehaviour(InteractionManager interactionManager)
+		{
+			if (!controllerTransforms.leapMotionEnabled) return;
+			interactionBehaviour = transform.AddOrGetInteractionBehavior();
+			interactionBehaviour.manager = interactionManager;
+			interactionBehaviour.ignoreGrasping = !grab;
 		}
 		private static void ToggleList(GameObject g, ICollection<GameObject> l, bool add)
 		{
