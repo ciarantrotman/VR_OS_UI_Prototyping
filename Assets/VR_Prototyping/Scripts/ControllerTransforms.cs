@@ -1,8 +1,8 @@
-﻿using Leap;
+﻿using System.Collections.Generic;
+using Leap;
 using Leap.Unity;
 using Leap.Unity.Interaction;
 using Sirenix.OdinInspector;
-using UnityEditor.U2D;
 using UnityEngine;
 using Valve.VR;
 
@@ -33,12 +33,14 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightRing;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightLittle;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightPalm;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform rightWrist;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled"), Space(10)] public Transform leftThumb;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftIndex;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftMiddle;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftRing;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftLittle;
         [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftPalm;
+        [FoldoutGroup("LeapMotion Hands"), SerializeField, Required, ShowIf("leapMotionEnabled")] public Transform leftWrist;
 
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material lineRenderMat;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material dottedLineRenderMat;
@@ -54,6 +56,8 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Vibration haptic;
         [FoldoutGroup("Events"), Space(10), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable leftHandEnabled;
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable rightHandEnabled;
+        [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand leftCapsuleHand;
+        [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand rightCapsuleHand;
         
         private GameObject lHandDirect;
         private GameObject rHandDirect;
@@ -63,10 +67,22 @@ namespace VR_Prototyping.Scripts
         private GameObject localR;
         private GameObject localL;
 
-        private GameObject leftHandStable;
-        private GameObject leftPalmStable;
-        private GameObject rightHandStable;
-        private GameObject rightPalmStable;
+        private GameObject lHandStable;
+        private GameObject lPalmStable;
+        private GameObject rHandStable;
+        private GameObject rPalmStable;
+        
+        private GameObject lElbow;
+        private GameObject rElbow;
+        
+        private GameObject lAnchor;
+        private GameObject rAnchor;
+
+        private List<Vector3> lPalmDirection = new List<Vector3>();
+        private List<Vector3> rPalmDirection = new List<Vector3>();
+        
+        Arm lArm;
+        Arm rArm;
 
         public const string LTag = "Direct/Left";
         public const string RTag = "Direct/Right";
@@ -76,12 +92,16 @@ namespace VR_Prototyping.Scripts
             SetupDirect();
             SetupLocal();
             SetupStable();
+            leftHandEnabled.handEnabledEvent.AddListener(SetupLeftArm);
+            rightHandEnabled.handEnabledEvent.AddListener(SetupRightArm);
         }
 
         private void SetupDirect()
         {
             lHandDirect = new GameObject(LTag);
             rHandDirect = new GameObject(RTag);
+            lHandDirect.transform.SetParent(transform);
+            rHandDirect.transform.SetParent(transform);
             lHandDirect.layer = layerIndex;
             rHandDirect.layer = layerIndex;
             SphereCollider ls = lHandDirect.AddComponent<SphereCollider>();
@@ -93,24 +113,54 @@ namespace VR_Prototyping.Scripts
         private void SetupLocal()
         {
             localRef = new GameObject("Local/Reference");
-            localRef.transform.SetParent(transform);
             localHeadset = new GameObject("Local/HMD");
-            localHeadset.transform.SetParent(localRef.transform);
             localR = new GameObject("Local/Right");
-            localR.transform.SetParent(localHeadset.transform);
             localL = new GameObject("Local/Left");
+            
             localL.transform.SetParent(localHeadset.transform);
+            localRef.transform.SetParent(transform);
+            localHeadset.transform.SetParent(localRef.transform);
+            localR.transform.SetParent(localHeadset.transform);
         }
 
         private void SetupStable()
         {
-            leftHandStable = new GameObject("Left_Hand/Stable");
-            rightHandStable = new GameObject("Right_Hand/Stable");
-            leftPalmStable = new GameObject("Left_Palm/Stable");
-            rightPalmStable = new GameObject("Right_Palm/Stable");
+            lHandStable = new GameObject("Left_Hand/Stable");
+            rHandStable = new GameObject("Right_Hand/Stable");
+            lPalmStable = new GameObject("Left_Palm/Stable");
+            rPalmStable = new GameObject("Right_Palm/Stable");
+            
 
-            leftHandStable.transform.SetParent(transform);
-            rightHandStable.transform.SetParent(transform);
+            lHandStable.transform.SetParent(transform);
+            rHandStable.transform.SetParent(transform);
+            lPalmStable.transform.SetParent(transform);
+            rPalmStable.transform.SetParent(transform);
+        }
+
+        private void SetupLeftArm()
+        {
+            lArm = leftCapsuleHand._hand.Arm;
+            
+            lElbow = new GameObject("Left_Elbow");
+            lAnchor = new GameObject("Left_Anchor");
+            
+            lElbow.transform.SetParent(transform);
+            lAnchor.transform.SetParent(transform);
+            
+            leftHandEnabled.handEnabledEvent.RemoveAllListeners();
+        }
+        
+        private void SetupRightArm()
+        {
+            rArm = rightCapsuleHand._hand.Arm;
+            
+            rElbow = new GameObject("Right_Elbow");
+            rAnchor = new GameObject("Right_Anchor");
+            
+            rElbow.transform.SetParent(transform);
+            rAnchor.transform.SetParent(transform);
+            
+            rightHandEnabled.handEnabledEvent.RemoveAllListeners();
         }
 
         private void FixedUpdate()
@@ -121,11 +171,12 @@ namespace VR_Prototyping.Scripts
             localHeadset.transform.Transforms(CameraTransform());
             localR.transform.Transforms(RightTransform());
             localL.transform.Transforms(LeftTransform());
-            
-            leftPalm.transform.StableTransforms(leftPalm, leapStabilisation);
-            rightPalmStable.transform.StableTransforms(rightPalm, leapStabilisation);
-            leftHandStable.transform.StableTransformLook(leftHand, leftPalmStable.transform, false);
-            rightHandStable.transform.StableTransformLook(rightHand, rightPalmStable.transform, false);
+
+            lPalmStable.transform.StableTransforms(leftPalm, leapStabilisation);
+            rPalmStable.transform.StableTransforms(rightPalm, leapStabilisation);
+
+            Set.HandPosition(lElbow == null, lElbow, lArm, lHandStable, Set.FivePointMidpointPosition(leftIndex, leftMiddle, leftRing, leftLittle, leftWrist), lAnchor, leftThumb);  
+            Set.HandPosition(rElbow == null || rightCapsuleHand._hand.IsLeft, rElbow, rArm, rHandStable, Set.FivePointMidpointPosition(rightIndex, rightMiddle, rightRing, rightLittle, rightWrist), rAnchor, rightThumb);
         }
 
         public GameObject Player()
@@ -135,12 +186,22 @@ namespace VR_Prototyping.Scripts
         
         public Transform LeftTransform()
         {
-            return LeftHandEnabled() && !LeftHandController() ? leftHandStable.transform : leftController;
+            return LeftHandEnabled() && !LeftHandController() ? AdjustedLeftHandTransform() : leftController;
+        }
+
+        private Transform AdjustedLeftHandTransform()
+        {
+            return lHandStable.transform;
         }
 
         public Transform RightTransform()
         {
-            return RightHandEnabled() && !RightHandController() ? rightHandStable.transform : rightController;
+            return RightHandEnabled() && !RightHandController() ? AdjustedRightHandTransform() : rightController;
+        }
+        
+        private Transform AdjustedRightHandTransform()
+        {
+            return rHandStable.transform;
         }
         
         public Vector3 LeftPosition()
@@ -315,15 +376,20 @@ namespace VR_Prototyping.Scripts
         {
             return rightThumb.Select(rightLittle, leapGestureThreshold);
         }
+        
+        public bool RightLittleSoloSelect()
+        {
+            return RightLittleSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightRingSelect());
+        }
 
         public bool LeftLocomotion()
         {
-            return LeftHandEnabled() && !LeftHandController() ? LeftIndexSoloSelect() : LeftJoystickPress();
+            return LeftHandEnabled() && !LeftHandController() ? leftPalm.PalmDown(lPalmDirection, 5f, 10) : LeftJoystickPress();
         }
 
         public bool RightLocomotion()
         {
-            return RightHandEnabled() && !RightHandController() ? RightIndexSoloSelect() : RightJoystickPress();
+            return RightHandEnabled() && !RightHandController() ? rightPalm.PalmDown(rPalmDirection, 5f, 10) : RightJoystickPress();
         }
         
         public bool LeftJoystickPress()
@@ -360,10 +426,7 @@ namespace VR_Prototyping.Scripts
 
         private static Vector3 AdjustedForward(Transform head, Transform hand)
         {
-            Debug.DrawRay(head.position, head.forward.normalized, Color.red);
-            Debug.DrawRay(hand.position, hand.forward.normalized, Color.red);
-            Debug.DrawRay(Set.MidpointPosition(head, hand), head.forward.normalized + hand.forward.normalized*.5f, Color.blue);
-            return head.forward.normalized + hand.forward*.5f;
+            return hand.forward;
         }
 
         public Vector3 CameraForwardVector()
@@ -383,7 +446,7 @@ namespace VR_Prototyping.Scripts
         
         public bool LeftHandEnabled()
         {
-            return leftHandEnabled.handEnabled && leapMotionEnabled;
+            return leftHandEnabled.handEnabled && leapMotionEnabled && leftCapsuleHand._hand.IsLeft;
         }
 
         private bool LeftHandController()
@@ -393,7 +456,7 @@ namespace VR_Prototyping.Scripts
         
         public bool RightHandEnabled()
         {
-            return rightHandEnabled.handEnabled && leapMotionEnabled;
+            return rightHandEnabled.handEnabled && leapMotionEnabled && rightCapsuleHand._hand.IsRight;
         }
         
         private bool RightHandController()

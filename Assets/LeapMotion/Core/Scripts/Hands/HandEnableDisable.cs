@@ -11,10 +11,12 @@ using UnityEngine;
 using System.Collections;
 using System;
 using Leap;
+using UnityEngine.Events;
 
 namespace Leap.Unity{
   public class HandEnableDisable : HandTransitionBehavior
   {
+    [HideInInspector] public UnityEvent handEnabledEvent;
     public bool handEnabled;
     protected override void Awake() {
       base.Awake();
@@ -25,6 +27,7 @@ namespace Leap.Unity{
   	protected override void HandReset() {
       gameObject.SetActive(true);
       handEnabled = true;
+      handEnabledEvent.Invoke();
     }
 
     protected override void HandFinish() {

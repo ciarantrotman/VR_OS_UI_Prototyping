@@ -57,7 +57,7 @@ namespace Leap.Unity {
     private float _palmRadius = 0.015f;
 
     private Material _sphereMat;
-    private Hand _hand;
+    public Hand _hand { get; private set; }
     private Vector3[] _spherePositions;
 
     public override ModelType HandModelType {

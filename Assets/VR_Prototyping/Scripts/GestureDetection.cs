@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace VR_Prototyping.Scripts
 {
@@ -6,8 +7,6 @@ namespace VR_Prototyping.Scripts
     {
         public static void JoystickGestureDetection(this Locomotion l, Vector2 current, Vector2 previous, float rot, float speed, float triggerValue, float toleranceValue, GameObject visual, LineRenderer lr, bool currentTouch, bool previousTouch, bool disabled, bool locomotionActive)
         {
-            Debug.Log(currentTouch + ", " + previousTouch);
-            
             if (disabled) return;
             
             bool trigger = Mathf.Abs(current.x) > triggerValue || Mathf.Abs(current.y) > triggerValue;
@@ -73,6 +72,13 @@ namespace VR_Prototyping.Scripts
         {
             float average = (thumb.TransformDistance(finger));
             return average < threshold;
+        }
+
+        public static bool PalmDown(this Transform palm, List<Vector3> palmDirection, float tolerance, int tracking)
+        {
+            Vector3 up = palm.up;
+            palmDirection.PositionTracking(-up, tracking);
+            return Vector3.Angle(Vector3.down, palmDirection[0]) < tolerance && Vector3.Angle(Vector3.down, palmDirection[palmDirection.Count]) < tolerance;
         }
     }
 }

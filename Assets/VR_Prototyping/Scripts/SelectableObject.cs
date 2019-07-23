@@ -313,7 +313,7 @@ namespace VR_Prototyping.Scripts
 		}
 		private void SetupInteractionBehaviour(InteractionManager interactionManager)
 		{
-			if (!controllerTransforms.leapMotionEnabled) return;
+			if (!controllerTransforms.leapMotionEnabled || !controllerTransforms.InteractionManager().enabled) return;
 			interactionBehaviour = transform.AddOrGetInteractionBehavior();
 			interactionBehaviour.manager = interactionManager;
 			interactionBehaviour.ignoreGrasping = !grab;

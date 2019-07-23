@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Leap;
+using Leap.Unity;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -146,6 +148,19 @@ namespace VR_Prototyping.Scripts
             }
         }
         
+        public static void StablePositionLook(this Transform a, Vector3 position, Transform look, bool away)
+        {
+            a.transform.position = position;
+            if (!away)
+            {
+                a.LookAt(look, a.up);
+            }
+            else
+            {
+                a.LookAwayFrom(look, a.up);
+            }
+        }
+        
         public static void LerpTransform(this Transform a, Transform b, float l)
         {
             if (a == null || b == null) return;
@@ -184,6 +199,43 @@ namespace VR_Prototyping.Scripts
             Vector3 posA = a.position;
             Vector3 posB = b.position;
             return Vector3.Lerp(posA, posB, .5f);
+        }
+        
+        public static void ThreePointMidpointPosition(this Transform target, Transform a, Transform b, Transform c)
+        {
+            Vector3 posA = a.position;
+            Vector3 posB = b.position;
+            Vector3 posC = c.position;
+            Vector3 aC = Vector3.Lerp(posA, posC, .5f);
+            Vector3 bC = Vector3.Lerp(posB, posC, .5f);
+            Vector3 midpoint = Vector3.Lerp(aC, bC, .5f);
+            target.position = midpoint;
+        }
+        
+        public static Vector3 ThreePointMidpointPosition(Transform a, Transform b, Transform c)
+        {
+            Vector3 posA = a.position;
+            Vector3 posB = b.position;
+            Vector3 posC = c.position;
+            Vector3 aC = Vector3.Lerp(posA, posC, .5f);
+            Vector3 bC = Vector3.Lerp(posB, posC, .5f);
+            return Vector3.Lerp(aC, bC, .5f);
+        }
+        
+        public static Vector3 FivePointMidpointPosition(Transform a, Transform b, Transform c, Transform d, Transform e)
+        {
+            Vector3 posA = a.position;
+            Vector3 posB = b.position;
+            Vector3 posC = c.position;
+            Vector3 posD = d.position;
+            Vector3 posE = e.position;
+            Vector3 aE = Vector3.Lerp(posA, posE, .5f);
+            Vector3 bE = Vector3.Lerp(posB, posE, .5f);
+            Vector3 cE = Vector3.Lerp(posC, posE, .5f);
+            Vector3 dE = Vector3.Lerp(posD, posE, .5f);
+            Vector3 aEbE = Vector3.Lerp(aE, bE, .5f);
+            Vector3 cEdE = Vector3.Lerp(cE, dE, .5f);
+            return Vector3.Lerp(aEbE, cEdE, .5f);
         }
 
         public static void AddForcePosition(this Rigidbody rb, Transform a, Transform b, bool debug)
@@ -384,6 +436,16 @@ namespace VR_Prototyping.Scripts
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis), axis, null);
             }
+        }
+        
+        public static void HandPosition(bool armDisabled, GameObject elbow, Arm arm, GameObject transformPosition, Vector3 position, GameObject lookAt, Transform wrist)
+        {
+            if (armDisabled) return;
+            elbow.transform.position = arm.ElbowPosition.ToVector3();
+            lookAt.transform.MidpointPosition(elbow.transform, wrist.transform, true);
+            transformPosition.transform.StablePositionLook(position, lookAt.transform, true);
+            Debug.DrawLine(elbow.transform.position, wrist.transform.position, Color.blue);
+            Debug.DrawLine(transformPosition.transform.position, lookAt.transform.position, Color.red);
         }
     }
 }
