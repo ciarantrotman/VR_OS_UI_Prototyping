@@ -63,18 +63,18 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand leftCapsuleHand;
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand rightCapsuleHand;
 
-        private UnityEvent lIndexSoloSelect;
-        private UnityEvent lMiddleSoloSelect;
-        private UnityEvent lRingSoloSelect;
-        private UnityEvent lLittleSoloSelect;
-        private UnityEvent lDualSelect;
-        private UnityEvent lGrabSelect;
-        private UnityEvent rIndexSoloSelect;
-        private UnityEvent rMiddleSoloSelect;
-        private UnityEvent rRingSoloSelect;
-        private UnityEvent rLittleSoloSelect;
-        private UnityEvent rDualSelect;
-        private UnityEvent rGrabSelect;
+        [HideInInspector] public UnityEvent lIndexSoloSelect;
+        [HideInInspector] public UnityEvent lMiddleSoloSelect;
+        [HideInInspector] public UnityEvent lRingSoloSelect;
+        [HideInInspector] public UnityEvent lLittleSoloSelect;
+        [HideInInspector] public UnityEvent lDualSelect;
+        [HideInInspector] public UnityEvent lGrabSelect;
+        [HideInInspector] public UnityEvent rIndexSoloSelect;
+        [HideInInspector] public UnityEvent rMiddleSoloSelect;
+        [HideInInspector] public UnityEvent rRingSoloSelect;
+        [HideInInspector] public UnityEvent rLittleSoloSelect;
+        [HideInInspector] public UnityEvent rDualSelect;
+        [HideInInspector] public UnityEvent rGrabSelect;
 
         private ParticleSystem lIndexParticle;
         private ParticleSystem lMiddleParticle;
@@ -122,10 +122,10 @@ namespace VR_Prototyping.Scripts
 
         private void Start()
         {
+            SetupParticleSystem();
             SetupDirect();
             SetupLocal();
             SetupStable();
-            SetupParticleSystem();
             leftHandEnabled.handEnabledEvent.AddListener(SetupLeftArm);
             rightHandEnabled.handEnabledEvent.AddListener(SetupRightArm);
         }
@@ -201,15 +201,23 @@ namespace VR_Prototyping.Scripts
 
         private void SetupParticleSystem()
         {
-            lIndexParticle = Instantiate(fingerTouchParticleSystem, leftIndex).GetComponent<ParticleSystem>();
-            lMiddleParticle = Instantiate(fingerTouchParticleSystem, leftMiddle).GetComponent<ParticleSystem>();
-            lRingParticle = Instantiate(fingerTouchParticleSystem, leftRing).GetComponent<ParticleSystem>();
-            lLittleParticle = Instantiate(fingerTouchParticleSystem, leftLittle).GetComponent<ParticleSystem>();
-            
-            rIndexParticle = Instantiate(fingerTouchParticleSystem, rightIndex).GetComponent<ParticleSystem>();
-            rMiddleParticle = Instantiate(fingerTouchParticleSystem, rightMiddle).GetComponent<ParticleSystem>();
-            rRingParticle = Instantiate(fingerTouchParticleSystem, rightRing).GetComponent<ParticleSystem>();
-            rLittleParticle = Instantiate(fingerTouchParticleSystem, rightLittle).GetComponent<ParticleSystem>();
+            GameObject particle = Instantiate(fingerTouchParticleSystem, leftIndex);
+            lIndexParticle = particle.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, leftMiddle);
+            lMiddleParticle = particle.transform.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, leftRing);
+            lRingParticle = particle.transform.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, leftLittle);
+            lLittleParticle = particle.transform.GetComponent<ParticleSystem>();
+
+            particle = Instantiate(fingerTouchParticleSystem, rightIndex);
+            rIndexParticle = particle.transform.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, rightMiddle);
+            rMiddleParticle = particle.transform.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, rightRing);
+            rRingParticle = particle.transform.GetComponent<ParticleSystem>();
+            particle = Instantiate(fingerTouchParticleSystem, rightLittle);
+            rLittleParticle = particle.transform.GetComponent<ParticleSystem>();
         }
 
         private void FixedUpdate()
@@ -371,7 +379,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftIndexSoloSelect()
         {
             bool state = LeftIndexSelect() && !(LeftMiddleSelect() || LeftRingSelect() || LeftLittleSelect());
-            if (state) lIndexSoloSelect.Invoke();
+            if (state) lIndexParticle.Play();// lIndexSoloSelect.Invoke();
             return state;
         }
         
@@ -383,7 +391,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftMiddleSoloSelect()
         {
             bool state = LeftMiddleSelect() && !(LeftIndexSelect() || LeftRingSelect() || LeftLittleSelect());
-            if (state) lMiddleSoloSelect.Invoke();
+            if (state) lMiddleParticle.Play();//lMiddleSoloSelect.Invoke();
             return state;
         }
         
@@ -395,7 +403,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftRingSoloSelect()
         {
             bool state = LeftRingSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftLittleSelect());
-            if (state) lRingSoloSelect.Invoke();
+            if (state) lRingParticle.Play();//lRingSoloSelect.Invoke();
             return state;
         }
         
@@ -407,7 +415,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftLittleSoloSelect()
         {
             bool state = LeftLittleSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftRingSelect());
-            if (state) lLittleSoloSelect.Invoke();
+            if (state) lLittleParticle.Play();//lLittleSoloSelect.Invoke();
             return state;
         }
         
@@ -419,7 +427,7 @@ namespace VR_Prototyping.Scripts
         public bool RightIndexSoloSelect()
         {
             bool state = RightIndexSelect() && !(RightMiddleSelect() || RightRingSelect() || RightLittleSelect());
-            if (state) rIndexSoloSelect.Invoke();
+            if (state) rIndexParticle.Play();//rIndexSoloSelect.Invoke();
             return state;
         }
         
@@ -431,7 +439,7 @@ namespace VR_Prototyping.Scripts
         public bool RightMiddleSoloSelect()
         {
             bool state = RightMiddleSelect() && !(RightIndexSelect() || RightRingSelect() || RightLittleSelect());
-            if (state) rMiddleSoloSelect.Invoke();
+            if (state) rMiddleParticle.Play();//rMiddleSoloSelect.Invoke();
             return state;
         }
         
@@ -443,7 +451,7 @@ namespace VR_Prototyping.Scripts
         public bool RightRingSoloSelect()
         {
             bool state = RightRingSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightLittleSelect());
-            if (state) rRingSoloSelect.Invoke();
+            if (state) rRingParticle.Play();//rRingSoloSelect.Invoke();
             return state;
         }
         
@@ -455,18 +463,18 @@ namespace VR_Prototyping.Scripts
         public bool RightLittleSoloSelect()
         {
             bool state = RightLittleSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightRingSelect());
-            if (state) rLittleSoloSelect.Invoke();
+            if (state) rLittleParticle.Play();//rLittleSoloSelect.Invoke();
             return state;
         }
 
         public bool LeftLocomotion()
         {
-            return LeftHandEnabled() && !LeftHandController() ? leftPalm.PalmDown(lPalmDirection, 5f, 20) : LeftJoystickPress();
+            return LeftHandEnabled() && !LeftHandController() ? leftPalm.PalmDown(lPalmDirection, 5f, 30) : LeftJoystickPress();
         }
 
         public bool RightLocomotion()
         {
-            return RightHandEnabled() && !RightHandController() ? rightPalm.PalmDown(rPalmDirection, 5f, 20) : RightJoystickPress();
+            return RightHandEnabled() && !RightHandController() ? rightPalm.PalmDown(rPalmDirection, 5f, 30) : RightJoystickPress();
         }
 
         private bool LeftJoystickPress()
