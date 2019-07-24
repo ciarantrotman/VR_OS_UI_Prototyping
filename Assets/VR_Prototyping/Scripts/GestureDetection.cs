@@ -76,8 +76,11 @@ namespace VR_Prototyping.Scripts
 
         public static bool PalmDown(this Transform palm, List<Vector3> palmDirection, float tolerance, int tracking)
         {
-            Vector3 up = palm.up;
-            palmDirection.PositionTracking(-up, tracking);
+            Vector3 down = -palm.up;
+            palmDirection.PositionTracking(down, tracking);
+            Vector3 position = palm.position;
+            Debug.DrawRay(position, down, Color.magenta);
+            Debug.DrawRay(position, Vector3.down, Color.red);
             return Vector3.Angle(Vector3.down, palmDirection[0]) < tolerance && Vector3.Angle(Vector3.down, palmDirection[palmDirection.Count]) < tolerance;
         }
     }

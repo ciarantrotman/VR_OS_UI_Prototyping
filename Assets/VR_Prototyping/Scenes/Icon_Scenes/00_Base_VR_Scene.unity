@@ -3355,7 +3355,7 @@ PrefabInstance:
     - target: {fileID: 2910476754053980516, guid: 8749d393fbf106e488259a509328cf48,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1263516890974150871, guid: 8749d393fbf106e488259a509328cf48,
         type: 3}
@@ -3622,6 +3622,16 @@ PrefabInstance:
       propertyPath: _leapProvider
       value: 
       objectReference: {fileID: 8161562647683697100}
+    - target: {fileID: 2453613896865763720, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988825840404499409, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8749d393fbf106e488259a509328cf48, type: 3}
 --- !u!114 &8976386972733659919 stripped

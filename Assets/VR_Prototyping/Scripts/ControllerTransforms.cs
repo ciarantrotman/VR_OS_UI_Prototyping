@@ -4,6 +4,7 @@ using Leap.Unity;
 using Leap.Unity.Interaction;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR;
 
 namespace VR_Prototyping.Scripts
@@ -47,6 +48,9 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material doubleSidedLineRenderMat;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material voidSkyBox;
         [FoldoutGroup("Aesthetics"),  SerializeField, Required] public Material environmentSkyBox;
+        [FoldoutGroup("Aesthetics"), Space(10), ShowIf("leapMotionEnabled"),  SerializeField, Required] public GameObject grabParticleSystem;
+        [FoldoutGroup("Aesthetics"), ShowIf("leapMotionEnabled"),  SerializeField, Required] public GameObject selectParticleSystem;
+        [FoldoutGroup("Aesthetics"), ShowIf("leapMotionEnabled"),  SerializeField, Required] public GameObject fingerTouchParticleSystem;
         
         [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean grabGrip;
         [FoldoutGroup("Events"), ShowIf("steamEnabled")] public SteamVR_Action_Boolean triggerGrip;
@@ -58,7 +62,33 @@ namespace VR_Prototyping.Scripts
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public HandEnableDisable rightHandEnabled;
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand leftCapsuleHand;
         [FoldoutGroup("Events"), ShowIf("leapMotionEnabled"), Required] public CapsuleHand rightCapsuleHand;
-        
+
+        private UnityEvent lIndexSoloSelect;
+        private UnityEvent lMiddleSoloSelect;
+        private UnityEvent lRingSoloSelect;
+        private UnityEvent lLittleSoloSelect;
+        private UnityEvent lDualSelect;
+        private UnityEvent lGrabSelect;
+        private UnityEvent rIndexSoloSelect;
+        private UnityEvent rMiddleSoloSelect;
+        private UnityEvent rRingSoloSelect;
+        private UnityEvent rLittleSoloSelect;
+        private UnityEvent rDualSelect;
+        private UnityEvent rGrabSelect;
+
+        private ParticleSystem lIndexParticle;
+        private ParticleSystem lMiddleParticle;
+        private ParticleSystem lRingParticle;
+        private ParticleSystem lLittleParticle;
+        private ParticleSystem lSelectParticle;
+        private ParticleSystem lGrabParticle;
+        private ParticleSystem rIndexParticle;
+        private ParticleSystem rMiddleParticle;
+        private ParticleSystem rRingParticle;
+        private ParticleSystem rLittleParticle;
+        private ParticleSystem rSelectParticle;
+        private ParticleSystem rGrabParticle;
+
         private GameObject lHandDirect;
         private GameObject rHandDirect;
 
@@ -78,11 +108,14 @@ namespace VR_Prototyping.Scripts
         private GameObject lAnchor;
         private GameObject rAnchor;
 
-        private List<Vector3> lPalmDirection = new List<Vector3>();
-        private List<Vector3> rPalmDirection = new List<Vector3>();
+        private readonly List<Vector3> lPalmDirection = new List<Vector3>();
+        private readonly List<Vector3> rPalmDirection = new List<Vector3>();
         
-        Arm lArm;
-        Arm rArm;
+        private Arm lArm;
+        private Arm rArm;
+        
+        private Hand lHand;
+        private Hand rHand;
 
         public const string LTag = "Direct/Left";
         public const string RTag = "Direct/Right";
@@ -92,6 +125,7 @@ namespace VR_Prototyping.Scripts
             SetupDirect();
             SetupLocal();
             SetupStable();
+            SetupParticleSystem();
             leftHandEnabled.handEnabledEvent.AddListener(SetupLeftArm);
             rightHandEnabled.handEnabledEvent.AddListener(SetupRightArm);
         }
@@ -139,7 +173,8 @@ namespace VR_Prototyping.Scripts
 
         private void SetupLeftArm()
         {
-            lArm = leftCapsuleHand._hand.Arm;
+            lHand = leftCapsuleHand._hand;
+            lArm = lHand.Arm;
             
             lElbow = new GameObject("Left_Elbow");
             lAnchor = new GameObject("Left_Anchor");
@@ -152,7 +187,8 @@ namespace VR_Prototyping.Scripts
         
         private void SetupRightArm()
         {
-            rArm = rightCapsuleHand._hand.Arm;
+            rHand = rightCapsuleHand._hand;
+            rArm = rHand.Arm;
             
             rElbow = new GameObject("Right_Elbow");
             rAnchor = new GameObject("Right_Anchor");
@@ -161,6 +197,19 @@ namespace VR_Prototyping.Scripts
             rAnchor.transform.SetParent(transform);
             
             rightHandEnabled.handEnabledEvent.RemoveAllListeners();
+        }
+
+        private void SetupParticleSystem()
+        {
+            lIndexParticle = Instantiate(fingerTouchParticleSystem, leftIndex).GetComponent<ParticleSystem>();
+            lMiddleParticle = Instantiate(fingerTouchParticleSystem, leftMiddle).GetComponent<ParticleSystem>();
+            lRingParticle = Instantiate(fingerTouchParticleSystem, leftRing).GetComponent<ParticleSystem>();
+            lLittleParticle = Instantiate(fingerTouchParticleSystem, leftLittle).GetComponent<ParticleSystem>();
+            
+            rIndexParticle = Instantiate(fingerTouchParticleSystem, rightIndex).GetComponent<ParticleSystem>();
+            rMiddleParticle = Instantiate(fingerTouchParticleSystem, rightMiddle).GetComponent<ParticleSystem>();
+            rRingParticle = Instantiate(fingerTouchParticleSystem, rightRing).GetComponent<ParticleSystem>();
+            rLittleParticle = Instantiate(fingerTouchParticleSystem, rightLittle).GetComponent<ParticleSystem>();
         }
 
         private void FixedUpdate()
@@ -260,46 +309,58 @@ namespace VR_Prototyping.Scripts
 
         public bool LeftGrab()
         {
-            return LeftHandEnabled()&& !LeftHandController() ? LeftHandGrab() : grabGrip.GetState(SteamVR_Input_Sources.LeftHand);
+            return LeftHandEnabled() && !LeftHandController() 
+                ? LeftHandGrab() 
+                : grabGrip.GetState(SteamVR_Input_Sources.LeftHand);
         }
 
         private bool LeftHandGrab()
         {
-            return leftThumb.DualSelect(leftIndex, leftMiddle, leapGestureThreshold);
+            //return LeftIndexSoloSelect();
+            //return leftThumb.DualSelect(leftIndex, leftMiddle, leapGestureThreshold);
             return leftPalm.Grab(leftIndex, leftMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
     
         public bool RightGrab()
         {
-            return RightHandEnabled() && !RightHandController() ? RightHandGrab() : grabGrip.GetState(SteamVR_Input_Sources.RightHand);
+            return RightHandEnabled() && !RightHandController() 
+                ? RightHandGrab() 
+                : grabGrip.GetState(SteamVR_Input_Sources.RightHand);
         }
         
         private bool RightHandGrab()
         {
-            return rightThumb.DualSelect(rightIndex, rightMiddle, leapGestureThreshold);
+            //return RightIndexSoloSelect();
+            //return rightThumb.DualSelect(rightIndex, rightMiddle, leapGestureThreshold);
             return rightHand.Grab(rightIndex, rightMiddle, leftRing, leftLittle, leapGestureThreshold);
         }
         
         public bool LeftMenu()
         {
-            return LeftHandEnabled()&& !LeftHandController() ? LeftMiddleSoloSelect() : menu.GetState(SteamVR_Input_Sources.LeftHand);
-            return menu.GetState(SteamVR_Input_Sources.LeftHand);
+            return LeftHandEnabled() && !LeftHandController()
+                ? LeftMiddleSoloSelect()
+                : menu.GetState(SteamVR_Input_Sources.LeftHand);
         }
     
         public bool RightMenu()
         {
-            return RightHandEnabled() && !RightHandController() ? RightMiddleSoloSelect() : menu.GetState(SteamVR_Input_Sources.RightHand);
-            return menu.GetState(SteamVR_Input_Sources.RightHand);
+            return RightHandEnabled() && !RightHandController()
+                ? RightMiddleSoloSelect()
+                : menu.GetState(SteamVR_Input_Sources.RightHand);
         }
 
         public bool LeftSelect()
         {
-            return LeftHandEnabled()&& !LeftHandController() ? LeftIndexSoloSelect() : triggerGrip.GetState(SteamVR_Input_Sources.LeftHand);
+            return LeftHandEnabled() && !LeftHandController()
+                ? LeftIndexSoloSelect()
+                : triggerGrip.GetState(SteamVR_Input_Sources.LeftHand);
         }
         
         public bool RightSelect()
         {
-            return RightHandEnabled() && !RightHandController() ? RightIndexSoloSelect() : triggerGrip.GetState(SteamVR_Input_Sources.RightHand);
+            return RightHandEnabled() && !RightHandController()
+                ? RightIndexSoloSelect()
+                : triggerGrip.GetState(SteamVR_Input_Sources.RightHand);
         }
 
         public bool LeftIndexSelect()
@@ -309,7 +370,9 @@ namespace VR_Prototyping.Scripts
 
         public bool LeftIndexSoloSelect()
         {
-            return LeftIndexSelect() && !(LeftMiddleSelect() || LeftRingSelect() || LeftLittleSelect());
+            bool state = LeftIndexSelect() && !(LeftMiddleSelect() || LeftRingSelect() || LeftLittleSelect());
+            if (state) lIndexSoloSelect.Invoke();
+            return state;
         }
         
         public bool LeftMiddleSelect()
@@ -319,7 +382,9 @@ namespace VR_Prototyping.Scripts
         
         public bool LeftMiddleSoloSelect()
         {
-            return LeftMiddleSelect() && !(LeftIndexSelect() || LeftRingSelect() || LeftLittleSelect());
+            bool state = LeftMiddleSelect() && !(LeftIndexSelect() || LeftRingSelect() || LeftLittleSelect());
+            if (state) lMiddleSoloSelect.Invoke();
+            return state;
         }
         
         public bool LeftRingSelect()
@@ -329,7 +394,9 @@ namespace VR_Prototyping.Scripts
         
         public bool LeftRingSoloSelect()
         {
-            return LeftRingSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftLittleSelect());
+            bool state = LeftRingSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftLittleSelect());
+            if (state) lRingSoloSelect.Invoke();
+            return state;
         }
         
         public bool LeftLittleSelect()
@@ -339,7 +406,9 @@ namespace VR_Prototyping.Scripts
         
         public bool LeftLittleSoloSelect()
         {
-            return LeftLittleSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftRingSelect());
+            bool state = LeftLittleSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftRingSelect());
+            if (state) lLittleSoloSelect.Invoke();
+            return state;
         }
         
         public bool RightIndexSelect()
@@ -349,7 +418,9 @@ namespace VR_Prototyping.Scripts
 
         public bool RightIndexSoloSelect()
         {
-            return RightIndexSelect() && !(RightMiddleSelect() || RightRingSelect() || RightLittleSelect());
+            bool state = RightIndexSelect() && !(RightMiddleSelect() || RightRingSelect() || RightLittleSelect());
+            if (state) rIndexSoloSelect.Invoke();
+            return state;
         }
         
         public bool RightMiddleSelect()
@@ -359,7 +430,9 @@ namespace VR_Prototyping.Scripts
         
         public bool RightMiddleSoloSelect()
         {
-            return RightMiddleSelect() && !(RightIndexSelect() || RightRingSelect() || RightLittleSelect());
+            bool state = RightMiddleSelect() && !(RightIndexSelect() || RightRingSelect() || RightLittleSelect());
+            if (state) rMiddleSoloSelect.Invoke();
+            return state;
         }
         
         public bool RightRingSelect()
@@ -369,7 +442,9 @@ namespace VR_Prototyping.Scripts
         
         public bool RightRingSoloSelect()
         {
-            return RightRingSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightLittleSelect());
+            bool state = RightRingSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightLittleSelect());
+            if (state) rRingSoloSelect.Invoke();
+            return state;
         }
         
         public bool RightLittleSelect()
@@ -379,25 +454,27 @@ namespace VR_Prototyping.Scripts
         
         public bool RightLittleSoloSelect()
         {
-            return RightLittleSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightRingSelect());
+            bool state = RightLittleSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightRingSelect());
+            if (state) rLittleSoloSelect.Invoke();
+            return state;
         }
 
         public bool LeftLocomotion()
         {
-            return LeftHandEnabled() && !LeftHandController() ? leftPalm.PalmDown(lPalmDirection, 5f, 10) : LeftJoystickPress();
+            return LeftHandEnabled() && !LeftHandController() ? leftPalm.PalmDown(lPalmDirection, 5f, 20) : LeftJoystickPress();
         }
 
         public bool RightLocomotion()
         {
-            return RightHandEnabled() && !RightHandController() ? rightPalm.PalmDown(rPalmDirection, 5f, 10) : RightJoystickPress();
+            return RightHandEnabled() && !RightHandController() ? rightPalm.PalmDown(rPalmDirection, 5f, 20) : RightJoystickPress();
         }
-        
-        public bool LeftJoystickPress()
+
+        private bool LeftJoystickPress()
         {
             return joystickPress.GetState(SteamVR_Input_Sources.LeftHand);
         }
         
-        public bool RightJoystickPress()
+        private bool RightJoystickPress()
         {
             return joystickPress.GetState(SteamVR_Input_Sources.RightHand);
         }
@@ -405,13 +482,11 @@ namespace VR_Prototyping.Scripts
         public Vector2 LeftJoystick()
         {
             return LeftHandEnabled() && !LeftHandController() ? new Vector2(1, 0) : joystickDirection.GetAxis(SteamVR_Input_Sources.LeftHand);
-            return joystickDirection.GetAxis(SteamVR_Input_Sources.LeftHand);
         }
 
         public Vector2 RightJoystick()
         {
             return RightHandEnabled() && !RightHandController() ? new Vector2(1, 0) : joystickDirection.GetAxis(SteamVR_Input_Sources.RightHand);
-            return joystickDirection.GetAxis(SteamVR_Input_Sources.RightHand);
         }
         
         public Vector3 LeftForwardVector()
@@ -446,7 +521,7 @@ namespace VR_Prototyping.Scripts
         
         public bool LeftHandEnabled()
         {
-            return leftHandEnabled.handEnabled && leapMotionEnabled && leftCapsuleHand._hand.IsLeft;
+            return leftHandEnabled.handEnabled && leapMotionEnabled && lHand.IsLeft;
         }
 
         private bool LeftHandController()
@@ -456,7 +531,7 @@ namespace VR_Prototyping.Scripts
         
         public bool RightHandEnabled()
         {
-            return rightHandEnabled.handEnabled && leapMotionEnabled && rightCapsuleHand._hand.IsRight;
+            return rightHandEnabled.handEnabled && leapMotionEnabled && rHand.IsRight;
         }
         
         private bool RightHandController()

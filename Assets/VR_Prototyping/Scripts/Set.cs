@@ -444,8 +444,8 @@ namespace VR_Prototyping.Scripts
             elbow.transform.position = arm.ElbowPosition.ToVector3();
             lookAt.transform.MidpointPosition(elbow.transform, wrist.transform, true);
             transformPosition.transform.StablePositionLook(position, lookAt.transform, true);
-            Debug.DrawLine(elbow.transform.position, wrist.transform.position, Color.blue);
-            Debug.DrawLine(transformPosition.transform.position, lookAt.transform.position, Color.red);
+            Debug.DrawLine(elbow.transform.position, wrist.transform.position, Color.yellow);
+            Debug.DrawLine(transformPosition.transform.position, lookAt.transform.position, Color.white);
         }
     }
 }
