@@ -20,38 +20,64 @@ namespace VR_Prototyping.Scripts
             Y,
             Z
         }
-        
+        /// <summary>
+        /// Sets transform A's position to transform B's position
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         public static void Position(this Transform a, Transform b)
         {
             if (a == null || b == null) return;
             a.transform.position = b.transform.position;
         }
+        /// <summary>
+        /// Sets transform A's rotation to transform B's rotation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         public static void Rotation(this Transform a, Transform b)
         {
             if (a == null || b == null) return;
             a.transform.rotation = b.transform.rotation;
         }
-
+        /// <summary>
+        /// Sets transform A's local position and rotation to zero
+        /// </summary>
+        /// <param name="a"></param>
         public static void LocalTransformZero(this Transform a)
         {
             Transform transform = a.transform;
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
         }
-        
+        /// <summary>
+        /// Sets transform A's local position and rotation to transform B's local position and rotation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         public static void LocalTransforms(this Transform a, Transform b)
         {
             Transform transform = a.transform;
             transform.localPosition = b.localPosition;
             transform.localRotation = b.localRotation;
         }
-        
+        /// <summary>
+        /// Transform A looks at transform B, but maintains it's vertical axis
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         public static void LookAtVertical(this Transform a, Transform b)
         {
             a.LookAwayFrom(b, Vector3.up);
             a.eulerAngles = new Vector3(0, a.eulerAngles.y,0);
         }
-        
+        /// <summary>
+        /// Adds rotational force to a rigid-body to keep transform A and B in line
+        /// </summary>
+        /// <param name="rb"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="force"></param>
         public static void AddForceRotation(this Rigidbody rb, Transform a, Transform b, float force)
         {
             if (a == null || b == null || rb == null) return;
@@ -59,28 +85,48 @@ namespace VR_Prototyping.Scripts
             Quaternion r = Quaternion.FromToRotation(a.forward, b.forward);
             rb.AddTorque(r.eulerAngles * force, ForceMode.Force);
         }
-        
+        /// <summary>
+        /// Transform C will follow transform XZ's x and z position, and transform Y's y position
+        /// </summary>
+        /// <param name="xz"></param>
+        /// <param name="y"></param>
+        /// <param name="c"></param>
         public static void SplitPosition(this Transform xz, Transform y, Transform c) // messed up the thing here
         {
             if (xz == null || y == null || c == null) return;
             Vector3 position = xz.position;
             c.transform.position = new Vector3(position.x, y.position.y, position.z);
         }
-        
-        public static void SplitPositionVector(this Transform c, float y, Transform xz) // messed up the thing here
+        /// <summary>
+        /// Transform C will follow transform XZ's x and z position, and transform Y's y position
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="y"></param>
+        /// <param name="xz"></param>
+        public static void SplitPositionVector(this Transform c, float y, Transform xz)
         {
             if (xz == null || c == null) return;
             Vector3 position = xz.position;
             c.transform.position = new Vector3(position.x, y, position.z);
         }
-        
+        /// <summary>
+        /// Transform C will follow transform XZ's x and z position, and transform Y's y position
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="xz"></param>
+        /// <param name="y"></param>
         public static void PositionSplit(this Transform c, Transform xz, Transform y)
         {
             if (xz == null || y == null || c == null) return;
             Vector3 position = xz.position;
             c.transform.position = new Vector3(position.x, y.position.y, position.z);
         }
-        
+        /// <summary>
+        /// Controller will follow the y-rotation of target, follow determines of it follows the position
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="target"></param>
+        /// <param name="follow"></param>
         public static void SplitRotation(this Transform controller, Transform target, bool follow)
         {
             if (controller == null || target == null) return;
@@ -90,51 +136,92 @@ namespace VR_Prototyping.Scripts
             if(!follow) return;
             Position(target, controller);
         }
-
+        /// <summary>
+        /// Sets the width and colour of a trail renderer
+        /// </summary>
+        /// <param name="tr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="c"></param>
         public static void TrailRender(this TrailRenderer tr, float start, float end, Color c)
         {
             tr.startWidth = start;
             tr.endWidth = end;
             tr.material.color = c;
         }
-        
+        /// <summary>
+        /// Transform A will lerp to transform B's position
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void TransformLerpPosition(this Transform a, Transform b, float l)
         {
             if (a == null || b == null) return;
             a.position = Vector3.Lerp(a.position, b.position, l);
         }
-        
+        /// <summary>
+        /// Transform A will lerp to transform B's rotation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void TransformLerpRotation(this Transform a, Transform b, float l)
         {
             if (a == null || b == null) return;
             a.rotation = Quaternion.Lerp(a.rotation, b.rotation, l);
         }
-        
+        /// <summary>
+        /// Transform A will lerp to transform B's position
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void VectorLerpPosition(this Transform a, Vector3 b, float l)
         {
             if (a == null) return;
             a.position = Vector3.Lerp(a.position, b, l);
         }
-        
+        /// <summary>
+        /// Transform A will lerp to transform B's local position
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void VectorLerpLocalPosition(this Transform a, Vector3 b, float l)
         {
             if (a == null) return;
             a.localPosition = Vector3.Lerp(a.localPosition, b, l);
         }
-        
+        /// <summary>
+        /// Sets transform A's position and rotation to transform B's position and rotation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         public static void Transforms(this Transform a, Transform b)
         {
             if (a == null || b == null) return;
             Position(a, b);
             Rotation(a, b);
         }
-
+        /// <summary>
+        /// Sets transform A's position to transform B's position, but wil lerp their rotations
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void StableTransforms(this Transform a, Transform b, float l)
         {
             Position(a, b);
             TransformLerpRotation(a, b, l);
         }
-        
+        /// <summary>
+        /// Sets transform A's position to transform B's position, but wil lerp their rotations
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="position"></param>
+        /// <param name="look"></param>
+        /// <param name="away"></param>
         public static void StableTransformLook(this Transform a, Transform position, Transform look, bool away)
         {
             Position(a, position);
@@ -147,7 +234,13 @@ namespace VR_Prototyping.Scripts
                 a.LookAwayFrom(look, a.up);
             }
         }
-        
+        /// <summary>
+        /// Sets transform A's position to transform B's position, but wil lerp their rotations
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="position"></param>
+        /// <param name="look"></param>
+        /// <param name="away"></param>
         public static void StablePositionLook(this Transform a, Vector3 position, Transform look, bool away)
         {
             a.transform.position = position;
@@ -160,14 +253,24 @@ namespace VR_Prototyping.Scripts
                 a.LookAwayFrom(look, a.up);
             }
         }
-        
+        /// <summary>
+        /// Lerps transform A's position and rotation to transform B's position and rotation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
         public static void LerpTransform(this Transform a, Transform b, float l)
         {
             if (a == null || b == null) return;
             TransformLerpPosition(a, b, l);
             TransformLerpRotation(a, b, l);
         }
-
+        /// <summary>
+        /// Returns distance to the midpoint of transform A and B
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static float Midpoint(this Transform a, Transform b)
         {
             if (a == null || b == null) return 0f;
@@ -447,7 +550,12 @@ namespace VR_Prototyping.Scripts
             Debug.DrawLine(elbow.transform.position, wrist.transform.position, Color.yellow);
             Debug.DrawLine(transformPosition.transform.position, lookAt.transform.position, Color.white);
         }
-
+        /// <summary>
+        /// Returns a GameObject, sets its parent, and names it
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static GameObject NewGameObject(GameObject parent, string name)
         {
             GameObject gameObject = new GameObject();

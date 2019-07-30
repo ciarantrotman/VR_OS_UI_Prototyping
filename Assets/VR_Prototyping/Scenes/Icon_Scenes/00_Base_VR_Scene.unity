@@ -3026,6 +3026,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549918177}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1966994590 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8976386972615268133, guid: 8749d393fbf106e488259a509328cf48,
+    type: 3}
+  m_PrefabInstance: {fileID: 8976386972733659918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1966994592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966994590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a27c45aba36a0647845c936a2a8ad29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2039567057
 GameObject:
   m_ObjectHideFlags: 0
@@ -3041,7 +3059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2039567058
 Transform:
   m_ObjectHideFlags: 0
@@ -3226,6 +3244,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: '[VR Player]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: _autoGenerateLayers
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: _interactionLayer.layerIndex
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: _interactionNoContactLayer.layerIndex
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: _contactBoneLayer.layerIndex
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: _templateLayer.layerIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 46615776621767229, guid: 8749d393fbf106e488259a509328cf48,
         type: 3}
@@ -3662,6 +3710,11 @@ PrefabInstance:
       propertyPath: setSelectionRange
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 618182138019180014, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2453613896865763720, guid: 8749d393fbf106e488259a509328cf48,
         type: 3}
       propertyPath: m_Enabled
@@ -3702,36 +3755,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.18201093
       objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: _autoGenerateLayers
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: _interactionLayer.layerIndex
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: _interactionNoContactLayer.layerIndex
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: _contactBoneLayer.layerIndex
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: _templateLayer.layerIndex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 702531175791984135, guid: 8749d393fbf106e488259a509328cf48,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2131628315703174159, guid: 8749d393fbf106e488259a509328cf48,
         type: 3}
       propertyPath: m_IsActive
@@ -3742,6 +3765,11 @@ PrefabInstance:
       propertyPath: _leapProvider
       value: 
       objectReference: {fileID: 8161562647683697100}
+    - target: {fileID: 2459010844718547940, guid: 8749d393fbf106e488259a509328cf48,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8749d393fbf106e488259a509328cf48, type: 3}
 --- !u!114 &8976386972733659919 stripped

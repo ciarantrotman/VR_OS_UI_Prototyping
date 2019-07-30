@@ -2286,6 +2286,7 @@
               <e p="KeyboardTarget.cs" t="Include" />
             </e>
             <e p="LeapMotion" t="Include">
+              <e p="AugmentedEnvelope.cs" t="Include" />
               <e p="HandMenu.cs" t="Include" />
             </e>
             <e p="Locomotion.cs" t="Include" />
