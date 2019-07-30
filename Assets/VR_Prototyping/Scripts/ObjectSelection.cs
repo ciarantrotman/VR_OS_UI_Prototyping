@@ -122,7 +122,7 @@ namespace VR_Prototyping.Scripts
 			
 			LMidPoint.transform.SetOffsetPosition(Controller.LeftTransform(), 0f);
 			RMidPoint.transform.SetOffsetPosition(Controller.RightTransform(), 0f);
-			
+
 			lTooltipObject.transform.SetOffsetPosition(Controller.LeftTransform(), toolTipOffset);
 			rTooltipObject.transform.SetOffsetPosition(Controller.RightTransform(), toolTipOffset);
 

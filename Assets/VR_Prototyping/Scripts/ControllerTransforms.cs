@@ -202,21 +202,29 @@ namespace VR_Prototyping.Scripts
         private void SetupParticleSystem()
         {
             GameObject particle = Instantiate(fingerTouchParticleSystem, leftIndex);
+            particle.transform.ResetLocalTransform();
             lIndexParticle = particle.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, leftMiddle);
+            particle.transform.ResetLocalTransform();
             lMiddleParticle = particle.transform.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, leftRing);
+            particle.transform.ResetLocalTransform();
             lRingParticle = particle.transform.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, leftLittle);
+            particle.transform.ResetLocalTransform();
             lLittleParticle = particle.transform.GetComponent<ParticleSystem>();
 
             particle = Instantiate(fingerTouchParticleSystem, rightIndex);
+            particle.transform.ResetLocalTransform();
             rIndexParticle = particle.transform.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, rightMiddle);
+            particle.transform.ResetLocalTransform();
             rMiddleParticle = particle.transform.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, rightRing);
+            particle.transform.ResetLocalTransform();
             rRingParticle = particle.transform.GetComponent<ParticleSystem>();
             particle = Instantiate(fingerTouchParticleSystem, rightLittle);
+            particle.transform.ResetLocalTransform();
             rLittleParticle = particle.transform.GetComponent<ParticleSystem>();
         }
 
