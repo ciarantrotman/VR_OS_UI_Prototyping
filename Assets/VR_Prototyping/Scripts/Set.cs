@@ -447,5 +447,13 @@ namespace VR_Prototyping.Scripts
             Debug.DrawLine(elbow.transform.position, wrist.transform.position, Color.yellow);
             Debug.DrawLine(transformPosition.transform.position, lookAt.transform.position, Color.white);
         }
+
+        public static GameObject NewGameObject(GameObject parent, string name)
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.transform.parent = parent.transform;
+            gameObject.name = name;
+            return gameObject;
+        }
     }
 }
