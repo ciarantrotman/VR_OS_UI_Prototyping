@@ -15,6 +15,9 @@ namespace VR_Prototyping.Scripts.Tools
         private bool pMenu;
         
         private bool trigger;
+        private bool initialised;
+
+        private GameObject keyboard;
         
         private ControllerTransforms controller;
         private ToolController toolController;
@@ -45,7 +48,7 @@ namespace VR_Prototyping.Scripts.Tools
         private void SetupMenu()
         {
             menuPrefab = Instantiate(menuPrefab);
-            menuPrefab.name = "Tools/Menu";
+            menuPrefab.name = "[ICON Tool Menu]";
             toolController = menuPrefab.GetComponent<ToolController>();
             toolController.Initialise(gameObject, active, controller, dominantHand, this);
             toolController.ToggleButtonState(false);
@@ -53,11 +56,13 @@ namespace VR_Prototyping.Scripts.Tools
 
         private void SetupKeyboard()
         {
-            GameObject keyboard = Instantiate(keyboardPrefab);
-            keyboard.name = "Indirect_Keyboard";
+            if (!initialised)
+            {
+                keyboard = Instantiate(keyboardPrefab);
+                keyboard.name = "[Indirect Keyboard]";
+                KeyboardManager = keyboard.GetComponent<KeyboardManager>();
+            }
             
-            KeyboardManager = keyboard.GetComponent<KeyboardManager>();
-
             switch (dominantHand)
             {
                 case Handedness.RIGHT:
@@ -71,6 +76,8 @@ namespace VR_Prototyping.Scripts.Tools
             }
 
             keyboard.transform.localPosition = new Vector3(.1f, -.02f, -.05f);
+
+            initialised = true;
         }
 
         private void Update()

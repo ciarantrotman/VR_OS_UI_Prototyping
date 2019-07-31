@@ -45,7 +45,6 @@ namespace VR_Prototyping.Scripts
 		private bool pDualGrab;
 		
 		private RotationLock rotLock;
-		private float gazeAngle;
 		private float manualRef;
 
 		private float buttonBlendShapeWeight = BlendShapeInactive;
@@ -57,6 +56,7 @@ namespace VR_Prototyping.Scripts
 		
 		public float AngleL { get; private set; }
 		public float AngleR { get; private set; }
+		public float AngleG { get; private set; }
 		public Renderer Renderer { get; private set; }
 
 		public Transform ResetState { get; private set; }
@@ -339,7 +339,7 @@ namespace VR_Prototyping.Scripts
 			SetButtonStates();
 			
 			GameObject o = gameObject;
-			o.CheckGaze(gazeAngle, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
+			o.CheckGaze(AngleG, objectSelection.gaze, objectSelection.gazeList, objectSelection.lHandList, objectSelection.rHandList, objectSelection.globalList);
 			o.ManageList(objectSelection.lHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleL,manipulation.disableRightGrab, button), objectSelection.disableLeftHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.LeftTransform(), objectSelection.selectionRange));
 			o.ManageList(objectSelection.rHandList, o.CheckHand(objectSelection.gazeList, objectSelection.manual, AngleR,manipulation.disableLeftGrab, button), objectSelection.disableRightHand, WithinRange(objectSelection.setSelectionRange, transform, objectSelection.Controller.RightTransform(), objectSelection.selectionRange));
 			
@@ -458,7 +458,7 @@ namespace VR_Prototyping.Scripts
 		private void GetAngles()
 		{
 			Vector3 position = transform.position;
-			gazeAngle = Vector3.Angle(position - objectSelection.Controller.CameraPosition(), objectSelection.Controller.CameraForwardVector());
+			AngleG = Vector3.Angle(position - objectSelection.Controller.CameraPosition(), objectSelection.Controller.CameraForwardVector());
 			AngleL = Vector3.Angle(position - objectSelection.Controller.LeftTransform().position, objectSelection.Controller.LeftForwardVector());
 			AngleR = Vector3.Angle(position - objectSelection.Controller.RightTransform().position, objectSelection.Controller.RightForwardVector());
 		}
@@ -593,6 +593,7 @@ namespace VR_Prototyping.Scripts
 		{
 			if(!hover) return;
 			hoverEnd.Invoke();
+			
 			if (toolTip)
 			{
 				tooltip.ClearTooltipText();

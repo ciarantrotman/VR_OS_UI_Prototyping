@@ -192,6 +192,7 @@ namespace VR_Prototyping.Scripts
             {
                 target.transform.SetParent(hit.transform);
                 target.transform.VectorLerpPosition(hit.point, .25f);
+                target.transform.forward = hit.normal;
                 return hit.transform.gameObject;
             }
 

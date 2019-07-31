@@ -116,24 +116,24 @@ namespace VR_Prototyping.Scripts.LeapMotion
             rRLr = rRa.transform.AddOrGetLineRenderer();
             rLLr = rLa.transform.AddOrGetLineRenderer();
             
-            lTLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            lILr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            lMLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            lRLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            lLLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
+            lTLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            lILr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            lMLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            lRLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            lLLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
             
-            rTLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            rILr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            rMLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            rRLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
-            rLLr.SetupLineRender(controller.doubleSidedLineRenderMat, .02f, true);
+            rTLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            rILr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            rMLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            rRLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
+            rLLr.SetupLineRender(controller.doubleSidedLineRenderMat, .005f, true);
         }
 
         private void Update()
         {
             anchor.transform.Transforms(controller.CameraTransform());
-            SetLocalPositions(lHl, lTl, lIl, lMl, lRl, lLl, controller.leftPalm, controller.leftThumb, controller.leftIndex, controller.leftMiddle, controller.leftRing, controller.leftLittle);
-            SetLocalPositions(rHl, rTl, rIl, rMl, rRl, rLl, controller.rightPalm, controller.rightThumb, controller.rightIndex, controller.rightMiddle, controller.rightRing, controller.rightLittle);
+            SetLocalPositions(lHl, lTl, lIl, lMl, lRl, lLl, controller.leftWrist, controller.leftThumb, controller.leftIndex, controller.leftMiddle, controller.leftRing, controller.leftLittle);
+            SetLocalPositions(rHl, rTl, rIl, rMl, rRl, rLl, controller.rightWrist, controller.rightThumb, controller.rightIndex, controller.rightMiddle, controller.rightRing, controller.rightLittle);
             SetAugmentedPositions(lHa, lTa, lIa, lMa, lRa, lLa, lHl, lTl, lIl, lMl, lRl, lLl);
             SetAugmentedPositions(rHa, rTa, rIa, rMa, rRa, rLa, rHl, rTl, rIl, rMl, rRl, rLl);
             SetHandLineRenders(lHa, lTa, lIa, lMa, lRa, lLa, lTLr, lILr, lMLr, lRLr, lLLr);

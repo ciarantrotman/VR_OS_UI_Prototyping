@@ -25,14 +25,17 @@ namespace VR_Prototyping.Scripts
 		{
 			return type == SelectionType.FUSION;
 		}
-		private GameObject lTarget;
-		private GameObject rTarget;
+		private GameObject lTarget; // left hand target
+		private GameObject rTarget; // right hand target
+		private GameObject gTarget; // gaze target
 		
 		private GameObject lDefault;
 		private GameObject rDefault;
+		private GameObject gDefault;
 		
 		private SelectableObject pLSelectableObject;
 		private SelectableObject pRSelectableObject;
+		private SelectableObject pGSelectableObject;
 		
 		private GameObject lTooltipObject;
 		private GameObject rTooltipObject;
@@ -48,10 +51,13 @@ namespace VR_Prototyping.Scripts
 		public GameObject RMidPoint { get; private set; }
 		public GameObject LFocusObject { get; set; }
 		public GameObject RFocusObject { get; set; }
+		public GameObject GFocusObject { get; set; }
 		public SelectableObject RSelectableObject { get; set; }
 		public SelectableObject LSelectableObject { get; set; }
+		public SelectableObject GSelectableObject { get; set; }
 		public SelectableObject RPreviousSelectableObject { get; set; }
 		public SelectableObject LPreviousSelectableObject { get; set; }
+		public SelectableObject GPreviousSelectableObject { get; set; }
 		public LineRenderer LLr { get; private set; }
 		public LineRenderer RLr { get; private set; }
 		public bool DisableSelection { get; set; }
@@ -72,8 +78,9 @@ namespace VR_Prototyping.Scripts
 		[BoxGroup("Selection Settings")] public bool disableLeftHand;
 		[BoxGroup("Selection Settings")] public bool disableRightHand;
 		
-		[BoxGroup("Aesthetics"), Range(3f, 30f)] public int lineRenderQuality = 15;
-		[BoxGroup("Aesthetics"), Range(.1f, 2.5f)] public float inactiveLineRenderOffset = 1f;
+		[BoxGroup("Aesthetics")] public GameObject gazeCursor;
+		[BoxGroup("Aesthetics"), Range(3f, 30f), Space(10)] public int lineRenderQuality = 15;
+		[BoxGroup("Aesthetics"), Range(.1f, 2.5f), Indent] public float inactiveLineRenderOffset = 1f;
 		
 		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> globalList;
 		[BoxGroup("Object Lists"), HideInEditorMode] public List<GameObject> gazeList;
@@ -101,20 +108,21 @@ namespace VR_Prototyping.Scripts
 		{
 			if (!initialised)
 			{
-				LMidPoint = new GameObject("MidPoint/Left");
-				RMidPoint = new GameObject("MidPoint/Right");
-			
-				lTarget = new GameObject("TargetLineRender/Left");
-				rTarget = new GameObject("Target/LineRender/Right");
-			
-				lDefault = new GameObject("Target/LineRender/Left/Default");
-				rDefault = new GameObject("Target/LineRender/Right/Default");
+				LMidPoint = Set.NewGameObject(Controller.LeftTransform().gameObject, "MidPoint/Left");
+				RMidPoint = Set.NewGameObject(Controller.RightTransform().gameObject, "MidPoint/Right");
+
+				lTarget = Set.NewGameObject(gameObject, "[Target Left]");
+				rTarget = Set.NewGameObject(gameObject, "[Target Right]");
+				gTarget = Set.NewGameObject(gameObject, "[Target Gaze]");
+
+				lDefault = Set.NewGameObject(Controller.LeftTransform().gameObject, "Target/LineRender/Left/Default");
+				rDefault = Set.NewGameObject(Controller.RightTransform().gameObject, "Target/LineRender/Right/Default");
+				gDefault = Set.NewGameObject(Controller.RightTransform().gameObject, "Target/LineRender/Right/Default");
 				
 				lTooltipObject = Instantiate(toolTipPrefab);
 				rTooltipObject = Instantiate(toolTipPrefab);
-			
-				lTarget.transform.SetParent(transform);
-				rTarget.transform.SetParent(transform);
+
+				gazeCursor = Instantiate(gazeCursor, gTarget.transform);
 			}
 
 			lDefault.transform.SetOffsetPosition(Controller.LeftTransform(), inactiveLineRenderOffset);
@@ -149,6 +157,7 @@ namespace VR_Prototyping.Scripts
 				case SelectionType.FUSION:
 					LFocusObject = lHandList.FusionFindFocusObject(LFocusObject, lTarget, lDefault, Controller.LeftTransform(), Controller.LeftForwardVector(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.LeftGrab() || LTouch);
 					RFocusObject = rHandList.FusionFindFocusObject(RFocusObject, rTarget, rDefault, Controller.RightTransform(), Controller.RightForwardVector(), setSelectionRange ? selectionRange : float.PositiveInfinity, Controller.RightGrab() || RTouch);
+					GFocusObject = gazeList.FusionFindFocusObject(GFocusObject, gTarget, gDefault, Controller.CameraTransform(), Controller.CameraForwardVector(), setSelectionRange ? selectionRange : float.PositiveInfinity, false);
 					break;
 				default:
 					LFocusObject = null;
@@ -164,6 +173,7 @@ namespace VR_Prototyping.Scripts
 			
 			LSelectableObject = LFocusObject.FindSelectableObject(LSelectableObject, Controller.LeftGrab());
 			RSelectableObject = RFocusObject.FindSelectableObject(RSelectableObject, Controller.RightGrab());
+			GSelectableObject = GFocusObject.FindSelectableObject(GSelectableObject, false);
 			
 			LGrabPrevious = Controller.LeftGrab();
 			RGrabPrevious = Controller.RightGrab();
@@ -176,9 +186,14 @@ namespace VR_Prototyping.Scripts
 			{
 				RPreviousSelectableObject.HoverEnd(rTooltip);
 			}
+			if (GPreviousSelectableObject != null && GSelectableObject != GPreviousSelectableObject)
+			{
+				GPreviousSelectableObject.HoverEnd(null);
+			}
 
 			LPreviousSelectableObject = LSelectableObject;
 			RPreviousSelectableObject = RSelectableObject;
+			GPreviousSelectableObject = GSelectableObject;
 			
 			ResetGameObjects(Controller.LeftTransform(), lPrevious);
 			ResetGameObjects(Controller.RightTransform(), rPrevious);
@@ -194,18 +209,21 @@ namespace VR_Prototyping.Scripts
 			
 			LSelectableObject.Hover(pLSelectableObject, lTooltip);
 			RSelectableObject.Hover(pRSelectableObject, rTooltip);
+			GSelectableObject.Hover(pGSelectableObject, rTooltip);
 		
 			LSelectPrevious = Controller.LeftSelect();
 			RSelectPrevious = Controller.RightSelect();
 
 			pLSelectableObject = LSelectableObject;
 			pRSelectableObject = RSelectableObject;
+			pGSelectableObject = GSelectableObject;
 		}
 
 		private void SortLists()
 		{
 			lHandList.Sort(SortBy.FocusObjectL);
 			rHandList.Sort(SortBy.FocusObjectR);
+			gazeList.Sort(SortBy.FocusObjectG);
 		}
 
 		private void ResetGameObjects(Object current, Object previous)

@@ -35,7 +35,7 @@ namespace VR_Prototyping.Scripts.Icon_Scripts
         private void SetupMenu()
         {
             menuPrefab = Instantiate(menuPrefab, transform);
-            menuPrefab.name = "Icon/Menu/Parent";
+            menuPrefab.name = "[ICON Menu]";
             iconMenuController = menuPrefab.GetComponent<IconMenuController>();
             iconMenuController.Initialise(iconMenuController.modelControls, gameObject,  controller, this);
             //iconMenuController.Initialise(iconMenuController.sceneControls, gameObject, controller, this);

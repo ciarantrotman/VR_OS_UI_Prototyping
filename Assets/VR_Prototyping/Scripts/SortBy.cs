@@ -12,5 +12,9 @@ namespace VR_Prototyping.Scripts
         {
             return obj1.GetComponent<SelectableObject>().AngleR.CompareTo(obj2.GetComponent<SelectableObject>().AngleR);
         }
+        public static int FocusObjectG(GameObject obj1, GameObject obj2)
+        {
+            return obj1.GetComponent<SelectableObject>().AngleG.CompareTo(obj2.GetComponent<SelectableObject>().AngleG);
+        }
     }
 }

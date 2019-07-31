@@ -97,14 +97,15 @@ namespace VR_Prototyping.Scripts
         private GameObject localR;
         private GameObject localL;
 
+        private GameObject stableRef;
         private GameObject lHandStable;
         private GameObject lPalmStable;
         private GameObject rHandStable;
         private GameObject rPalmStable;
         
+        private GameObject armRef;
         private GameObject lElbow;
         private GameObject rElbow;
-        
         private GameObject lAnchor;
         private GameObject rAnchor;
 
@@ -146,29 +147,21 @@ namespace VR_Prototyping.Scripts
 
         private void SetupLocal()
         {
-            localRef = new GameObject("Local/Reference");
-            localHeadset = new GameObject("Local/HMD");
-            localR = new GameObject("Local/Right");
-            localL = new GameObject("Local/Left");
-            
-            localL.transform.SetParent(localHeadset.transform);
-            localRef.transform.SetParent(transform);
-            localHeadset.transform.SetParent(localRef.transform);
-            localR.transform.SetParent(localHeadset.transform);
+            localRef = Set.NewGameObject(gameObject, "[Local Reference Rig]");
+            localHeadset = Set.NewGameObject(localRef, "Local/HMD");
+            localR = Set.NewGameObject(localHeadset,"Local/Right");
+            localL = Set.NewGameObject(localHeadset,"Local/Left");
         }
 
         private void SetupStable()
         {
-            lHandStable = new GameObject("Left_Hand/Stable");
-            rHandStable = new GameObject("Right_Hand/Stable");
-            lPalmStable = new GameObject("Left_Palm/Stable");
-            rPalmStable = new GameObject("Right_Palm/Stable");
+            stableRef = Set.NewGameObject(gameObject,"[Stable Rig]");
+            lHandStable = Set.NewGameObject(stableRef,"Left_Hand/Stable");
+            rHandStable = Set.NewGameObject(stableRef,"Right_Hand/Stable");
+            lPalmStable = Set.NewGameObject(stableRef,"Left_Palm/Stable");
+            rPalmStable = Set.NewGameObject(stableRef,"Right_Palm/Stable");
             
-
-            lHandStable.transform.SetParent(transform);
-            rHandStable.transform.SetParent(transform);
-            lPalmStable.transform.SetParent(transform);
-            rPalmStable.transform.SetParent(transform);
+            armRef = Set.NewGameObject(gameObject,"[Leap Arm Rig]");
         }
 
         private void SetupLeftArm()
@@ -176,12 +169,9 @@ namespace VR_Prototyping.Scripts
             lHand = leftCapsuleHand._hand;
             lArm = lHand.Arm;
             
-            lElbow = new GameObject("Left_Elbow");
-            lAnchor = new GameObject("Left_Anchor");
-            
-            lElbow.transform.SetParent(transform);
-            lAnchor.transform.SetParent(transform);
-            
+            lElbow = Set.NewGameObject(armRef,"Left_Elbow");
+            lAnchor = Set.NewGameObject(armRef,"Left_Anchor");
+
             leftHandEnabled.handEnabledEvent.RemoveAllListeners();
         }
         
@@ -190,17 +180,15 @@ namespace VR_Prototyping.Scripts
             rHand = rightCapsuleHand._hand;
             rArm = rHand.Arm;
             
-            rElbow = new GameObject("Right_Elbow");
-            rAnchor = new GameObject("Right_Anchor");
-            
-            rElbow.transform.SetParent(transform);
-            rAnchor.transform.SetParent(transform);
-            
+            rElbow = Set.NewGameObject(armRef,"Right_Elbow");
+            rAnchor = Set.NewGameObject(armRef,"Right_Anchor");
+
             rightHandEnabled.handEnabledEvent.RemoveAllListeners();
         }
 
         private void SetupParticleSystem()
         {
+            return;
             GameObject particle = Instantiate(fingerTouchParticleSystem, leftIndex);
             particle.transform.ResetLocalTransform();
             lIndexParticle = particle.GetComponent<ParticleSystem>();
@@ -387,7 +375,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftIndexSoloSelect()
         {
             bool state = LeftIndexSelect() && !(LeftMiddleSelect() || LeftRingSelect() || LeftLittleSelect());
-            if (state) lIndexParticle.Play();// lIndexSoloSelect.Invoke();
+            //if (state) lIndexParticle.Play();// lIndexSoloSelect.Invoke();
             return state;
         }
         
@@ -399,7 +387,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftMiddleSoloSelect()
         {
             bool state = LeftMiddleSelect() && !(LeftIndexSelect() || LeftRingSelect() || LeftLittleSelect());
-            if (state) lMiddleParticle.Play();//lMiddleSoloSelect.Invoke();
+            //if (state) lMiddleParticle.Play();//lMiddleSoloSelect.Invoke();
             return state;
         }
         
@@ -411,7 +399,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftRingSoloSelect()
         {
             bool state = LeftRingSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftLittleSelect());
-            if (state) lRingParticle.Play();//lRingSoloSelect.Invoke();
+            //if (state) lRingParticle.Play();//lRingSoloSelect.Invoke();
             return state;
         }
         
@@ -423,7 +411,7 @@ namespace VR_Prototyping.Scripts
         public bool LeftLittleSoloSelect()
         {
             bool state = LeftLittleSelect() && !(LeftIndexSelect() || LeftMiddleSelect() || LeftRingSelect());
-            if (state) lLittleParticle.Play();//lLittleSoloSelect.Invoke();
+            //if (state) lLittleParticle.Play();//lLittleSoloSelect.Invoke();
             return state;
         }
         
@@ -435,7 +423,7 @@ namespace VR_Prototyping.Scripts
         public bool RightIndexSoloSelect()
         {
             bool state = RightIndexSelect() && !(RightMiddleSelect() || RightRingSelect() || RightLittleSelect());
-            if (state) rIndexParticle.Play();//rIndexSoloSelect.Invoke();
+            //if (state) rIndexParticle.Play();//rIndexSoloSelect.Invoke();
             return state;
         }
         
@@ -447,7 +435,7 @@ namespace VR_Prototyping.Scripts
         public bool RightMiddleSoloSelect()
         {
             bool state = RightMiddleSelect() && !(RightIndexSelect() || RightRingSelect() || RightLittleSelect());
-            if (state) rMiddleParticle.Play();//rMiddleSoloSelect.Invoke();
+            //if (state) rMiddleParticle.Play();//rMiddleSoloSelect.Invoke();
             return state;
         }
         
@@ -459,7 +447,7 @@ namespace VR_Prototyping.Scripts
         public bool RightRingSoloSelect()
         {
             bool state = RightRingSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightLittleSelect());
-            if (state) rRingParticle.Play();//rRingSoloSelect.Invoke();
+            //if (state) rRingParticle.Play();//rRingSoloSelect.Invoke();
             return state;
         }
         
@@ -471,7 +459,7 @@ namespace VR_Prototyping.Scripts
         public bool RightLittleSoloSelect()
         {
             bool state = RightLittleSelect() && !(RightIndexSelect() || RightMiddleSelect() || RightRingSelect());
-            if (state) rLittleParticle.Play();//rLittleSoloSelect.Invoke();
+            //if (state) rLittleParticle.Play();//rLittleSoloSelect.Invoke();
             return state;
         }
 
